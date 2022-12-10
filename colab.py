@@ -2,6 +2,8 @@ import torch
 model_name = ""
 ready = False
 text2img = None
+img2img = None
+inpaint = None
 def init(ModelName):
     global model_name, ready, text2img, img2img, inpaint
     model_name = ModelName
