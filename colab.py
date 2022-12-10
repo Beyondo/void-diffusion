@@ -14,7 +14,7 @@ def init(ModelName):
         print(torch.cuda.get_device_name("cuda:0") + ".")
         print("Initializing model -> " + model_name + ":")
         from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
-        text2img = StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16)
+        text2img = StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
         img2img = StableDiffusionImg2ImgPipeline(**text2img.components)
         inpaint = StableDiffusionInpaintPipeline(**text2img.components)
         print("Done.")
