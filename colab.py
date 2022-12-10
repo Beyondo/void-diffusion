@@ -1,6 +1,8 @@
 import subprocess
 def install(name):
     subprocess.call(['pip', 'install', name])
+install("torch")
+import torch
 def init():
     if not torch.cuda.is_available():
         print("No GPU found. Go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
@@ -13,7 +15,6 @@ def init():
         # @markdown **Available models**:<br>
         # @markdown `CompVis/stable-diffusion-v1-4` -> Trained on everything<br>
         # @markdown `hakurei/waifu-diffusion` -> Trained on anime<br>
-        import torch
         from diffusers import StableDiffusionPipeline
         import sys
         sys.stdout = open('stdout.txt', 'w')
