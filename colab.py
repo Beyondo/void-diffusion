@@ -14,5 +14,5 @@ def init(ModelName):
         sys.stdout = open('stdout.txt', 'w')
         pipe = StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16)
         print("Done.")
-        from IPython.display import clear_output; clear_output()
         ready = True
+        from IPython.display import clear_output; clear_output()
