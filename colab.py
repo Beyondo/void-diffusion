@@ -1,5 +1,5 @@
 import importlib
-importlib.reload(functions.readfunctions)
+importlib.reload(diffusers)
 import subprocess
 def install(name):
     subprocess.call(['pip3', 'install', name])
