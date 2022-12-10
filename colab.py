@@ -1,5 +1,4 @@
 import patcher, torch
-patcher.patch()
 model_name = ""
 ready = False
 text2img = None
@@ -8,6 +7,7 @@ inpaint = None
 def init(ModelName):
     global model_name, ready, text2img, img2img, inpaint
     model_name = ModelName
+    patcher.patch()
     if not torch.cuda.is_available():
         print("No GPU found. Go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
     else:
