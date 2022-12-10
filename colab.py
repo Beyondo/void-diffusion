@@ -1,10 +1,4 @@
 import torch
-
-import importlib
-try:
-    importlib.reload(diffusers)
-except:
-    pass
 model_name = ""
 ready = False
 pipe = None
