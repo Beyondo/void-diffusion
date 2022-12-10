@@ -6,7 +6,7 @@ def get_python_modules_dir():
     if sys.platform == 'win32':
         python_version = "Python%d%d" % (sys.version_info.major, sys.version_info.minor)
         # get appdata folder
-        dir = os.path.expandvars(f"%appdata%\\Local\\Packages\\")
+        dir = os.path.expandvars(f"%LOCALAPPDATA%\\Packages\\")
         # search folder than starts with "PythonSoftwareFoundation.Python"
         for folder in os.listdir(dir):
             if folder.startswith("PythonSoftwareFoundation.Python"):
