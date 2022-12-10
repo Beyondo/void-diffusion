@@ -1,7 +1,24 @@
-import shutil, sys, importlib
-patch_path = '/content/void-diffusion/safety_checker_patched.py'
+import shutil, sys, importlib, os
+patched_script = 'safety_checker_patched.py'
+
+def get_python_modules_dir():
+    #  get where python modules are installed for every operating system
+    if sys.platform == 'win32':
+        python_version = "Python%d%d" % (sys.version_info.major, sys.version_info.minor)
+        dir = f"%appdata%\\Local\\Packages\\"
+        # search folder than starts with "PythonSoftwareFoundation.Python"
+        for folder in os.listdir(dir):
+            if folder.startswith("PythonSoftwareFoundation.Python"):
+                return os.path.join(dir, folder, "LocalCache", "local-packages", python_version, "site-packages")
+        return os.path.join(sys.prefix, 'Lib', 'site-packages')
+        #if colab
+    elif 'google.colab' in sys.modules:
+        python_version = "python%d.%d" % (sys.version_info.major, sys.version_info.minor)
+        return '/usr/local/lib/%s/dist-packages' % python_version
+    else:
+        python_version = "python%d.%d" % (sys.version_info.major, sys.version_info.minor)
+        return os.path.join(sys.prefix, 'lib', python_version, 'site-packages')
 def patch():
-    python_version = "python%d.%d" % (sys.version_info.major, sys.version_info.minor)
-    target_path = '/usr/local/lib/%s/dist-packages/diffusers/pipelines/stable_diffusion/safety_checker.py' % python_version
-    shutil.copyfile(patch_path, target_path)
+    target_script = get_python_modules_dir().join('diffusers/pipelines/stable_diffusion/safety_checker.py')
+    shutil.copyfile(patched_script, target_script)
     importlib.invalidate_caches()
