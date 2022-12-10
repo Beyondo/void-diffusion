@@ -1,6 +1,8 @@
+import importlib
+importlib.reload(functions.readfunctions)
 import subprocess
 def install(name):
-    subprocess.call(['pip', 'install', name])
+    subprocess.call(['pip3', 'install', name])
 install("torch")
 import torch
 def init():
