@@ -1,6 +1,13 @@
 import torch
+
+import importlib
+try:
+    importlib.reload(diffusers)
+except:
+    pass
 model_name = ""
 ready = False
+pipe = None
 def init(ModelName):
     global model_name, ready, pipe
     model_name = ModelName
@@ -11,8 +18,6 @@ def init(ModelName):
         print(torch.cuda.get_device_name("cuda:0") + ".")
         print("Initializing model -> " + model_name + ":")
         from diffusers import StableDiffusionPipeline
-        import sys
-        sys.stdout = open('stdout.txt', 'w')
         pipe = StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16)
         print("Done.")
         ready = True
