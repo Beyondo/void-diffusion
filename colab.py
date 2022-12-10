@@ -1,5 +1,4 @@
 import subprocess
-import torch
 def install(name):
     subprocess.call(['pip', 'install', name])
 def init():
@@ -14,6 +13,7 @@ def init():
         # @markdown **Available models**:<br>
         # @markdown `CompVis/stable-diffusion-v1-4` -> Trained on everything<br>
         # @markdown `hakurei/waifu-diffusion` -> Trained on anime<br>
+        import torch
         from diffusers import StableDiffusionPipeline
         import sys
         sys.stdout = open('stdout.txt', 'w')
