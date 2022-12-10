@@ -1,5 +1,8 @@
 import torch
-def init(model_name):
+model_name = ""
+ready = False
+def init(ModelName):
+    model_name = ModelName
     if not torch.cuda.is_available():
         print("No GPU found. Go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
     else:
@@ -11,3 +14,5 @@ def init(model_name):
         sys.stdout = open('stdout.txt', 'w')
         pipe = StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16)
         print("Done.")
+        from IPython.display import clear_output; clear_output()
+        ready = True
