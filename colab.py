@@ -2,6 +2,7 @@ import torch
 model_name = ""
 ready = False
 def init(ModelName):
+    global model_name, ready, pipe
     model_name = ModelName
     if not torch.cuda.is_available():
         print("No GPU found. Go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
