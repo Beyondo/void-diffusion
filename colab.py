@@ -1,11 +1,14 @@
+import subprocess
 import torch
+def install(name):
+    subprocess.call(['pip', 'install', name])
 def init():
     if not torch.cuda.is_available():
         print("No GPU found. Go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
     else:
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0"), end=".\nInstalling dependencies -> ")
-        !pip install einops torch transformers diffusers accelerate > /dev/null
+        install("einops torch transformers diffusers accelerate > /dev/null")
         print("Done.\nUsing model -> ", end="")
         Model = "CompVis/stable-diffusion-v1-4" # @param ["CompVis/stable-diffusion-v1-4", "hakurei/waifu-diffusion"]
         # @markdown **Available models**:<br>
