@@ -9,7 +9,7 @@ def init(ModelName):
     model_name = ModelName
     patcher.patch()
     if not torch.cuda.is_available():
-        print("No GPU found. Go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
+        print("No GPU found. If you are on Colab, go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
     else:
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
