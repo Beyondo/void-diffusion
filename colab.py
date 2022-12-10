@@ -1,4 +1,5 @@
-import torch
+import patcher, torch
+patcher.patch()
 model_name = ""
 ready = False
 text2img = None
