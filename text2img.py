@@ -12,6 +12,6 @@ def process(ShouldSave):
         guidance_scale=colab.settings['GuidanceScale'],
         num_inference_steps=colab.settings['Steps'],
         generator=generator).images[0]
-    if save:
+    if ShouldSave:
         postprocessor.save_image(image)
     
