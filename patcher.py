@@ -19,5 +19,6 @@ def get_python_modules_dir():
         return os.path.join(sys.prefix, 'lib', python_version, 'site-packages')
 def patch():
     target_script = os.path.join(get_python_modules_dir(), 'diffusers', 'pipelines', 'stable_diffusion', 'safety_checker.py')
-    shutil.copyfile(patched_script, target_script)
-    importlib.invalidate_caches()
+    if(os.path.exists(patched_script)):
+        shutil.copyfile(patched_script, target_script)
+        importlib.invalidate_caches()
