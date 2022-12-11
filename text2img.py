@@ -3,6 +3,7 @@ from IPython.display import Image
 from IPython.display import display
 importlib.reload(postprocessor)
 def processing_callback(iter, t, latents):
+    print("....")
     with torch.no_grad():
         latents = 1 / 0.18215 * latents
         image = colab.text2img.vae.decode(latents).sample
