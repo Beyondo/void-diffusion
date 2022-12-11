@@ -1,7 +1,9 @@
-import torch, os, time, datetime, colab
+import torch, os, time, datetime, colab, postprocessor
 from IPython.display import Image
 from IPython.display import display
 def process(width, height, seed, positive_prompt, negative_prompt, guidance_scale, inference_steps, save_to_google_drive, directory):
+    global Seed
+    print ("Generating image using seed: " + str(Seed) + "...")
     genSeed = torch.random.seed() if seed == 0 else seed
     generator = torch.Generator("cuda").manual_seed(genSeed)
     image = colab.text2img(
@@ -13,10 +15,5 @@ def process(width, height, seed, positive_prompt, negative_prompt, guidance_scal
         num_inference_steps=inference_steps,
         generator=generator).images[0]
     if save_to_google_drive:
-        dir = '/content/gdrive/MyDrive/' + directory
-        if not os.path.exists(dir): os.makedirs(dir)
-        imgSavePath = "%s/%d-voidops" % (dir, int(time.mktime(datetime.datetime.now().timetuple())))
-        image.save(imgSavePath + ".png")
-        display(image)
-        print("Saved to " + imgSavePath)
-        return image
+        postprocessor.save_image(image)
+    
