@@ -11,5 +11,4 @@ def process(seed, positive_prompt, negative_prompt, guidance_scale, inference_st
         if not os.path.exists(dir): os.makedirs(dir)
         imgSavePath = "%s/voidops-%d.png" % (dir, genSeed)
         image.save(imgSavePath)
-        print("Saved to " + imgSavePath)
-        Image(imgSavePath)
+        image
