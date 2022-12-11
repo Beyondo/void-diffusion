@@ -15,7 +15,7 @@ def process(ShouldSave):
     # Process image
     colab.settings['Seed'] = torch.random.seed() if colab.settings['Seed'] == 0 else colab.settings['Seed']
     generator = torch.Generator("cuda").manual_seed(colab.settings['Seed'])
-    image = colab.img2img(
+    images = colab.img2img(
         prompt=colab.settings['Prompt'],
         image=init_image,
         negative_prompt=colab.settings['NegativePrompt'],
@@ -24,6 +24,13 @@ def process(ShouldSave):
         num_inference_steps=colab.settings['Steps'],
         generator=generator,
         callback=progress.callback,
-        callback_steps=10).images[0]
+        callback_steps=10).images
+    timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if ShouldSave:
-        postprocessor.save_gdrive(image)
+        if colab.save_settings: postprocessor.save_settings(timestamp)
+        for i, image in images:
+            imageName = timestamp + "_" + str(i)
+            path = postprocessor.save_gdrive(image, imageName)
+            display(image, str(i))
+            print("Saved to " + path)
+            postprocessor.post_process(image, imageName)
