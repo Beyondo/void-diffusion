@@ -27,6 +27,6 @@ def process(ShouldSave):
             imageName = "%d_%d" % (timestamp, i)
             print(imageName)
             path = postprocessor.save_gdrive(image, imageName)
-            display(image, display_id=i)
+            display(image, display_id=str(i))
             print("Saved to " + path)
             postprocessor.post_process(image, imageName)

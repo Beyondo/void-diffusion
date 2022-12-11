@@ -34,6 +34,6 @@ def process(ShouldSave):
         for i, image in enumerate(images):
             imageName = "%d_%d" % (timestamp, i)
             path = postprocessor.save_gdrive(image, imageName)
-            display(image, display_id=i)
+            display(image, display_id=str(i))
             print("Saved to " + path)
             postprocessor.post_process(image, imageName)
