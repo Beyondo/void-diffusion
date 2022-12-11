@@ -1,6 +1,7 @@
-import torch, os, time, datetime, colab, postprocessor
+import torch, os, time, datetime, colab, postprocessor, importlib
 from IPython.display import Image
 from IPython.display import display
+importlib.reload(postprocessor)
 def process(ShouldSave):
     genSeed = torch.random.seed() if colab.settings['Seed'] == 0 else colab.settings['Seed']
     generator = torch.Generator("cuda").manual_seed(genSeed)
