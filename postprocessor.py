@@ -17,5 +17,5 @@ def save_gdrive(img):
     # Display image
     display(img)
     # Print save locations
-    print("Saved to " + imgFile.replace("/content/gdrive/MyDrive/", ""))
+    print("Saved to " + imgFile.replace("/content/gdrive/MyDrive/", ""), end="")
     if colab.save_settings: print("and " + settingsFile.replace("/content/gdrive/MyDrive/", ""))
