@@ -15,7 +15,7 @@ def process(ShouldSave):
         num_inference_steps=colab.settings['Steps'],
         generator=generator,
         callback=progress.callback,
-        callback_steps=5).images[0]
+        callback_steps=10).images[0]
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if ShouldSave:
         if colab.save_settings: postprocessor.save_settings(timestamp)

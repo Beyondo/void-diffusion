@@ -1,4 +1,4 @@
-import torch, os, time, datetime, colab, postprocessor, importlib
+import torch, os, time, datetime, colab, postprocessor, progress, importlib
 from IPython.display import Image
 from IPython.display import display
 
@@ -22,8 +22,8 @@ def process(ShouldSave):
         negative_prompt=colab.settings['NegativePrompt'],
         guidance_scale=colab.settings['GuidanceScale'],
         num_inference_steps=colab.settings['Steps'],
-        generator=generator
+        generator=generator,
         callback=progress.callback,
-        callback_steps=5).images[0]
+        callback_steps=10).images[0]
     if ShouldSave:
         postprocessor.save_gdrive(image)
