@@ -1,5 +1,6 @@
 import torch, os, datetime, colab
 from IPython.display import Image
+from IPython.display import display
 def process(seed, positive_prompt, negative_prompt, guidance_scale, inference_steps, save_to_google_drive, directory):
     genSeed = torch.random.seed() if seed == 0 else seed
     generator = torch.Generator("cuda").manual_seed(genSeed)
@@ -11,4 +12,5 @@ def process(seed, positive_prompt, negative_prompt, guidance_scale, inference_st
         imgSavePath = "%s/%d-voidops" % (dir, num)
         image.save(imgSavePath + ".png")
         print("Saved to " + imgSavePath)
+        display(img)
         return image
