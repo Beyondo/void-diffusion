@@ -17,4 +17,4 @@ def process(ShouldSave):
         num_inference_steps=inference_steps,
         generator=generator).images[0]
     if ShouldSave:
-        postprocessor.save(image)
+        postprocessor.save_gdrive(image)
