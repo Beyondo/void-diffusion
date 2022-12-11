@@ -31,6 +31,5 @@ def process(ShouldSave):
     if ShouldSave:
         if colab.save_settings: postprocessor.save_settings(timestamp)
         path = postprocessor.save_gdrive(image, timestamp)
-        display(image)
         print("Saved to " + path)
     postprocessor.post_process(image, timestamp)
