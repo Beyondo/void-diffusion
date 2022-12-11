@@ -1,9 +1,10 @@
-import torch, os, time, datetime, colab
+import torch, os, time, datetime, colab, postprocessor, importlib
 from IPython.display import Image
 from IPython.display import display
-def process(width, height, seed, positive_prompt, negative_prompt, strength, image_url, guidance_scale, inference_steps, save_to_google_drive, directory):
+importlib.reload(postprocessor)
+def process(ShouldSave):
     # Load image
-    image = Image.open(image_url)
+    image = Image.open(colab.settings['ImageURL'])
     # Process image
     genSeed = torch.random.seed() if seed == 0 else seed
     generator = torch.Generator("cuda").manual_seed(genSeed)
@@ -15,11 +16,5 @@ def process(width, height, seed, positive_prompt, negative_prompt, strength, ima
         guidance_scale=guidance_scale,
         num_inference_steps=inference_steps,
         generator=generator).images[0]
-    if save_to_google_drive:
-        dir = '/content/gdrive/MyDrive/' + save_directory
-        if not os.path.exists(dir): os.makedirs(dir)
-        imgSavePath = "%s/%d-voidops" % (dir, int(time.mktime(datetime.datetime.now().timetuple())))
-        image.save(imgSavePath + ".png")
-        display(image)
-        print("Saved to " + imgSavePath + ".png")
-        return image
+    if ShouldSave:
+        postprocessor.save(image)

@@ -6,6 +6,7 @@ img2img = None
 inpaint = None
 settings = { }
 save_directory = "AI-Gen"
+save_settings = True
 def init(ModelName):
     global model_name, ready, text2img, img2img, inpaint
     model_name = ModelName
