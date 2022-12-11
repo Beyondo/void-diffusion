@@ -14,8 +14,8 @@ def processing_callback(iter, t, latents):
 
 def process(ShouldSave):
     if 'Seed' not in colab.settings: "Please set your settings first."
-    genSeed = torch.random.seed() if colab.settings['Seed'] == 0 else colab.settings['Seed']
-    generator = torch.Generator("cuda").manual_seed(genSeed)
+    colab.settings['Seed'] = torch.random.seed() if colab.settings['Seed'] == 0 else colab.settings['Seed']
+    generator = torch.Generator("cuda").manual_seed(colab.settings['Seed'])
     # how to get the image every 100 steps in StableDiffusionPipeline?
     image = colab.text2img(
         width=colab.settings['Width'],
