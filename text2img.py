@@ -24,7 +24,7 @@ def process(ShouldSave):
         if colab.save_settings: postprocessor.save_settings(timestamp)
         # loop with index
         for i, image in enumerate(images):
-            imageName = "%d_%d" % timestamp, i
+            imageName = "%d_%d" % (timestamp, i)
             print(imageName)
             path = postprocessor.save_gdrive(image, imageName)
             display(image, str(i))
