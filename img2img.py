@@ -16,7 +16,7 @@ def process(width, height, seed, positive_prompt, negative_prompt, strength, ima
         num_inference_steps=inference_steps,
         generator=generator).images[0]
     if save_to_google_drive:
-        dir = '/content/gdrive/MyDrive/' + directory
+        dir = '/content/gdrive/MyDrive/' + save_directory
         if not os.path.exists(dir): os.makedirs(dir)
         imgSavePath = "%s/%d-voidops" % (dir, int(time.mktime(datetime.datetime.now().timetuple())))
         image.save(imgSavePath + ".png")
