@@ -5,7 +5,7 @@ from IPython.display import display
 def get_save_path(filename):
     dir = '/content/gdrive/MyDrive/' + colab.save_directory
     if not os.path.exists(dir): os.makedirs(dir)
-    return "%s/%d" % (dir, filename)
+    return "%s/%s" % (dir, filename)
 
 def save_gdrive(img, filename):
     imgSavePath = get_save_path(filename)
