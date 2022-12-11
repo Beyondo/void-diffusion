@@ -1,18 +1,17 @@
 import torch, os, time, datetime, colab, postprocessor
 from IPython.display import Image
 from IPython.display import display
-def process(width, height, seed, positive_prompt, negative_prompt, guidance_scale, inference_steps, save_to_google_drive, directory):
-    print ("Generating image using seed: " + str(colab.settings['Seed']) + "...")
-    genSeed = torch.random.seed() if seed == 0 else seed
+def process():
+    genSeed = torch.random.seed() if colab.settings['Seed'] == 0 else colab.settings['Seed']
     generator = torch.Generator("cuda").manual_seed(genSeed)
     image = colab.text2img(
-        width=width,
-        height=height,
-        prompt=positive_prompt,
-        negative_prompt=negative_prompt,
-        guidance_scale=guidance_scale,
-        num_inference_steps=inference_steps,
+        width=colab.settings['Width'],
+        height=colab.settings['Height'],
+        prompt=colab.settings['PositivePrompt'],
+        negative_prompt=colab.settings['NegativePrompt'],
+        guidance_scale=colab.settings['GuidanceScale'],
+        num_inference_steps=colab.settings['Steps'],
         generator=generator).images[0]
-    if save_to_google_drive:
+    if colab.settings['SaveToGoogleDrive']:
         postprocessor.save_image(image)
     
