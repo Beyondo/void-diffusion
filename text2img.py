@@ -3,6 +3,7 @@ from IPython.display import Image
 from IPython.display import display
 importlib.reload(postprocessor)
 def process(ShouldSave):
+    if 'Seed' not in colab.settings: "Please set your settings first."
     genSeed = torch.random.seed() if colab.settings['Seed'] == 0 else colab.settings['Seed']
     generator = torch.Generator("cuda").manual_seed(genSeed)
     image = colab.text2img(
