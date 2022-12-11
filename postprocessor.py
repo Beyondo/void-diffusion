@@ -1,21 +1,27 @@
 import torch, os, time, datetime, colab
 from IPython.display import Image
 from IPython.display import display
-def save_gdrive(img):
-    # Save image to Google Drive and a txt file with the settings used to generate it
+
+def get_save_name(filename):
     dir = '/content/gdrive/MyDrive/' + colab.save_directory
     if not os.path.exists(dir): os.makedirs(dir)
-    imgSavePath = "%s/%d-voidops" % (dir, int(time.mktime(datetime.datetime.now().timetuple())))
+    return "%s/%d" % (dir, filename)
+
+def save_gdrive(img, filename):
+    imgSavePath = get_save_name()
     imgFile = imgSavePath + ".png"
+    img.save(imgFile)
+    return imgFile.replace("/content/gdrive/MyDrive/", "")
+
+def save_settings(filename):
+    imgSavePath = get_save_name()
     settingsFile = imgSavePath + "-settings.txt"
-    img.save(imgFile) # Save before displaying, so that the image is saved regardless of whether the user sees it
-    # Save settings
     if colab.save_settings:
         with open(settingsFile, "w") as f:
             for key, value in colab.settings.items():
                 f.write("%s: %s \n" % (key, value))
-    # Display image
-    display(img)
-    # Print save locations
-    print("Saved to " + imgFile.replace("/content/gdrive/MyDrive/", ""), end="")
-    if colab.save_settings: print("and " + settingsFile.replace("/content/gdrive/MyDrive/", ""))
+    return settingsFile.replace("/content/gdrive/MyDrive/", "")
+
+def post_process(img, filename):
+    imgSavePath = get_save_name()
+    imgFile = imgSavePath + "-2x.png"
