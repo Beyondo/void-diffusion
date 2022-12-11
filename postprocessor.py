@@ -19,7 +19,9 @@ def save_settings(filename):
     if colab.save_settings:
         with open(settingsFile, "w") as f:
             for key, value in colab.settings.items():
-                f.write("%s: %s \n" % (key, value))
+                f.write("%s: %s\n" % (key, value))
+            f.write(('-' * 64)  + "\nMain Colab: https://colab.research.google.com/drive/1MRwvDBNc4jhlEXSAtdLe49A4C1k35pgp\n")
+            f.write("Website: https://voidops.com\n")
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
 def post_process(img, filename):
