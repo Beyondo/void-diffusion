@@ -1,6 +1,4 @@
-import torch
-import colab
-import os
+import torch, os, datetime, colab
 from IPython.display import Image
 def process(seed, positive_prompt, negative_prompt, guidance_scale, inference_steps, save_to_google_drive, directory):
     genSeed = torch.random.seed() if seed == 0 else seed
@@ -9,7 +7,8 @@ def process(seed, positive_prompt, negative_prompt, guidance_scale, inference_st
     if save_to_google_drive:
         dir = '/content/gdrive/MyDrive/' + directory
         if not os.path.exists(dir): os.makedirs(dir)
-        imgSavePath = "%s/voidops-%d.png" % (dir, genSeed)
+        num = len([name for name in os.listdir(dir) if os.path.isfile(name)])
+        imgSavePath = "%s/%d-voidops.png" % (dir, num)
         image.save(imgSavePath)
         print("Saved to " + imgSavePath)
         return image
