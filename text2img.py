@@ -20,6 +20,7 @@ def process(ShouldSave):
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if ShouldSave:
         if colab.save_settings: postprocessor.save_settings(timestamp)
+        # loop with index
         for i, image in images:
             imageName = timestamp + "_" + str(i)
             print(imageName)

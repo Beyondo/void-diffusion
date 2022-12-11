@@ -28,7 +28,7 @@ def process(ShouldSave):
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if ShouldSave:
         if colab.save_settings: postprocessor.save_settings(timestamp)
-        for i, image in images:
+        for i, image in enumerate(images):
             imageName = timestamp + "_" + str(i)
             path = postprocessor.save_gdrive(image, imageName)
             display(image, str(i))
