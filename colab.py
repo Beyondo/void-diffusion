@@ -4,9 +4,12 @@ ready = False
 text2img = None
 img2img = None
 inpaint = None
+settings = { }
+directory = "AI-Gen"
 def init(ModelName):
     global model_name, ready, text2img, img2img, inpaint
     model_name = ModelName
+    settings['ModelName'] = ModelName
     patcher.patch()
     if not torch.cuda.is_available():
         print("No GPU found. If you are on Colab, go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
