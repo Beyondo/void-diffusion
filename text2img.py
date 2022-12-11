@@ -8,7 +8,7 @@ def process(seed, positive_prompt, negative_prompt, guidance_scale, inference_st
         dir = '/content/gdrive/MyDrive/' + directory
         if not os.path.exists(dir): os.makedirs(dir)
         num = len([name for name in os.listdir(dir) if os.path.isfile(name)])
-        imgSavePath = "%s/%d-voidops.png" % (dir, num)
-        image.save(imgSavePath)
+        imgSavePath = "%s/%d-voidops" % (dir, num)
+        image.save(imgSavePath + ".png")
         print("Saved to " + imgSavePath)
         return image
