@@ -12,5 +12,5 @@ def process(seed, positive_prompt, negative_prompt, guidance_scale, inference_st
         imgSavePath = "%s/%d-voidops" % (dir, num)
         image.save(imgSavePath + ".png")
         print("Saved to " + imgSavePath)
-        display(img)
+        display(image)
         return image
