@@ -7,8 +7,8 @@ def process(ShouldSave):
     image = Image.open(colab.settings['ImageURL'])
     display(image) # temporary
     # Process image
-    genSeed = torch.random.seed() if colab.settings['Seed'] == 0 else colab.settings['Seed']
-    generator = torch.Generator("cuda").manual_seed(genSeed)
+    colab.settings['Seed'] = torch.random.seed() if colab.settings['Seed'] == 0 else colab.settings['Seed']
+    generator = torch.Generator("cuda").manual_seed(colab.settings['Seed'])
     image = colab.img2img(
         width=colab.settings['Width'],
         height=colab.settings['Height'],
