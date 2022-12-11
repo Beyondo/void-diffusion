@@ -11,7 +11,7 @@ def processing_callback(iter, t, latents):
         image = image.cpu().permute(0, 2, 3, 1).float().numpy()
         image = colab.text2img.numpy_to_pil(image)
         for i, img in enumerate(image):
-            display(img)
+            display(img, display_id=str(i))
 
 def process(ShouldSave):
     if 'Seed' not in colab.settings: "Please set your settings first."
