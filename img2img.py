@@ -7,6 +7,9 @@ from PIL import Image
 from io import BytesIO
 importlib.reload(postprocessor)
 def process(ShouldSave):
+    if 'Seed' not in colab.settings:
+        print("Please set your settings first.")
+        return
     # Load image
     response = requests.get(colab.settings['ImageURL'])
     init_image = Image.open(BytesIO(response.content)).convert('RGB')
