@@ -17,7 +17,7 @@ def process(ShouldSave):
         generator=generator,
         callback=progress.callback,
         callback_steps=10).images
-    
+    print(images)
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if ShouldSave:
         if colab.save_settings: postprocessor.save_settings(timestamp)
