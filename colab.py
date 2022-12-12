@@ -1,4 +1,5 @@
 import patcher, torch, random, time
+from IPython import display
 model_name = ""
 ready = False
 tokenizer = None
@@ -35,7 +36,7 @@ def init(ModelName):
             print("Done.")
             ready = True
             from IPython.display import clear_output; clear_output()
-            print("Model '" + model_name + "' has been selected.")
+            display(display.HTML("<span style='color: green'>Model %s has been selected.</span>" % model_name))
         except Exception as e:
             print("Failed to initialize model %s with error %s" % (model_name, e))
 
