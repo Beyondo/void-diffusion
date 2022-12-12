@@ -8,4 +8,5 @@ def callback(iter, t, latents):
         image = image.cpu().permute(0, 2, 3, 1).float().numpy()
         image = colab.text2img.numpy_to_pil(image)
         for i, img in enumerate(image):
+            display("Seed: " + str(colab.settings['Seed'] + i), display_id="seed-"+str(i))
             display(img, display_id=str(i))
