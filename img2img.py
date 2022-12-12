@@ -5,6 +5,7 @@ from IPython.display import display
 import requests
 from PIL import Image
 from io import BytesIO
+importlib.reload(progress)
 importlib.reload(postprocessor)
 def process(ShouldSave, ShouldPreview = True):
     colab.prepare("img2img")

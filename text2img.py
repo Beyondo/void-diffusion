@@ -1,5 +1,6 @@
 import torch, os, time, datetime, colab, postprocessor, progress, importlib
 from IPython.display import display
+importlib.reload(progress)
 importlib.reload(postprocessor)
 def process(ShouldSave, ShouldPreview = True):
     colab.prepare("text2img")
