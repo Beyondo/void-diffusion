@@ -8,5 +8,4 @@ def callback(iter, t, latents):
         images = images.cpu().permute(0, 2, 3, 1).float().numpy()
         images = colab.text2img.numpy_to_pil(images)
         print(colab.get_current_image_seed())
-        display("Seed: %d" % colab.get_current_image_seed(), display_id=colab.get_current_image_uid() + "-seed")
         display(images[0], display_id=colab.get_current_image_uid())

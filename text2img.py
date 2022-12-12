@@ -4,8 +4,11 @@ importlib.reload(postprocessor)
 def process(ShouldSave, ShouldPreview = True):
     colab.prepare("text2img")
     print("Iterations: %d" % colab.settings['Iterations'])
+    timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
+    if ShouldSave and colab.save_settings: postprocessor.save_settings(timestamp, mode="text2img")
     for i in range(colab.settings['Iterations']):
         colab.image_id = i # needed for progress.py
+        print("Seed: %d" % colab.get_current_image_seed())
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
         image = colab.text2img(
             width=colab.settings['Width'],
@@ -17,11 +20,9 @@ def process(ShouldSave, ShouldPreview = True):
             generator=generator,
             callback=progress.callback,
             callback_steps=10).images[0]
-        timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
         if ShouldPreview:
             display(image, display_id=str(i))
         if ShouldSave:
-            if colab.save_settings: postprocessor.save_settings(timestamp, mode="text2img")
             imageName = "%d_%d" % (timestamp, i)
             path = postprocessor.save_gdrive(image, imageName)
             print("Saved to " + path)
