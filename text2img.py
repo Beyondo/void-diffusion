@@ -10,7 +10,6 @@ def process(ShouldSave, ShouldPreview = True):
     display("Iterations: 0/%d" % num_iterations, display_id="iterations")
     for i in range(num_iterations):
         colab.image_id = i # needed for progress.py
-        print("Seed: %d" % colab.get_current_image_seed())
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
         image = colab.text2img(
             width=colab.settings['Width'],

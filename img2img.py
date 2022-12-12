@@ -30,7 +30,7 @@ def process(ShouldSave, ShouldPreview = True):
             callback_steps=10).images[0]
         timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
         if ShouldPreview:
-            display(image, display_id=str(i))
+            display(image, display_id=colab.get_current_image_uid())
         if ShouldSave:
             if colab.save_settings: postprocessor.save_settings(timestamp, mode="img2img")
             imageName = "%d_%d" % (timestamp, i)
