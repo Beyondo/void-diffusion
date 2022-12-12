@@ -20,7 +20,7 @@ def process(ShouldSave, ShouldPreview = True):
             num_inference_steps=colab.settings['Steps'],
             generator=generator,
             callback=progress.callback,
-            callback_steps=1).images[0]
+            callback_steps=10).images[0]
         if ShouldPreview:
             display(image, display_id=colab.get_current_image_uid())
         if ShouldSave:
