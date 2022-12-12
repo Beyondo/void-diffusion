@@ -37,7 +37,7 @@ def init(ModelName):
             print("Done.")
             ready = True
             from IPython.display import clear_output; clear_output()
-            display.display(HTML("<span style='color: green'>Model %s has been selected.</span>" % model_name))
+            display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
         except Exception as e:
             print("Failed to initialize model %s with error %s" % (model_name, e))
 
