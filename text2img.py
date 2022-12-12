@@ -5,10 +5,12 @@ def process(ShouldSave):
     if 'Seed' not in colab.settings:
         print("Please set your settings first.")
         return
-    original_seed = colab.settings['Seed']
     random.seed(int(time.time_ns()))
-    colab.settings['Seed'] = random.getrandbits(64) if colab.settings['Seed'] == 0 else colab.settings['Seed']
-    generator = torch.Generator("cuda").manual_seed(colab.settings['Seed'])
+    if colab.settings['Seed'] == 0:
+        colab.settings['InitialSeed'] = random.getrandbits(64)
+    else:
+        colab.settings['InitialSeed'] = colab.settings['Seed']
+    generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'])
     # how to get the image every 100 steps in StableDiffusionPipeline?
     images = colab.text2img(
         width=colab.settings['Width'],
@@ -30,4 +32,3 @@ def process(ShouldSave):
             display(image, display_id=str(i))
             print("Saved to " + path)
             postprocessor.post_process(image, imageName)
-    colab.settings['Seed'] = original_seed
