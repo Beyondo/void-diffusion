@@ -10,6 +10,7 @@ save_settings = True
 image_id = 0
 current_mode = ""
 def get_current_image_seed():
+    global settings, image_id
     return settings['InitialSeed'] + image_id
 def get_current_image_uid():
     return "text2img-%d" % get_current_image_seed()
