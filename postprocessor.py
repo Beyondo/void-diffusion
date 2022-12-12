@@ -34,7 +34,7 @@ def save_settings(filename, mode):
                 f.write("Negative Prompt: %s\n" % colab.settings['NegativePrompt'])
                 write_general_settings(f)
             elif mode == "img2img":
-                f.write("Mode: Image2Image\n")
+                f.write("Mode: Image to Image\n")
                 f.write("Initial Seed: %s\n" % colab.settings['InitialSeed'])
                 f.write("Prompt: %s\n" % colab.settings['Prompt'])
                 f.write("Negative Prompt: %s\n" % colab.settings['NegativePrompt'])
