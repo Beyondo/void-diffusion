@@ -3,10 +3,10 @@ from IPython.display import display
 def callback(iter, t, latents):
     with torch.no_grad():
         latents = 1 / 0.18215 * latents
-        image = colab.text2img.vae.decode(latents).sample
-        image = (image / 2 + 0.5).clamp(0, 1)
-        image = image.cpu().permute(0, 2, 3, 1).float().numpy()
-        image = colab.text2img.numpy_to_pil(image)
-        for i, img in enumerate(image):
-            display("Seed: " + str(colab.settings['Seed'] + i), display_id="seed-"+str(i))
-            display(img, display_id=str(i))
+        images = colab.text2img.vae.decode(latents).sample
+        images = (images / 2 + 0.5).clamp(0, 1)
+        images = images.cpu().permute(0, 2, 3, 1).float().numpy()
+        images = colab.text2img.numpy_to_pil(images)
+        generator = torch.Generator("cuda").manual_seed()
+        display("Seed: %d" % colab.get_current_image_seed(), display_id=colab.get_current_image_uid() + "-seed")
+        display(images[0], display_id=colab.get_current_image_uid())

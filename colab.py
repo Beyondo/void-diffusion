@@ -1,4 +1,4 @@
-import patcher, torch
+import patcher, torch, random, time
 model_name = ""
 ready = False
 text2img = None
@@ -7,6 +7,12 @@ inpaint = None
 settings = { }
 save_directory = "AI-Gen"
 save_settings = True
+image_id = 0
+current_mode = ""
+def get_current_image_seed():
+    return settings['InitialSeed'] + image_id
+def get_current_image_uid():
+    return "text2img-%d" % get_current_image_seed()
 def init(ModelName):
     global model_name, ready, text2img, img2img, inpaint
     model_name = ModelName
@@ -26,3 +32,14 @@ def init(ModelName):
         ready = True
         from IPython.display import clear_output; clear_output()
         print("Model '" + model_name + "' has been selected.")
+
+def prepare(mode):
+    if 'Seed' not in settings:
+        print("Please set your settings first.")
+        return
+    if settings['Seed'] == 0:
+        random.seed(int(time.time_ns()))
+        settings['InitialSeed'] = random.getrandbits(64)
+    else:
+        settings['InitialSeed'] = settings['Seed']
+    current_mode = mode
