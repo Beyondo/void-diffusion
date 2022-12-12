@@ -27,16 +27,15 @@ def save_settings(filename, mode):
     settingsFile = imgSavePath + "-settings.txt"
     if colab.save_settings:
         with open(settingsFile, "w") as f:
+            f.write("Model: %s\n" % colab.settings['ModelName'])
             if mode == "text2img":
                 f.write("Mode: Text to Image\n")
-                f.write("Model: %s\n" % colab.settings['ModelName'])
                 f.write("Initial Seed: %s\n" % colab.settings['InitialSeed'])
                 f.write("Prompt: %s\n" % colab.settings['Prompt'])
                 f.write("Negative Prompt: %s\n" % colab.settings['NegativePrompt'])
                 write_general_settings(f)
             elif mode == "img2img":
                 f.write("Mode: Image to Image\n")
-                f.write("Model: %s\n" % colab.settings['ModelName'])
                 f.write("Initial Seed: %s\n" % colab.settings['InitialSeed'])
                 f.write("Prompt: %s\n" % colab.settings['Prompt'])
                 f.write("Negative Prompt: %s\n" % colab.settings['NegativePrompt'])
