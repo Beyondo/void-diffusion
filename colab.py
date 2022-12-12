@@ -34,7 +34,7 @@ def init(ModelName):
         print("Model '" + model_name + "' has been selected.")
 
 def prepare(mode):
-    global current_mode
+    global current_mode, settings
     if 'Seed' not in settings:
         print("Please set your settings first.")
         return
