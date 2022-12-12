@@ -22,10 +22,10 @@ def process(ShouldSave, ShouldPreview = True):
             callback=progress.callback,
             callback_steps=10).images[0]
         if ShouldPreview:
-            display(image, display_id=str(i))
+            display(image, display_id=colab.get_current_image_uid())
         if ShouldSave:
             imageName = "%d_%d" % (timestamp, i)
             path = postprocessor.save_gdrive(image, imageName)
             print("Saved to " + path)
             postprocessor.post_process(image, imageName)
-        display("Iterations: %d/%d" % (i,  num_iterations), display_id="iterations")
+        display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
