@@ -11,7 +11,6 @@ def process(ShouldSave):
     else:
         colab.settings['InitialSeed'] = colab.settings['Seed']
     generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'])
-    # how to get the image every 100 steps in StableDiffusionPipeline?
     images = colab.text2img(
         width=colab.settings['Width'],
         height=colab.settings['Height'],
