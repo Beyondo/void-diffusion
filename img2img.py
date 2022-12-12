@@ -10,14 +10,14 @@ def process(ShouldSave):
     if 'Seed' not in colab.settings:
         print("Please set your settings first.")
         return
+    colab.settings['Seed'] = torch.random.seed(int(time.mktime(datetime.datetime.now().timetuple()))) if colab.settings['Seed'] == 0 else colab.settings['Seed']
+    generator = torch.Generator("cuda").manual_seed(colab.settings['Seed'])
     # Load image
     response = requests.get(colab.settings['ImageURL'])
     init_image = Image.open(BytesIO(response.content)).convert('RGB')
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     display(init_image)
     # Process image
-    colab.settings['Seed'] = torch.random.seed() if colab.settings['Seed'] == 0 else colab.settings['Seed']
-    generator = torch.Generator("cuda").manual_seed(colab.settings['Seed'])
     images = colab.img2img(
         prompt=colab.settings['Prompt'],
         image=init_image,
