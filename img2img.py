@@ -10,9 +10,8 @@ def process(ShouldSave):
     if 'Seed' not in colab.settings:
         print("Please set your settings first.")
         return
-    # get time in nanoseconds
     random.seed(int(time.time_ns()))
-    colab.settings['Seed'] = random.randint() if colab.settings['Seed'] == 0 else colab.settings['Seed']
+    colab.settings['Seed'] = random.getrandbits(64) if colab.settings['Seed'] == 0 else colab.settings['Seed']
     generator = torch.Generator("cuda").manual_seed(colab.settings['Seed'])
     # Load image
     response = requests.get(colab.settings['ImageURL'])
