@@ -17,9 +17,9 @@ def write_general_settings(f):
     f.write("Guidance Scale: %s\n" % colab.settings['GuidanceScale'])
     f.write("Steps: %s\n" % colab.settings['Steps'])
     f.write("Iterations: %s\n" % colab.settings['Iterations'])
-    f.write("Generated seeds: " + str(colab.settings['InitialSeed']))
+    f.write("Generated seeds: %d (0)" % colab.settings['InitialSeed'])
     for i in range(1, colab.settings['Iterations']):
-        f.write(", %d" % (colab.settings['InitialSeed'] + i))
+        f.write(", %d (%d)" % (colab.settings['InitialSeed'] + i, i))
     f.write("\n")
     
 def save_settings(filename, mode):
