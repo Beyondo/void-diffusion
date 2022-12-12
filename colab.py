@@ -1,6 +1,7 @@
 import patcher, torch, random, time
 model_name = ""
 ready = False
+tokenizer = None
 text2img = None
 img2img = None
 inpaint = None
@@ -26,7 +27,10 @@ def init(ModelName):
         print(torch.cuda.get_device_name("cuda:0") + ".")
         print("Initializing model -> " + model_name + ":")
         from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
-        text2img = StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
+        from transformers import CLIPTokenizer
+        tokenizer = CLIPTokenizer.from_pretrained(model_name)
+        tokenizer.model_max_length = 512
+        text2img = StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16, tokenizer=tokenizer).to("cuda:0")
         img2img = StableDiffusionImg2ImgPipeline(**text2img.components)
         inpaint = StableDiffusionInpaintPipeline(**text2img.components)
         print("Done.")
