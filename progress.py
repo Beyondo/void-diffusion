@@ -2,7 +2,7 @@ import torch, colab, time
 from IPython.display import display
 last_image_time = 0
 def callback(iter, t, latents):
-    if time.time() - last_image_time > 2:
+    if time.time() - last_image_time > 3:
         colab.last_image_time = time.time()
         with torch.no_grad():
             latents = 1 / 0.18215 * latents
