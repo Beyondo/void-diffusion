@@ -17,6 +17,7 @@ def process(ShouldSave):
         negative_prompt=colab.settings['NegativePrompt'],
         guidance_scale=colab.settings['GuidanceScale'],
         num_inference_steps=colab.settings['Steps'],
+        num_images_per_prompt=colab.settings['NumImages'],
         generator=generator,
         callback=progress.callback,
         callback_steps=10).images
