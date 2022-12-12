@@ -3,7 +3,7 @@ from IPython.display import display
 importlib.reload(postprocessor)
 def process(ShouldSave, ShouldPreview = True):
     colab.prepare("text2img")
-    print("Iterations: %d" % str(colab.settings['Iterations']))
+    print("Iterations: %d" % colab.settings['Iterations'])
     for i in range(colab.settings['Iterations']):
         colab.image_id = i # needed for progress.py
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
