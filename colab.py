@@ -25,3 +25,4 @@ def init(ModelName):
         print("Done.")
         ready = True
         from IPython.display import clear_output; clear_output()
+        print("Model '" + model_name + "' has been selected.")
