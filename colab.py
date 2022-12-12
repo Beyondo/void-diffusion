@@ -30,6 +30,7 @@ def init(ModelName):
         from transformers import CLIPTokenizer
         tokenizer = CLIPTokenizer.from_pretrained(model_name)
         tokenizer.model_max_length = 512
+        tokenizer.max_length = 512
         text2img = StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16, tokenizer=tokenizer).to("cuda:0")
         img2img = StableDiffusionImg2ImgPipeline(**text2img.components)
         inpaint = StableDiffusionInpaintPipeline(**text2img.components)
