@@ -15,7 +15,7 @@ def process(ShouldSave):
     colab.settings['Seed'] = random.getrandbits(64) if colab.settings['Seed'] == 0 else colab.settings['Seed']
     generator = torch.Generator("cuda").manual_seed(colab.settings['Seed'])
     # Load image
-    response = requests.get(colab.settings['ImageURL'])
+    response = requests.get(colab.settings['InitialImageURL'])
     init_image = Image.open(BytesIO(response.content)).convert('RGB')
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     display(init_image)
