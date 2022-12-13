@@ -33,7 +33,7 @@ def process(ShouldSave, ShouldPreview = True):
             generator=generator,
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
-        progress.display(image)
+        progress.show(image)
         if ShouldSave:
             imageName = "%d_%d" % (timestamp, i)
             path = postprocessor.save_gdrive(image, imageName)
