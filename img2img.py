@@ -34,6 +34,7 @@ def process(ShouldSave, ShouldPreview = True):
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
         end = time.time()
+        display("Seed: %d" % colab.get_current_image_seed(), display_id=colab.get_current_image_uid() + "_seed")
         print("Execution time: %fs" % (end - start))
         display(image, display_id=colab.get_current_image_uid())
         if ShouldSave:

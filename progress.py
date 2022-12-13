@@ -10,5 +10,4 @@ def callback(iter, t, latents):
             images = (images / 2 + 0.5).clamp(0, 1)
             images = images.cpu().permute(0, 2, 3, 1).float().numpy()
             images = colab.text2img.numpy_to_pil(images)
-            display("Seed: %d" % colab.get_current_image_seed(), display_id=colab.get_current_image_uid() + "_seed")
             display(images[0], display_id=colab.get_current_image_uid())
