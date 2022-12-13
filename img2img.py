@@ -32,7 +32,7 @@ def process(ShouldSave, ShouldPreview = True):
             num_inference_steps=colab.settings['Steps'],
             generator=generator,
             callback=progress.callback if ShouldPreview else None,
-            callback_steps=1).images[0]
+            callback_steps=20).images[0]
         end = time.time()
         print("Execution time: %fs" % (end - start))
         display(image, display_id=colab.get_current_image_uid())
