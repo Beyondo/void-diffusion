@@ -1,6 +1,7 @@
 import torch, colab, time
 from IPython.display import display
 rendering_start_time = 0
+last_image_time = 0
 def reset():
     global rendering_start_time
     rendering_start_time = time.time()
@@ -12,8 +13,9 @@ def show(img = None):
     if not img == None: display(img, display_id=colab.get_current_image_uid())
     else: display("...", display_id=colab.get_current_image_uid())
 def callback(iter, t, latents):
-    if time.time() - colab.last_image_time > 3:
-        colab.last_image_time = time.time()
+    global last_image_time
+    if time.time() - last_image_time > 3:
+        last_image_time = time.time()
         with torch.no_grad():
             latents = 1 / 0.18215 * latents
             images = colab.text2img.vae.decode(latents).sample
