@@ -53,3 +53,4 @@ def prepare(mode):
     else:
         settings['InitialSeed'] = settings['Seed']
     current_mode = mode
+    torch.cuda.empty_cache()
