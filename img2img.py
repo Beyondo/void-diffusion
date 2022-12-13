@@ -35,8 +35,7 @@ def process(ShouldSave, ShouldPreview = True):
             callback_steps=1).images[0]
         end = time.time()
         print("Execution time: %fs" % (end - start))
-        if ShouldPreview:
-            display(image, display_id=colab.get_current_image_uid())
+        display(image, display_id=colab.get_current_image_uid())
         if ShouldSave:
             imageName = "%d_%d" % (timestamp, i)
             path = postprocessor.save_gdrive(image, imageName)

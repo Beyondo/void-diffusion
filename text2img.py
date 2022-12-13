@@ -25,8 +25,7 @@ def process(ShouldSave, ShouldPreview = True):
         end = time.time()
         # print execution time round to 1 decimal places
         print("Execution time: %.2fs" % (end - start))
-        if ShouldPreview:
-            display(image, display_id=colab.get_current_image_uid())
+        display(image, display_id=colab.get_current_image_uid())
         if ShouldSave:
             imageName = "%d_%d" % (timestamp, i)
             path = postprocessor.save_gdrive(image, imageName)
