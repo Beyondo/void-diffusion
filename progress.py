@@ -9,7 +9,8 @@ def show(img = None):
     global rendering_start_time
     display("Seed: %d" % colab.get_current_image_seed(), display_id=colab.get_current_image_uid() + "_seed")
     display("Execution time: %.2fs" % (time.time() - rendering_start_time), display_id=colab.get_current_image_uid() + "_time")
-    if not img == None: display("...", display_id=colab.get_current_image_uid())
+    if not img == None: display(img, display_id=colab.get_current_image_uid())
+    else: display("...", display_id=colab.get_current_image_uid())
 def callback(iter, t, latents):
     if time.time() - colab.last_image_time > 3:
         colab.last_image_time = time.time()
