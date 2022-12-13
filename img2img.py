@@ -23,7 +23,7 @@ def process(ShouldSave, ShouldPreview = True):
         colab.image_id = i # needed for progress.py
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
         progress.reset()
-        progress.show(image)
+        progress.show()
         image = colab.img2img(
             prompt=colab.settings['Prompt'],
             image=init_image,
