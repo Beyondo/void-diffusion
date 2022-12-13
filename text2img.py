@@ -11,6 +11,8 @@ def process(ShouldSave, ShouldPreview = True):
     for i in range(num_iterations):
         colab.image_id = i # needed for progress.py
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
+        # calulate execution time
+        start = time.time()
         image = colab.text2img(
             width=colab.settings['Width'],
             height=colab.settings['Height'],
@@ -21,6 +23,8 @@ def process(ShouldSave, ShouldPreview = True):
             generator=generator,
             callback=progress.callback,
             callback_steps=20).images[0]
+        end = time.time()
+        print("Execution time: %f" % (end - start))
         if ShouldPreview:
             display(image, display_id=colab.get_current_image_uid())
         if ShouldSave:
