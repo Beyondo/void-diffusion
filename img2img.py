@@ -26,8 +26,8 @@ def process(ShouldSave, ShouldPreview = True):
             strength=colab.settings['Strength'],
             num_inference_steps=colab.settings['Steps'],
             generator=generator,
-            callback=progress.callback,
-            callback_steps=20).images[0]
+            callback=progress.callback if ShouldPreview else None,
+            callback_steps=1).images[0]
         timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
         if ShouldPreview:
             display(image, display_id=colab.get_current_image_uid())
