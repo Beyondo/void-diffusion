@@ -24,9 +24,9 @@ def process(ShouldSave, ShouldPreview = True):
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
         progress.show(image)
+        imageName = "%d_%d" % (timestamp, i)
         if ShouldSave:
-            imageName = "%d_%d" % (timestamp, i)
             path = postprocessor.save_gdrive(image, imageName)
             print("Saved to " + path)
-        postprocessor.post_process(image, imageName)
+            postprocessor.post_process(image, imageName)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
