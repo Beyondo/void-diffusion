@@ -39,5 +39,5 @@ def process(ShouldSave, ShouldPreview = True):
             imageName = "%d_%d" % (timestamp, i)
             path = postprocessor.save_gdrive(image, imageName)
             print("Saved to " + path)
-        postprocessor.post_process(image, imageName)
+            postprocessor.post_process(image, imageName)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
