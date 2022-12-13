@@ -23,7 +23,8 @@ def process(ShouldSave, ShouldPreview = True):
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
         end = time.time()
-        print("Execution time: %fs" % (end - start))
+        # print execution time round to 1 decimal places
+        print("Execution time: %.2fs" % (end - start))
         if ShouldPreview:
             display(image, display_id=colab.get_current_image_uid())
         if ShouldSave:
