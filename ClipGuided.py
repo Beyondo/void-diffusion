@@ -172,6 +172,7 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
     def __call__(
         self,
         prompt: Union[str, List[str]],
+        negative_prompt: Union[str, List[str]],
         height: Optional[int] = 512,
         width: Optional[int] = 512,
         num_inference_steps: Optional[int] = 50,
@@ -198,6 +199,7 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
         # get prompt text embeddings
         text_input = self.tokenizer(
             prompt,
+            negative_prompt,
             padding="max_length",
             max_length=self.tokenizer.model_max_length,
             truncation=True,
