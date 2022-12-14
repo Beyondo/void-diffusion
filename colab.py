@@ -25,7 +25,7 @@ def create_pipeline():
     print ("Loading model revision " + rev)
     pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
     print ("Loading CLIP model revision " + rev)
-    clip_model = CLIPModel.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+    clip_model = CLIPModel.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
     print ("Loading CLIP Feature extractor revision " + rev)
     feature_extractor = CLIPFeatureExtractor.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16)
     print ("Creating the guided pipeline" + rev)
