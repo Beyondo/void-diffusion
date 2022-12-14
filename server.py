@@ -19,4 +19,4 @@ try:
           # Activate the server; this will keep running until you
           # interrupt the program with Ctrl-C
           server.serve_forever()
-except: print("Error occured.")
+except Exception as e: print("Error: %s" % e)
