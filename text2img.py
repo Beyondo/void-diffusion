@@ -3,7 +3,6 @@ import torch, os, time, datetime, colab, postprocessor, progress, importlib
 from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
 from diffusers.schedulers import PNDMScheduler, LMSDiscreteScheduler, DDIMScheduler, DDPMScheduler
 from transformers import CLIPFeatureExtractor, CLIPModel, CLIPTokenizer, CLIPTextModel
-import ClipGuided
 
 
 from IPython.display import display
@@ -25,14 +24,13 @@ def process(ShouldSave, ShouldPreview = True):
         prompt_tokens = tokenizer(colab.settings['Prompt'], return_tensors="pt").input_ids.cuda()
         # Load model
         model = CLIPTextModel.from_pretrained("openai/clip-vit-base-patch32").cuda()
-        # Encode prompt
-        prompt_features = model.encode_text(prompt_tokens).cuda()
         # Generate image from prompt
         image = colab.text2img(
-            prompt=prompt_features,
-            negative_prompt=colab.settings['NegativePrompt'],
+            prompt=prompt_tokens,
+            model=model,
             width=colab.settings['Width'],
             height=colab.settings['Height'],
+            negative_prompt=colab.settings['NegativePrompt'],
             guidance_scale=colab.settings['GuidanceScale'],
             num_inference_steps=colab.settings['Steps'],
             generator=generator,
