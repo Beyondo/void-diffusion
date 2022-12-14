@@ -62,7 +62,7 @@ def init(ModelName):
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             text2img = create_guided_pipeline(pipeline)
             img2img = create_guided_pipeline(StableDiffusionImg2ImgPipeline(**pipeline.components))
-            inpaint = (StableDiffusionInpaintPipeline(**pipeline.components))
+            inpaint = create_guided_pipeline(StableDiffusionInpaintPipeline(**pipeline.components))
             print("Done.")
             ready = True
             from IPython.display import clear_output; clear_output()
