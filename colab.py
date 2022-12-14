@@ -2,6 +2,7 @@ import patcher, torch, random, time
 from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
+from diffusers.schedulers import PNDMScheduler, LMSDiscreteScheduler, DDIMScheduler, DDPMScheduler
 from transformers import CLIPFeatureExtractor, CLIPModel, CLIPTokenizer, CLIPTextModel
 import ClipGuided
 model_name = ""
@@ -25,17 +26,24 @@ def create_pipeline():
     rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
     print("-> Initializing model " + model_name + ":")
     pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
-    print("-> Loading CLIP model")
+    print("-> Loading CLIP model...")
     clip_model = CLIPModel.from_pretrained(clip_model_name, torch_dtype=torch.float16).to("cuda:0")
-    print("-> Loading CLIP Feature extractor")
+    print("-> Loading CLIP Feature extractor...")
     feature_extractor = CLIPFeatureExtractor.from_pretrained(clip_model_name, torch_dtype=torch.float16)
-    print("-> Creating the guided pipeline")
+    print("-> Creating the guided pipeline...")
+    # PNDMScheduler
+    scheduler = PNDMScheduler(
+        beta_start=0.00085,
+        beta_end=0.012,
+        beta_schedule="scaled_linear",
+        num_train_timesteps=1000,
+        skip_prk_steps=True)
     guided_pipeline = ClipGuided.CLIPGuidedStableDiffusion(
         unet=pipeline.unet,
         vae=pipeline.vae,
         tokenizer=pipeline.tokenizer,
         text_encoder=pipeline.text_encoder,
-        #scheduler=scheduler,
+        scheduler=scheduler,
         clip_model=clip_model,
         feature_extractor=feature_extractor,
     )
