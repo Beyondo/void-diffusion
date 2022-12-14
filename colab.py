@@ -1,6 +1,9 @@
 import patcher, torch, random, time
 from IPython import display
 from IPython.display import HTML
+from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
+from transformers import CLIPFeatureExtractor, CLIPModel, CLIPTokenizer, CLIPTextModel
+import ClipGuided
 model_name = ""
 ready = False
 tokenizer = None
@@ -17,6 +20,23 @@ def get_current_image_seed():
     return settings['InitialSeed'] + image_id
 def get_current_image_uid():
     return "text2img-%d" % get_current_image_seed()
+def create_pipeline():
+    rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
+    # Create a custom CLIP model with a higher limit than the default 77 tokens
+    tokenizer = CLIPTokenizer.from_pretrained(model_name, revision=rev)
+    text2img = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+    clip_model = CLIPModel.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+    feature_extractor = CLIPFeatureExtractor.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16)
+    guided_pipeline = ClipGuided.CLIPGuidedStableDiffusion(
+        unet=text2img.unet,
+        vae=text2img.vae,
+        tokenizer=text2img.tokenizer,
+        text_encoder=text2img.text_encoder,
+        #scheduler=scheduler,
+        clip_model=clip_model,
+        feature_extractor=feature_extractor,
+    )
+    return guided_pipeline
 def init(ModelName):
     global model_name, ready, text2img, img2img, inpaint
     model_name = ModelName
@@ -29,10 +49,8 @@ def init(ModelName):
         print(torch.cuda.get_device_name("cuda:0") + ".")
         print("Initializing model -> " + model_name + ":")
         try:
-            from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
-            from transformers import AutoTokenizer
-            rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
-            text2img = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16, clip_token_limit=2048).to("cuda:0")
+            pipeline = create_pipeline()
+            text2img = pipeline
             img2img = StableDiffusionImg2ImgPipeline(**text2img.components)
             inpaint = StableDiffusionInpaintPipeline(**text2img.components)
             print("Done.")
