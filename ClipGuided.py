@@ -187,7 +187,7 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
         callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
         callback_steps: Optional[int] = 1,
     ):
-        self.device = "cuda:0"
+        device = "cuda:0"
         if isinstance(prompt, str):
             batch_size = 1
         elif isinstance(prompt, list):
@@ -207,7 +207,7 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
             truncation=True,
             return_tensors="pt",
         )
-        text_embeddings = self.text_encoder(text_input.input_ids.to(self.device))[0]
+        text_embeddings = self.text_encoder(text_input.input_ids.to(device))[0]
 
         if clip_guidance_scale > 0:
             if clip_prompt is not None:
@@ -217,9 +217,9 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
                     max_length=self.tokenizer.model_max_length,
                     truncation=True,
                     return_tensors="pt",
-                ).input_ids.to(self.device)
+                ).input_ids.to(device)
             else:
-                clip_text_input = text_input.input_ids.to(self.device)
+                clip_text_input = text_input.input_ids.to(device)
             text_embeddings_clip = self.clip_model.get_text_features(clip_text_input)
             text_embeddings_clip = text_embeddings_clip / text_embeddings_clip.norm(p=2, dim=-1, keepdim=True)
 
@@ -233,7 +233,7 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
             uncond_input = self.tokenizer(
                 [""] * batch_size, padding="max_length", max_length=max_length, return_tensors="pt"
             )
-            uncond_embeddings = self.text_encoder(uncond_input.input_ids.to(self.device))[0]
+            uncond_embeddings = self.text_encoder(uncond_input.input_ids.to(device))[0]
 
             # For classifier free guidance, we need to do two forward passes.
             # Here we concatenate the unconditional and text embeddings into a single batch
@@ -245,7 +245,7 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
         # Unlike in other pipelines, latents need to be generated in the target device
         # for 1-to-1 results reproducibility with the CompVis implementation.
         # However this currently doesn't work in `mps`.
-        latents_device = "cpu" if self.device.type == "mps" else self.device
+        latents_device = device
         latents_shape = (batch_size, self.unet.in_channels, height // 8, width // 8)
         if latents is None:
             latents = torch.randn(
@@ -256,7 +256,7 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
         else:
             if latents.shape != latents_shape:
                 raise ValueError(f"Unexpected latents shape, got {latents.shape}, expected {latents_shape}")
-        latents = latents.to(self.device)
+        latents = latents.to(device)
 
         # set timesteps
         accepts_offset = "offset" in set(inspect.signature(self.scheduler.set_timesteps).parameters.keys())
