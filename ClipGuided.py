@@ -60,7 +60,7 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
         feature_extractor: CLIPFeatureExtractor,
     ):
         super().__init__()
-        scheduler = scheduler.set_format("pt")
+        #scheduler = scheduler.set_format("pt") # This works
         self.register_modules(
             vae=vae,
             text_encoder=text_encoder,
