@@ -187,6 +187,7 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
         callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
         callback_steps: Optional[int] = 1,
     ):
+        self.device = "cuda:0"
         if isinstance(prompt, str):
             batch_size = 1
         elif isinstance(prompt, list):
@@ -205,8 +206,6 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
             max_length=self.tokenizer.model_max_length,
             truncation=True,
             return_tensors="pt",
-            callback=callback,
-            callback_steps=callback_steps,
         )
         text_embeddings = self.text_encoder(text_input.input_ids.to(self.device))[0]
 
@@ -309,6 +308,10 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
                 latents = self.scheduler.step(noise_pred, i, latents).prev_sample
             else:
                 latents = self.scheduler.step(noise_pred, t, latents).prev_sample
+
+            # callback every callback_steps
+            if callback is not None and i % callback_steps == 0:
+                callback(i, t, latents)
 
         # scale and decode the image latents with vae
         latents = 1 / 0.18215 * latents
