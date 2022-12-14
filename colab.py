@@ -56,9 +56,9 @@ def init(ModelName):
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             print("-> Initializing model " + model_name + ":")
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
-            text2img = create_guided_pipeline(pipeline)
-            img2img = create_guided_pipeline(StableDiffusionImg2ImgPipeline(**pipeline.components))
-            inpaint = create_guided_pipeline(StableDiffusionInpaintPipeline(**pipeline.components))
+            text2img = pipeline
+            img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
+            inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             print("Done.")
             ready = True
             from IPython.display import clear_output; clear_output()
