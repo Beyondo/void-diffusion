@@ -22,13 +22,13 @@ def get_current_image_uid():
     return "text2img-%d" % get_current_image_seed()
 def create_pipeline():
     rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
-    print ("Loading model revision " + rev)
+    print ("-> Loading model")
     pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
-    print ("Loading CLIP model revision " + rev)
-    clip_model = CLIPModel.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
-    print ("Loading CLIP Feature extractor revision " + rev)
+    print ("-> Loading CLIP model")
+    clip_model = CLIPModel.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K", torch_dtype=torch.float16).to("cuda:0")
+    print ("-> Loading CLIP Feature extractor")
     feature_extractor = CLIPFeatureExtractor.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16)
-    print ("Creating the guided pipeline" + rev)
+    print ("-> Creating the guided pipeline")
     guided_pipeline = ClipGuided.CLIPGuidedStableDiffusion(
         unet=pipeline.unet,
         vae=pipeline.vae,
