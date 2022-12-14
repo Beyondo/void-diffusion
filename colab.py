@@ -30,14 +30,14 @@ def create_pipeline():
     clip_model = CLIPModel.from_pretrained(clip_model_name, torch_dtype=torch.float16).to("cuda:0")
     print("-> Loading CLIP Feature extractor...")
     feature_extractor = CLIPFeatureExtractor.from_pretrained(clip_model_name, torch_dtype=torch.float16)
-    print("-> Creating the guided pipeline...")
-    # PNDMScheduler
+    print("-> Loading schedulers...")
     scheduler = PNDMScheduler(
         beta_start=0.00085,
         beta_end=0.012,
         beta_schedule="scaled_linear",
         num_train_timesteps=1000,
         skip_prk_steps=True)
+    print("-> Creating the guided pipeline...")
     guided_pipeline = ClipGuided.CLIPGuidedStableDiffusion(
         unet=pipeline.unet,
         vae=pipeline.vae,
