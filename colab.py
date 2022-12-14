@@ -8,6 +8,7 @@ import ClipGuided
 model_name = ""
 ready = False
 tokenizer = None
+pipeline = None
 text2img = None
 img2img = None
 inpaint = None
@@ -21,13 +22,10 @@ def get_current_image_seed():
     return settings['InitialSeed'] + image_id
 def get_current_image_uid():
     return "text2img-%d" % get_current_image_seed()
-def create_pipeline():
+def create_guided_pipeline(pipeline):
     clip_model_name = "laion/CLIP-ViT-B-32-laion2B-s34B-b79K"
-    rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
-    print("-> Initializing model " + model_name + ":")
-    pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
     print("-> Loading CLIP model...")
-    clip = CLIPModel.from_pretrained(clip_model_name, torch_dtype=torch.float16).to("cuda:0")
+    clip_model = CLIPModel.from_pretrained(clip_model_name, torch_dtype=torch.float16).to("cuda:0")
     print("-> Loading CLIP Feature extractor...")
     feature_extractor = CLIPFeatureExtractor.from_pretrained(clip_model_name, torch_dtype=torch.float16)
     print("-> Loading schedulers...")
@@ -44,12 +42,12 @@ def create_pipeline():
         tokenizer=pipeline.tokenizer,
         text_encoder=pipeline.text_encoder,
         scheduler=scheduler,
-        clip_model=clip,
+        clip_model=clip_model,
         feature_extractor=feature_extractor,
     )
     return guided_pipeline
 def init(ModelName):
-    global model_name, ready, text2img, img2img, inpaint
+    global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     model_name = ModelName
     settings['ModelName'] = ModelName
     patcher.patch()
@@ -59,11 +57,12 @@ def init(ModelName):
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
-            pipeline = create_pipeline()
-            print("Pipeline created.")
-            text2img = pipeline
-            img2img = StableDiffusionImg2ImgPipeline(**text2img.components)
-            inpaint = StableDiffusionInpaintPipeline(**text2img.components)
+            rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
+            print("-> Initializing model " + model_name + ":")
+            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+            text2img = create_guided_pipeline(pipeline)
+            img2img = create_guided_pipeline(StableDiffusionImg2ImgPipeline(**pipeline.components))
+            inpaint = (StableDiffusionInpaintPipeline(**pipeline.components))
             print("Done.")
             ready = True
             from IPython.display import clear_output; clear_output()
