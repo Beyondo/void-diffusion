@@ -28,7 +28,7 @@ def create_pipeline():
     print("-> Loading CLIP model")
     clip_model = CLIPModel.from_pretrained(clip_model_name, torch_dtype=torch.float16).to("cuda:0")
     print("-> Loading CLIP Feature extractor")
-    feature_extractor = CLIPFeatureExtractor.from_pretrained(clip_model_name, revision=rev, torch_dtype=torch.float16)
+    feature_extractor = CLIPFeatureExtractor.from_pretrained(clip_model_name, torch_dtype=torch.float16)
     print("-> Creating the guided pipeline")
     guided_pipeline = ClipGuided.CLIPGuidedStableDiffusion(
         unet=pipeline.unet,
