@@ -1,5 +1,5 @@
 import inspect
-from typing import List, Optional, Union
+from typing import Callable, List, Optional, Union
 
 import torch
 from torch import nn
@@ -9,7 +9,6 @@ from diffusers import AutoencoderKL, DiffusionPipeline, LMSDiscreteScheduler, PN
 from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion import StableDiffusionPipelineOutput
 from torchvision import transforms
 from transformers import CLIPFeatureExtractor, CLIPModel, CLIPTextModel, CLIPTokenizer
-
 
 class MakeCutouts(nn.Module):
     def __init__(self, cut_size, cut_power=1.0):
@@ -172,11 +171,11 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
     def __call__(
         self,
         prompt: Union[str, List[str]],
-        negative_prompt: Union[str, List[str]],
         height: Optional[int] = 512,
         width: Optional[int] = 512,
         num_inference_steps: Optional[int] = 50,
         guidance_scale: Optional[float] = 7.5,
+        negative_prompt: Optional[Union[str, List[str]]] = None,
         clip_guidance_scale: Optional[float] = 100,
         clip_prompt: Optional[Union[str, List[str]]] = None,
         num_cutouts: Optional[int] = 4,
@@ -185,6 +184,8 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
         latents: Optional[torch.FloatTensor] = None,
         output_type: Optional[str] = "pil",
         return_dict: bool = True,
+        callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
+        callback_steps: Optional[int] = 1,
     ):
         if isinstance(prompt, str):
             batch_size = 1
@@ -204,6 +205,8 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
             max_length=self.tokenizer.model_max_length,
             truncation=True,
             return_tensors="pt",
+            callback=callback,
+            callback_steps=callback_steps,
         )
         text_embeddings = self.text_encoder(text_input.input_ids.to(self.device))[0]
 
