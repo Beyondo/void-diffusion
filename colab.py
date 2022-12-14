@@ -22,16 +22,14 @@ def get_current_image_uid():
     return "text2img-%d" % get_current_image_seed()
 def create_pipeline():
     rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
-    # Create a custom CLIP model with a higher limit than the default 77 tokens
-    tokenizer = CLIPTokenizer.from_pretrained(model_name, revision=rev)
-    text2img = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+    pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
     clip_model = CLIPModel.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
     feature_extractor = CLIPFeatureExtractor.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16)
     guided_pipeline = ClipGuided.CLIPGuidedStableDiffusion(
-        unet=text2img.unet,
-        vae=text2img.vae,
-        tokenizer=text2img.tokenizer,
-        text_encoder=text2img.text_encoder,
+        unet=pipeline.unet,
+        vae=pipeline.vae,
+        tokenizer=pipeline.tokenizer,
+        text_encoder=pipeline.text_encoder,
         #scheduler=scheduler,
         clip_model=clip_model,
         feature_extractor=feature_extractor,
