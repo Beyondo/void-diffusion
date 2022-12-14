@@ -4,7 +4,6 @@ import time
 from IPython import get_ipython
 try:
   port = int(sys.argv[1])
-  get_ipython().system("kill -9 $(lsof -t -i:%d) &> /dev/null" % port)
   class TCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         # self.request is the TCP socket connected to the client
