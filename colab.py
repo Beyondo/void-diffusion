@@ -27,7 +27,7 @@ def create_pipeline():
     print("-> Initializing model " + model_name + ":")
     pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
     print("-> Loading CLIP model...")
-    clip_model = CLIPModel.from_pretrained(clip_model_name, torch_dtype=torch.float16).to("cuda:0")
+    clip = CLIPModel.from_pretrained(clip_model_name, torch_dtype=torch.float16).to("cuda:0")
     print("-> Loading CLIP Feature extractor...")
     feature_extractor = CLIPFeatureExtractor.from_pretrained(clip_model_name, torch_dtype=torch.float16)
     print("-> Loading schedulers...")
@@ -44,7 +44,7 @@ def create_pipeline():
         tokenizer=pipeline.tokenizer,
         text_encoder=pipeline.text_encoder,
         scheduler=scheduler,
-        clip_model=clip_model,
+        clip_model=clip,
         feature_extractor=feature_extractor,
     )
     return guided_pipeline
