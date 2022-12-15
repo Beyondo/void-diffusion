@@ -70,7 +70,7 @@ def init(ModelName):
             #pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(512, 768).to("cuda:0")
             #pipeline.text_encoder.config.max_position_embeddings = 512
             #pipeline.text_encoder.config.model_max_length = 512
-            pipeline.text_encoder = CLIPTextModel(CLIPTextConfig(**pipeline.text_encoder.config.to_dict())).to("cuda:0")
+            pipeline.text_encoder = CLIPTextModel(pipeline.text_encoder.config).to("cuda:0")
             #pipeline.tokenizer.model_max_length = 512
             #pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
             ###############################
