@@ -67,6 +67,7 @@ def init(ModelName):
             pipeline.tokenizer = tokenizer
             pipeline.text_encoder = CLIPTextModel.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16).to("cuda:0")
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
+            print(len(tokenizer))
             pipeline.text_encoder.load_state_dict(pipeline.text_encoder.state_dict())
             pipeline.text_encoder.resize_token_embeddings(512)
             text2img = StableDiffusionPipeline(**pipeline.components)
