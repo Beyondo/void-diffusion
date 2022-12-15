@@ -6,7 +6,6 @@ from diffusers.schedulers import PNDMScheduler, LMSDiscreteScheduler, DDIMSchedu
 from transformers import CLIPFeatureExtractor, CLIPModel, CLIPTokenizer, CLIPTextModel, CLIPTextConfig
 import ClipGuided
 from diffusers.pipelines.stable_diffusion import StableDiffusionPipelineOutput
-#import VOIDPipeline
 model_name = ""
 ready = False
 tokenizer = None
@@ -58,13 +57,18 @@ def init(ModelName):
         try:
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             print("-> Initializing model " + model_name + ":")
+            import VOIDPipeline
+            import importlib
+            importlib.reload(VOIDPipeline)
+            VOIDPipeline.Take_Over()
+            # CLIPTextConfig
             config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16)
             config.max_position_embeddings = 512
             tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16)
             tokenizer.model_max_length = 512
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
-            pipeline.tokenizer = tokenizer.to("cuda:0")
+            pipeline.tokenizer = tokenizer
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
