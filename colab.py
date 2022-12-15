@@ -73,6 +73,7 @@ def init(ModelName):
             pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(512, 768).to("cuda:0")
             pipeline.text_encoder.config.max_position_embeddings = 512
             pipeline.text_encoder.config.model_max_length = 512
+            pipeline.text_encoder.__init__(pipeline.text_encoder.config)
 
             pipeline.tokenizer.model_max_length = 512
 
