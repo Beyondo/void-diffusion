@@ -46,6 +46,7 @@ def create_guided_pipeline(pipeline):
     return guided_pipeline
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
+    ready = False
     model_name = ModelName
     settings['ModelName'] = ModelName
     patcher.patch()
