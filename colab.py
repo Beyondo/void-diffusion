@@ -64,9 +64,11 @@ def init(ModelName):
             # Creating the pipeline
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             # Setting the max length to 512
+            pipeline.text_encoder = CLIPTextModel.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K").to("cuda:0")
             pipeline.text_encoder.config.max_position_embeddings = 512
             pipeline.tokenizer.model_max_length = 512
             pipeline.tokenizer.init_kwargs["model_max_length"] = 512
+            
             # Resizing the token embeddings
             pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
             # Creating a guided pipeline
