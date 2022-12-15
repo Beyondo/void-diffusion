@@ -61,7 +61,7 @@ def init(ModelName):
             #import importlib
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Take_Over()
-            tokenizer = CLIPTokenizer.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K", torch_dtype=torch.float16)
+            tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch16", torch_dtype=torch.float16)
             #tokenizer.model_max_length = 512
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             pipeline.tokenizer = tokenizer
