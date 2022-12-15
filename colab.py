@@ -59,7 +59,7 @@ def modify_clip_limit(limit):
     #pipeline.tokenizer.pad_token = pipeline.tokenizer.eos_token
     #pipeline.tokenizer.pad_token_id = pipeline.tokenizer.eos_token_id
     print (pipeline.text_encoder.text_model.embeddings.position_embedding, end=" -> ")
-    pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
+    pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768)
     print (pipeline.text_encoder.text_model.embeddings.position_embedding)
     print (pipeline.text_encoder.config.max_position_embeddings, end=" -> ")
     pipeline.text_encoder.config.max_position_embeddings = limit
@@ -80,7 +80,7 @@ def init(ModelName):
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            modify_clip_limit(77)
+            #modify_clip_limit(77)
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
