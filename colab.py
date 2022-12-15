@@ -55,22 +55,21 @@ def init(ModelName):
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
-            #rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
+            rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             print("-> Initializing model " + model_name + ":")
             #import VOIDPipeline
             #import importlib
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Take_Over()
             # CLIPTextConfig
-            config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch32")
-            config.max_position_embeddings = 77
-            tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32")
-            tokenizer.model_max_length = 77
-            pipeline = StableDiffusionPipeline.from_pretrained(model_name).to("cuda:0")
+            config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16)
+            #config.max_position_embeddings = 512
+            tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16)
+            #tokenizer.model_max_length = 512
+            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer = tokenizer
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
-            pipeline.text_encoder.load_state_dict(pipeline.text_encoder.state_dict())
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
