@@ -152,9 +152,11 @@ def generate_text2img(
         prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt
     )
     # 4. Prepare timesteps
+    print("Testing 4")
     self.scheduler.set_timesteps(num_inference_steps, device=device)
     timesteps = self.scheduler.timesteps
     # 5. Prepare latent variables
+    print("Testing 5")
     num_channels_latents = self.unet.in_channels
     latents = self.prepare_latents(
         batch_size * num_images_per_prompt,
@@ -167,12 +169,14 @@ def generate_text2img(
         latents,
     )
     # 6. Prepare extra step kwargs. TODO: Logic should ideally just be moved out of the pipeline
+    print("Testing 6")
     extra_step_kwargs = self.prepare_extra_step_kwargs(generator, eta)
     # 7. Denoising loop
+    print("Testing 7")
     num_warmup_steps = len(timesteps) - num_inference_steps * self.scheduler.order
+    print("Testing Final:")
     with self.progress_bar(total=num_inference_steps) as progress_bar:
         for i, t in enumerate(timesteps):
-            print("K ", num_warmup_steps)
             # expand the latents if we are doing classifier free guidance
             latent_model_input = torch.cat([latents] * 2) if do_classifier_free_guidance else latents
             latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
