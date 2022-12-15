@@ -49,7 +49,6 @@ def modify_clip_limit(limit):
     global pipeline
     if limit <= pipeline.text_encoder.config.max_position_embeddings: return
     # Text Encoder
-    print (pipeline.text_encoder.text_model.embeddings.position_embedding, end=" -> ")
     # Resize position embedding without losing the old weights (unless you like random noise)
     old_embedding = pipeline.text_encoder.text_model.embeddings.position_embedding #.weight.data
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
@@ -57,9 +56,12 @@ def modify_clip_limit(limit):
     pipeline.text_encoder.config.max_position_embeddings = limit
     # Tokenizer
     # Setting the max length to 512
-    pipeline.tokenizer.model_max_length = 512
+    print(pipeline.tokenizer.model_max_length, end=" -> ")
+    pipeline.tokenizer.model_max_length = limit
+    print(pipeline.tokenizer.model_max_length)
     # Resizing the token embeddings
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
+    
     
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
@@ -77,7 +79,7 @@ def init(ModelName):
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            modify_clip_limit(512)
+            modify_clip_limit(77)
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
