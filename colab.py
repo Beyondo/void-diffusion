@@ -71,9 +71,10 @@ def init(ModelName):
             sentenceTransformer = SentenceTransformer("clip-ViT-L-14")
             # get CLIPTextConfig from sentenceTransformer
             config = sentenceTransformer._modules['0'] 
-            config.max_position_embeddings = 512
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
+            pipeline.text_encoder.config.max_length = 512
+            pipeline.text_encoder.config.max_position_embeddings = 512
             pipeline.tokenizer.model_max_length = 512
             pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
             text2img = StableDiffusionPipeline(**pipeline.components)
