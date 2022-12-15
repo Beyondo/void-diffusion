@@ -64,7 +64,7 @@ def init(ModelName):
             # CLIPTextConfig
             # I think it's because the model is in fp16, but the bias is in fp32.
             #config.max_position_embeddings = 512
-            tokenizer = CLIPTokenizer.from_pretrained(model_name, torch_dtype=torch.float16)
+            tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch16", torch_dtype=torch.float16)
             #tokenizer.model_max_length = 512
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             pipeline.tokenizer = tokenizer
