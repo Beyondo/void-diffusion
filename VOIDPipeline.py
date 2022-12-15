@@ -41,7 +41,6 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
             The prompt or prompts not to guide the image generation. Ignored when not using guidance (i.e., ignored
             if `guidance_scale` is less than `1`).
     """
-    self.tokenizer.model_max_length = 512
     max_length = self.tokenizer.model_max_length
     batch_size = len(prompt) if isinstance(prompt, list) else 1
     text_inputs = self.tokenizer(
@@ -52,6 +51,8 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
         return_tensors="pt",
     )
     text_input_ids = text_inputs.input_ids
+    # Print their size
+    print("text_input_ids.shape: ", text_input_ids.shape)
     untruncated_ids = self.tokenizer(prompt, padding="longest", return_tensors="pt").input_ids
     if untruncated_ids.shape[-1] >= text_input_ids.shape[-1] and not torch.equal(text_input_ids, untruncated_ids):
         removed_text = self.tokenizer.batch_decode(untruncated_ids[:, self.tokenizer.model_max_length - 1 : -1])
@@ -63,6 +64,9 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
         attention_mask = text_inputs.attention_mask.to(device)
     else:
         attention_mask = None
+        
+    print("Size: ", self.text_encoder.config.max_position_embeddings)
+
     text_embeddings = self.text_encoder(
         text_input_ids.to(device),
         attention_mask=attention_mask,
