@@ -67,12 +67,12 @@ def init(ModelName):
             #VOIDPipeline.Take_Over()
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             # Trying to increase the max length of the text encoder to 512
-            pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(512, 768).to("cuda:0")
-            pipeline.text_encoder.config.max_position_embeddings = 512
-            pipeline.text_encoder.config.model_max_length = 512
+            #pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(512, 768).to("cuda:0")
+            #pipeline.text_encoder.config.max_position_embeddings = 512
+            #pipeline.text_encoder.config.model_max_length = 512
             pipeline.text_encoder = CLIPTextModel(CLIPTextConfig(**pipeline.text_encoder.config.to_dict())).to("cuda:0")
-            pipeline.tokenizer.model_max_length = 512
-            pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
+            #pipeline.tokenizer.model_max_length = 512
+            #pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
             ###############################
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
