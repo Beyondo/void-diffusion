@@ -62,6 +62,9 @@ def init(ModelName):
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             # Increase CLIP limit to 512 tokens:
+            import VOIDPipeline, importlib
+            importlib.reload(VOIDPipeline)
+            VOIDPipeline.Take_Over()
             pipeline.tokenizer.model_max_length = 512
             pipeline.tokenizer.padding_side = "right"
             pipeline.tokenizer.pad_token = pipeline.tokenizer.eos_token

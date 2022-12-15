@@ -41,6 +41,8 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
             The prompt or prompts not to guide the image generation. Ignored when not using guidance (i.e., ignored
             if `guidance_scale` is less than `1`).
     """
+    self.tokenizer.model_max_length = 512
+    max_length = self.tokenizer.model_max_length
     batch_size = len(prompt) if isinstance(prompt, list) else 1
     text_inputs = self.tokenizer(
         prompt,
