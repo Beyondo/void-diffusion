@@ -60,7 +60,6 @@ def modify_clip_limit(limit):
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
     # Image Encoder
     pipeline.vae.config.max_position_embeddings = limit
-    pipeline.vae.resize_token_embeddings(len(pipeline.tokenizer))
     # Unet
     pipeline.unet.config.max_position_embeddings = limit
     pipeline.unet.resize_token_embeddings(len(pipeline.tokenizer))
