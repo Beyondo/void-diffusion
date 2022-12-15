@@ -61,6 +61,12 @@ def init(ModelName):
             importlib.reload(VOIDPipeline)
             VOIDPipeline.Take_Over()
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+            # Create tokenizer with bigger max length
+            tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32")
+            tokenizer.model_max_length = 2048
+            pipeline.tokenizer = tokenizer
+            pipeline.text_encoder = CLIPTextModel.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16).to("cuda:0")
+            pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
