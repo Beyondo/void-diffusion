@@ -49,17 +49,16 @@ def modify_clip_limit(limit):
     global pipeline
     if limit < 77:
         print("You cannot reduce the limit below 77 because we need to keep the CLIP text encoder weights.")
-    # Tokenizer
-    pipeline.tokenizer.model_max_length = limit
-    pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))    
     # Text Encoder
     # Resize position embedding without losing the old weights (unless you like random noise)
-    # Recreate the text encoder
     old_embedding = pipeline.text_encoder.text_model.embeddings.position_embedding #.weight.data
     pipeline.text_encoder.config.max_position_embeddings = limit
     pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
     pipeline.text_encoder.text_model.to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_embedding.weight.data.shape[0]] = old_embedding.weight.data
+    # Tokenizer
+    pipeline.tokenizer.model_max_length = limit
+    pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))    
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     ready = False
@@ -76,9 +75,9 @@ def init(ModelName):
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             # Hook VOIDPipeline to StableDiffusionPipeline
-            import VOIDPipeline, importlib
-            importlib.reload(VOIDPipeline)
-            VOIDPipeline.Hook()
+            #import VOIDPipeline, importlib
+            #importlib.reload(VOIDPipeline)
+            #VOIDPipeline.Hook()
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             modify_clip_limit(78)
             text2img = pipeline
