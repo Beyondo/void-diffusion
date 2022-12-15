@@ -47,7 +47,8 @@ def create_guided_pipeline(pipeline):
     return guided_pipeline
 def modify_clip_limit(limit):
     global pipeline
-    #if limit <= pipeline.text_encoder.config.max_position_embeddings: return
+    if limit < 77:
+        print("You cannot reduce the limit below 77 because we need to keep the CLIP text encoder weights.")
     # Text Encoder
     # Resize position embedding without losing the old weights (unless you like random noise)
     old_embedding = pipeline.text_encoder.text_model.embeddings.position_embedding #.weight.data
@@ -79,7 +80,7 @@ def init(ModelName):
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            modify_clip_limit(77)
+            modify_clip_limit(78)
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
