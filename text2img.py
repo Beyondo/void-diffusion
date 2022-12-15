@@ -14,9 +14,9 @@ def process(ShouldSave, ShouldPreview = True):
         progress.reset()
         progress.show()
         image = colab.text2img(
-            prompt=colab.settings['Prompt'],
             width=colab.settings['Width'],
             height=colab.settings['Height'],
+            prompt=colab.settings['Prompt'],
             negative_prompt=colab.settings['NegativePrompt'],
             guidance_scale=colab.settings['GuidanceScale'],
             num_inference_steps=colab.settings['Steps'],
