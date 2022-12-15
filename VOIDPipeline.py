@@ -26,6 +26,7 @@ from diffusers.pipelines.stable_diffusion import StableDiffusionSafetyChecker
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
 def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt):
+    print("Custom encoder")
     r"""
     Encodes the prompt into text encoder hidden states.
     Args:
