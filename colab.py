@@ -48,11 +48,12 @@ def create_guided_pipeline(pipeline):
 def modify_clip_limit(limit):
     global pipeline
     # Text Encoder
-    old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
+    copy_embeddings = pipeline.text_encoder.text_model.embeddings.to("cuda:0")
     pipeline.text_encoder.config.max_position_embeddings = limit
     #pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
     #pipeline.text_encoder.text_model.to("cuda:0")
     pipeline.text_encoder.text_model = CLIPTextModel(config=pipeline.text_encoder.config).to("cuda:0")
+    pipeline.text_encoder.text_model.load_state_dict(copy_embeddings.state_dict())
     print("Hi")
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
     print("Hi")
