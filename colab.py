@@ -51,7 +51,7 @@ def modify_clip_limit(limit):
         print("You cannot reduce the limit below 77 because we need to keep the CLIP text encoder weights.")
     # Text Encoder
     # Resize position embedding without losing the old weights (unless you like random noise)
-    old_embedding = pipeline.text_encoder.text_model.embeddings.position_embedding #.weight.data
+    old_embedding = pipeline.text_encoder.text_model.embeddings.position_embedding.to("cuda:0") #.weight.data
     pipeline.text_encoder.config.max_position_embeddings = limit
     pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
