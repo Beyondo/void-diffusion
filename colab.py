@@ -76,6 +76,8 @@ def init(ModelName):
             config.num_attention_heads = 8
             config.num_hidden_layers = 12
             config.vocab_size = 49408
+            config.attention_dropout = 0.1
+            config.hidden_dropout = 0.1
             config.max_position_embeddings = 512
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
