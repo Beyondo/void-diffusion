@@ -56,19 +56,27 @@ def init(ModelName):
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
-            rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             print("-> Initializing model " + model_name + ":")
             torch.set_default_dtype(torch.float16)
+            rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
+            # Creating the pipeline
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
+            # Setting the max length to 512
             pipeline.text_encoder.config.max_position_embeddings = 512
+            # Setting the max length to 512
             pipeline.tokenizer.model_max_length = 512
+            # Resizing the token embeddings
             pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
+            # Creating a guided pipeline
             pipeline = create_guided_pipeline(pipeline, "laion/CLIP-ViT-B-32-laion2B-s34B-b79K")
-            text2img = StableDiffusionPipeline(**pipeline.components)
+            # Initializing the Text To Image pipeline
+            text2img = pipeline
+            # Initializing the Image To Image pipeline
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
+            # Initializing the Inpaint pipeline
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
-            print("Done.")
             ready = True
+            print("Done.")
             #from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
         except Exception as e:
