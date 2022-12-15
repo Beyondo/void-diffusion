@@ -23,7 +23,8 @@ def get_current_image_seed():
     return settings['InitialSeed'] + image_id
 def get_current_image_uid():
     return "text2img-%d" % get_current_image_seed()
-def create_guided_pipeline(pipeline, clip_model_name):
+def create_guided_pipeline(pipeline):
+    clip_model_name = "laion/CLIP-ViT-B-32-laion2B-s34B-b79K"
     clip_model = CLIPModel.from_pretrained(clip_model_name, torch_dtype=torch.float16).to("cuda:0")
     feature_extractor = CLIPFeatureExtractor.from_pretrained(clip_model_name, torch_dtype=torch.float16)
     scheduler = PNDMScheduler(
@@ -66,12 +67,11 @@ def init(ModelName):
             tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16)
             tokenizer.model_max_length = 512
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
-            pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
+            pipeline.text_encoder = CLIPTextModel(config, torch_dtype=torch.float16).to("cuda:0")
             pipeline.tokenizer = tokenizer
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
             pipeline.text_encoder.load_state_dict(pipeline.text_encoder.state_dict())
             text2img = StableDiffusionPipeline(**pipeline.components)
-            text2img = create_guided_pipeline(text2img, "openai/clip-vit-base-patch32")
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             print("Done.")
