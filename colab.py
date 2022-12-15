@@ -54,6 +54,8 @@ def modify_clip_limit(limit):
     old_embedding = pipeline.text_encoder.text_model.embeddings.position_embedding.to("cuda:0") #.weight.data
     pipeline.text_encoder.config.max_position_embeddings = limit
     pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
+    # move to gpu
+    pipeline.text_encoder.text_model.to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_embedding.weight.data.shape[0]] = old_embedding.weight.data
     # Tokenizer
