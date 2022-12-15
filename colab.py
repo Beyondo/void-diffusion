@@ -59,9 +59,7 @@ def modify_clip_limit(limit):
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_embedding.weight.data.shape[0]] = old_embedding.weight.data
     pipeline.text_encoder.config.max_position_embeddings = limit
     # Recreate the text encoder
-    pipeline.text_encoder.text_model = CLIPTextModel(pipeline.text_encoder.config).to("cuda:0")
-    pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-    
+    pipeline.text_encoder.text_model.post_init()
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     ready = False
