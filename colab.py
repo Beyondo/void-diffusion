@@ -69,7 +69,6 @@ def init(ModelName):
             torch.set_default_dtype(torch.float16)
             # get CLIPTextConfig from sentenceTransformer
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            pipeline.text_encoder = CLIPTextModel.from_pretrained("sentence-transformers/clip-ViT-B-32").to("cuda:0")
             pipeline.text_encoder.config.max_length = 512
             pipeline.text_encoder.config.max_position_embeddings = 512
             pipeline.tokenizer.model_max_length = 512
