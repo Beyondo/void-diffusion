@@ -23,6 +23,8 @@ def get_current_image_seed():
     return settings['InitialSeed'] + image_id
 def get_current_image_uid():
     return "text2img-%d" % get_current_image_seed()
+# v1.4 = laion/CLIP-ViT-B-32-laion2B-s34B-b79K
+# v1.5 = sentence-transformers/clip-ViT-L-14
 def create_guided_pipeline(pipeline):
     clip_model_name = "laion/CLIP-ViT-B-32-laion2B-s34B-b79K"
     clip_model = CLIPModel.from_pretrained(clip_model_name, torch_dtype=torch.float16).to("cuda:0")
@@ -65,7 +67,7 @@ def init(ModelName):
             # Why does it generate an image that has nothing to do with the text?
             # -> Because the text encoder is not trained on the same dataset as the image encoder.
             torch.set_default_dtype(torch.float16)
-            config = CLIPTextConfig.from_pretrained("openai/clip-vit-large-patch14")
+            config = CLIPTextConfig.from_pretrained("sentence-transformers/clip-ViT-L-14")
             config.max_position_embeddings = 512
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
