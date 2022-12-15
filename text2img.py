@@ -19,7 +19,7 @@ def process(ShouldSave, ShouldPreview = True):
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
         progress.reset()
         progress.show()
-        image = colab.custom_generate(
+        image = colab.custom_generate(colab.text2img,
             prompt=colab.settings['Prompt'],
             width=colab.settings['Width'],
             height=colab.settings['Height'],
