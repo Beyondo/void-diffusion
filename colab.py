@@ -68,7 +68,7 @@ def init(ModelName):
             # -> Because the text encoder is not trained on the same dataset as the image encoder.
             torch.set_default_dtype(torch.float16)
             # get clip text config
-            config = CLIPTextConfig.from_pretrained(model_name, revision=rev)
+            config = CLIPTextConfig.from_pretrained("openai/clip-vit-large-patch14")
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer.model_max_length = 512
