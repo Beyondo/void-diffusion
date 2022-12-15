@@ -67,7 +67,7 @@ def init(ModelName):
             # Why does it generate an image that has nothing to do with the text?
             # -> Because the text encoder is not trained on the same dataset as the image encoder.
             torch.set_default_dtype(torch.float16)
-            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
+            pipeline = StableDiffusionPipeline.from_pretrained("https://github.com/acheong08/stable-diffusion-v1-5", revision=rev).to("cuda:0")
             print(pipeline.text_encoder.text_model.embeddings)
             pipeline.text_encoder.config.max_position_embeddings = 512
             pipeline.text_encoder.position_embeddings = torch.nn.Embedding(512, 768)
