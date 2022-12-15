@@ -73,11 +73,11 @@ def init(ModelName):
             text2img = pipeline
             print("Text To Image pipeline initialized.")
             # Initializing the Image To Image pipeline
-            img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
-            print("Image To Image pipeline initialized.")
+            #img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
+            #print("Image To Image pipeline initialized.")
             # Initializing the Inpaint pipeline
-            inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
-            print("Inpaint pipeline initialized.")
+            #inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
+            #print("Inpaint pipeline initialized.")
             ready = True
             print("Done.")
             #from IPython.display import clear_output; clear_output()
