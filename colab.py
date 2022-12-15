@@ -57,16 +57,14 @@ def init(ModelName):
         try:
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             print("-> Initializing model " + model_name + ":")
-            #import VOIDPipeline
-            #import importlib
-            #importlib.reload(VOIDPipeline)
-            #VOIDPipeline.Take_Over()
-            # CLIPTextConfig
-            # I think it's because the model is in fp16, but the bias is in fp32.
+            import VOIDPipeline
+            import importlib
+            importlib.reload(VOIDPipeline)
+            VOIDPipeline.Take_Over()
+            # CLIPTextConfig(max_position_embeddings=1024)
             #config.max_position_embeddings = 512
             tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch16", torch_dtype=torch.float16)
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
-            #tokenizer.model_max_length = 512
             pipeline.text_encoder.config.max_position_embeddings = 1024
             pipeline.tokenizer = tokenizer
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
