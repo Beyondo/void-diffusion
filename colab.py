@@ -61,8 +61,8 @@ def init(ModelName):
             text2img = pipeline
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
-            print("Done.")
             VOIDPipeline.Take_Over()
+            print("Done.")
             ready = True
             from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
