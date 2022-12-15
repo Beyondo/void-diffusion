@@ -71,8 +71,8 @@ def init(ModelName):
             sentenceTransformer = SentenceTransformer("clip-ViT-L-14")
             # get clip text config from sentenceTransformer
             config = sentenceTransformer._modules['0'].model.config
-            config.hidden_size = 1024
-            config.intermediate_size = 2048
+            config.hidden_size = 320
+            config.intermediate_size = 1024
             config.num_attention_heads = 8
             config.num_hidden_layers = 12
             config.vocab_size = 49408
