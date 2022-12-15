@@ -48,22 +48,16 @@ def create_guided_pipeline(pipeline):
 def modify_clip_limit(limit):
     global pipeline
     # Text Encoder
-    copy_embeddings = pipeline.text_encoder.text_model.embeddings.to("cuda:0")
+    old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     pipeline.text_encoder.config.max_position_embeddings = limit
-    #pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
-    #pipeline.text_encoder.text_model.to("cuda:0")
-    pipeline.text_encoder.text_model = CLIPTextModel(config=pipeline.text_encoder.config).to("cuda:0")
-    # load all missing attributes from the checkpoint in the existing module
-    pipeline.text_encoder.text_model.embeddings = copy_embeddings
-    print("Hi")
-    #pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
-    #print("Hi")
-    #pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_weights.shape[0]] = old_weights
-    #print("Hi")
+    # Bug: The following line is supposed to be a hack to make the model reload everything using the new config but it makes the model generate random images
+    pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
+    pipeline.text_encoder.text_model.to("cuda:0")
+    pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
+    pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_weights.shape[0]] = old_weights
     # Tokenizer
     pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-    print("Hi")
     
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
