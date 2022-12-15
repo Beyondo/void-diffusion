@@ -19,15 +19,12 @@ def process(ShouldSave, ShouldPreview = True):
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
         progress.reset()
         progress.show()
-        # Tokenize prompt
+        # Tokenize prompt and feed it to colab.text2img
         tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32")
         prompt_tokens = tokenizer(colab.settings['Prompt'], return_tensors="pt").input_ids.cuda()
-        # Load model
-        model = CLIPTextModel.from_pretrained("openai/clip-vit-base-patch32").cuda()
         # Generate image from prompt
         image = colab.text2img(
             prompt=prompt_tokens,
-            model=model,
             width=colab.settings['Width'],
             height=colab.settings['Height'],
             negative_prompt=colab.settings['NegativePrompt'],
