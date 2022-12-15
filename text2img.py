@@ -24,7 +24,7 @@ def process(ShouldSave, ShouldPreview = True):
         prompt_tokens = tokenizer(colab.settings['Prompt'], return_tensors="pt").input_ids.cuda()
         # Generate image from prompt
         image = colab.text2img(
-            prompt=prompt_tokens,
+            prompt=["Picture of a cat", "Picture of a dog"],
             width=colab.settings['Width'],
             height=colab.settings['Height'],
             negative_prompt=colab.settings['NegativePrompt'],
