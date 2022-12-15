@@ -47,7 +47,7 @@ def create_guided_pipeline(pipeline):
     return guided_pipeline
 def modify_clip_limit(limit):
     global pipeline
-    if limit <= pipeline.text_encoder.config.max_position_embeddings: return
+    #if limit <= pipeline.text_encoder.config.max_position_embeddings: return
     # Text Encoder
     # Resize position embedding without losing the old weights (unless you like random noise)
     old_embedding = pipeline.text_encoder.text_model.embeddings.position_embedding #.weight.data
