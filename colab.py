@@ -63,12 +63,8 @@ def init(ModelName):
             #VOIDPipeline.Take_Over()
             torch.set_default_dtype(torch.float16)
             # If the text encoder is not trained on the same dataset as the image encoder, the image generation will be irrelevant and random.
-            tokenizer = CLIPTokenizer.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K", torch_dtype=torch.float16)
-            tokenizer.model_max_length = 77
-            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
-            pipeline.text_encoder.config.max_position_embeddings = 77
-            pipeline.tokenizer = tokenizer
-            pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
+            clip_model = CLIPModel.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K", torch_dtype=torch.float16).to("cuda:0")
+            pipeline = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16, revision=rev, clip_model=clip_model)
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
