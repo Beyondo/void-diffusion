@@ -62,15 +62,16 @@ def init(ModelName):
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Take_Over()
             torch.set_default_dtype(torch.float16)
-            config = CLIPTextConfig.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K")
+            config = CLIPTextConfig.from_pretrained("openai/clip-vit-large-patch14", torch_dtype=torch.float16)
             config.max_position_embeddings = 77
-            tokenizer = CLIPTokenizer.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K")
+            tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-large-patch14", torch_dtype=torch.float16)
             tokenizer.model_max_length = 77
-            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
+            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer = tokenizer
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
-
+            # Why does it generate an image that has nothing to do with the text?
+            # -> Because the text encoder is not trained on the same dataset as the image encoder.
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
