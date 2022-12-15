@@ -68,12 +68,12 @@ def init(ModelName):
             # -> Because the text encoder is not trained on the same dataset as the image encoder.
             torch.set_default_dtype(torch.float16)
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            print(pipeline.text_encoder.embeddings)
+            print(pipeline.text_encoder)
             pipeline.text_encoder.config.max_position_embeddings = 512
             pipeline.text_encoder.position_embeddings = torch.nn.Embedding(512, 768)
             pipeline.tokenizer.model_max_length = 512
             pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-            print(pipeline.text_encoder.embeddings)
+            print(pipeline.text_encoder)
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
