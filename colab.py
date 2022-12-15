@@ -46,9 +46,9 @@ def create_guided_pipeline(pipeline):
     )
     return guided_pipeline
 def modify_clip_limit(limit):
+    # I thought it trivial... but it's not
     global pipeline
     # Text Encoder
-    old_embeddings = pipeline.text_encoder.text_model.embeddings
     old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     input_embeddings = pipeline.text_encoder.text_model.embeddings.token_embedding
     pipeline.text_encoder.config.max_position_embeddings = limit
@@ -57,7 +57,7 @@ def modify_clip_limit(limit):
     #
     pipeline.text_encoder.text_model.to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.token_embedding = input_embeddings
-    #pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
+    pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0") # Zero padding
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_weights.shape[0]] = old_weights
     # Tokenizer
     pipeline.tokenizer.model_max_length = limit
