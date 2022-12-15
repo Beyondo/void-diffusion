@@ -56,12 +56,15 @@ def modify_clip_limit(limit):
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_embedding.weight.data.shape[0]] = old_embedding.weight.data
     pipeline.text_encoder.config.max_position_embeddings = limit
     # Tokenizer
-    # Setting the max length to 512
-    print(pipeline.tokenizer.model_max_length, end=" -> ")
     pipeline.tokenizer.model_max_length = limit
-    print(pipeline.tokenizer.model_max_length)
-    # Resizing the token embeddings
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
+    # Image Encoder
+    pipeline.vae.config.max_position_embeddings = limit
+    pipeline.vae.resize_token_embeddings(len(pipeline.tokenizer))
+    # Unet
+    pipeline.unet.config.max_position_embeddings = limit
+    pipeline.unet.resize_token_embeddings(len(pipeline.tokenizer))
+
     
     
 def init(ModelName):
