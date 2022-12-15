@@ -5,6 +5,7 @@ from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, S
 from diffusers.schedulers import PNDMScheduler, LMSDiscreteScheduler, DDIMScheduler, DDPMScheduler
 from transformers import CLIPFeatureExtractor, CLIPModel, CLIPTokenizer, CLIPTextModel
 import ClipGuided
+from diffusers.pipelines.stable_diffusion import StableDiffusionPipelineOutput
 model_name = ""
 ready = False
 tokenizer = None
@@ -99,6 +100,7 @@ def custom_generate(
     callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
     callback_steps: Optional[int] = 1,
 ):
+    print("custom_generate")
     r"""
     Function invoked when calling the pipeline for generation.
     Args:
