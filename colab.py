@@ -71,8 +71,6 @@ def init(ModelName):
             
             # Resizing the token embeddings
             pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-            # Creating a guided pipeline
-            pipeline = create_guided_pipeline(pipeline, "laion/CLIP-ViT-B-32-laion2B-s34B-b79K")
             # Initializing the Text To Image pipeline
             text2img = pipeline
             print("Text To Image pipeline initialized.")
