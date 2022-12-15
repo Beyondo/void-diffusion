@@ -62,15 +62,14 @@ def init(ModelName):
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Take_Over()
             # CLIPTextConfig
-            config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16)
+            config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16).to("cuda:0")
             config.max_position_embeddings = 512
-            tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16)
+            tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16).to("cuda:0")
             tokenizer.model_max_length = 512
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer = tokenizer
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
-            pipeline.text_encoder.load_state_dict(pipeline.text_encoder.state_dict())
             # How to increase the max length of the ClipTextModel?
             #pipeline.text_encoder.resize_token_embeddings(512)
             text2img = StableDiffusionPipeline(**pipeline.components)
