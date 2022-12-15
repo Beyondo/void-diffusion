@@ -45,6 +45,22 @@ def create_guided_pipeline(pipeline):
         feature_extractor=feature_extractor,
     )
     return guided_pipeline
+def modify_clip_limit(limit):
+    # I gave up on this. It generates random images for anything other than 77.
+    # I think it has something to do with the tokenizer.
+    # If someone with more knowledge of CLIP wants to fix this, feel free to do so.
+
+    #import VOIDPipeline, importlib
+    #importlib.reload(VOIDPipeline)
+    #VOIDPipeline.Take_Over()
+    #pipeline.tokenizer.model_max_length = limit
+    #pipeline.tokenizer.padding_side = "right"
+    #pipeline.tokenizer.pad_token = pipeline.tokenizer.eos_token
+    #pipeline.tokenizer.pad_token_id = pipeline.tokenizer.eos_token_id
+    pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
+    pipeline.text_encoder.config.max_position_embeddings = limit
+    pipeline.text_encoder.config.model_max_length = limit
+    pipeline.text_encoder.config.max_length = limit
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     ready = False
@@ -61,19 +77,7 @@ def init(ModelName):
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            # Increase CLIP limit to 512 tokens:
-            import VOIDPipeline, importlib
-            importlib.reload(VOIDPipeline)
-            VOIDPipeline.Take_Over()
-            pipeline.tokenizer.model_max_length = 512
-            pipeline.tokenizer.padding_side = "right"
-            pipeline.tokenizer.pad_token = pipeline.tokenizer.eos_token
-            pipeline.tokenizer.pad_token_id = pipeline.tokenizer.eos_token_id
-            pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(512, 768).to("cuda:0")
-            pipeline.text_encoder.config.max_position_embeddings = 512
-            pipeline.text_encoder.config.model_max_length = 512
-            pipeline.text_encoder.config.max_length = 512
-            ###############################
+            modify_clip_limit(512)
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
