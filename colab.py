@@ -85,7 +85,7 @@ def init(ModelName):
             config.num_hidden_layers = 12
             config.pad_token_id = 1
             config.projection_dim = 768
-            config.torch_dtype = "float32"
+            config.torch_dtype = "float16"
             config.transformers_version = "4.22.0.dev0"
             config.vocab_size = 49408
 
