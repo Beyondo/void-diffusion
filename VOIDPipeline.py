@@ -26,22 +26,6 @@ from diffusers.pipelines.stable_diffusion import StableDiffusionSafetyChecker
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
 def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt):
-    print("Max length: ", self.tokenizer.model_max_length)
-    r"""
-    Encodes the prompt into text encoder hidden states.
-    Args:
-        prompt (`str` or `list(int)`):
-            prompt to be encoded
-        device: (`torch.device`):
-            torch device
-        num_images_per_prompt (`int`):
-            number of images that should be generated per prompt
-        do_classifier_free_guidance (`bool`):
-            whether to use classifier free guidance or not
-        negative_prompt (`str` or `List[str]`):
-            The prompt or prompts not to guide the image generation. Ignored when not using guidance (i.e., ignored
-            if `guidance_scale` is less than `1`).
-    """
     batch_size = len(prompt) if isinstance(prompt, list) else 1
     text_inputs = self.tokenizer(
         prompt,
