@@ -61,7 +61,11 @@ def init(ModelName):
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            # Failed attempt to make to increase the max length of the text encoder, it produces random results:
+            # Increase CLIP limit to 512 tokens:
+            pipeline.tokenizer.model_max_length = 512
+            pipeline.tokenizer.padding_side = "right"
+            pipeline.tokenizer.pad_token = pipeline.tokenizer.eos_token
+            pipeline.tokenizer.pad_token_id = pipeline.tokenizer.eos_token_id
             pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(512, 768).to("cuda:0")
             pipeline.text_encoder.config.max_position_embeddings = 512
             pipeline.text_encoder.config.model_max_length = 512
