@@ -82,7 +82,7 @@ def init(ModelName):
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Hook()
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            modify_clip_limit(128)
+            modify_clip_limit(77)
             text2img = pipeline
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
