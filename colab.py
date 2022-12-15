@@ -56,7 +56,11 @@ def modify_clip_limit(limit):
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_embedding.weight.data.shape[0]] = old_embedding.weight.data
     pipeline.text_encoder.config.max_position_embeddings = limit
     # Tokenizer
-    pipeline.tokenizer.model_max_length = limit
+    # Setting the max length to 512
+    pipeline.tokenizer.model_max_length = 512
+    # Resizing the token embeddings
+    pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
+    
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     ready = False
