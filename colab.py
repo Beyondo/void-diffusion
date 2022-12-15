@@ -47,20 +47,18 @@ def create_guided_pipeline(pipeline):
     return guided_pipeline
 def modify_clip_limit(limit):
     global pipeline
-    if limit < 77:
-        print("You cannot reduce the limit below 77 because we need to keep the CLIP text encoder weights.")
     # Text Encoder
     old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     pipeline.text_encoder.config.max_position_embeddings = limit
-    old_config = pipeline.text_encoder.config
-    pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
+    #pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
+    pipeline.text_encoder.text_model = CLIPTextModel(config=pipeline.text_encoder.config).to("cuda:0")
+    print("Hi")
     pipeline.text_encoder.text_model.to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_weights.shape[0]] = old_weights
     # Tokenizer
     pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-    pipeline.text_encoder.config = old_config
     
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
