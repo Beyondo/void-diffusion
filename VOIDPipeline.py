@@ -205,4 +205,4 @@ def generate_text2img(
 def Take_Over():
     from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
     StableDiffusionPipeline.__call__ = generate_text2img
-    StableDiffusionImg2ImgPipeline._encode_prompt = text2img_encode_prompt
+    StableDiffusionPipeline._encode_prompt = text2img_encode_prompt
