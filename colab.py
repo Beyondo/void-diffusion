@@ -52,15 +52,27 @@ def modify_clip_limit(limit):
     # Text Encoder
     old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     pipeline.text_encoder.config.max_position_embeddings = limit
-    #pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config) # This is not working, so we do it manually
-    pipeline.text_encoder.text_model = CLIPTextModel(config=pipeline.text_encoder.config).to("cuda:0")
+    #pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config) # Bug: This line is to make sure the model's token limit is updated, but it breaks the model
     pipeline.text_encoder.text_model.to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_weights.shape[0]] = old_weights
     # Tokenizer
     pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-
+def modify_clip_limit_hack(limit):
+    # This patches the config.json file to change the max position embedding limit
+    # This is a hack, but it works
+    global pipeline
+    if limit < 77:
+        print("You cannot reduce the limit below 77 because we need to keep the CLIP text encoder weights.")
+    # Where's the config.json file?
+    import os
+    config_path = os.path.join(pipeline.text_encoder.text_model.config.model_dir, "config.json")
+    # Read the config file
+    import json
+    with open(config_path, "r") as f:
+        config = json.load(f)
+    
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     ready = False
@@ -81,7 +93,7 @@ def init(ModelName):
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Hook()
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            modify_clip_limit(77)
+            modify_clip_limit_hack(77)
             text2img = pipeline
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
