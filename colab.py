@@ -69,6 +69,27 @@ def init(ModelName):
             torch.set_default_dtype(torch.float16)
             # get clip text config
             config = CLIPTextConfig.from_pretrained("openai/clip-vit-large-patch14")
+            config.atttention_dropout = 0.0
+            config.bos_token_id = 0
+            config.dropout = 0.0
+            config.eos_token_id = 2
+            config.hidden_act = "quick_gelu"
+            config.hidden_size = 768
+            config.initializer_factor = 1.0
+            config.initializer_range = 0.02
+            config.intermediate_size = 3072
+            config.layer_norm_eps = 1e-05
+            config.max_position_embeddings = 512
+            config.model_type = "clip_text_model"
+            config.num_attention_heads = 12
+            config.num_hidden_layers = 12
+            config.pad_token_id = 1
+            config.projection_dim = 768
+            config.torch_dtype = "float32"
+            config.transformers_version = "4.22.0.dev0"
+            config.vocab_size = 49408
+
+
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer.model_max_length = 512
