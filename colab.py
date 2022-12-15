@@ -50,18 +50,16 @@ def modify_clip_limit(limit):
     if limit < 77:
         print("You cannot reduce the limit below 77 because we need to keep the CLIP text encoder weights.")
     # Text Encoder
-    old_embedding = pipeline.text_encoder.text_model.embeddings.position_embedding.to("cuda:0") #.weight.data
+    old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     pipeline.text_encoder.config.max_position_embeddings = limit
     pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config) 
     # move to gpu
     pipeline.text_encoder.text_model.to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
-    pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_embedding.weight.data.shape[0]] = old_embedding.weight.data
+    pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_weights.shape[0]] = old_weights
     # Tokenizer
     pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-    # This code produces random results for some reason
-    pipeline.model.config.max_position_embeddings = limit
 
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
