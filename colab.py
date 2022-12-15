@@ -68,6 +68,8 @@ def init(ModelName):
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             tokenizer.model_max_length = 512
             pipeline.text_encoder.config.max_position_embeddings = 512
+            pipeline.text_encoder.config.hidden_size = 512
+            pipeline.text_encoder.config.num_attention_heads = 8
             pipeline.tokenizer = tokenizer
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
             text2img = StableDiffusionPipeline(**pipeline.components)
