@@ -58,19 +58,15 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
             "The following part of your input was truncated because CLIP can only handle sequences up to"
             f" {self.tokenizer.model_max_length} tokens: {removed_text}"
         )
-    print("A")
     if hasattr(self.text_encoder.config, "use_attention_mask") and self.text_encoder.config.use_attention_mask:
-        print("B")
         attention_mask = text_inputs.attention_mask.to(device)
     else:
-        print("C")
         attention_mask = None
-    print("D")
     text_embeddings = self.text_encoder(
         text_input_ids.to(device),
         attention_mask=attention_mask,
+        max_length=self.tokenizer.model_max_length,
     )
-    print("E")
     text_embeddings = text_embeddings[0]
     # duplicate text embeddings for each generation per prompt, using mps friendly method
     bs_embed, seq_len, _ = text_embeddings.shape
