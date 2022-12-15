@@ -57,28 +57,23 @@ def init(ModelName):
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
-            rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             print("-> Initializing model " + model_name + ":")
+            torch.set_default_dtype(torch.float16)
+            rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
+            # - The text encoder needs to be trained on the same dataset as the image encoder.
             #import VOIDPipeline
             #import importlib
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Take_Over()
-            
-            # Why does it generate an image that has nothing to do with the text?
-            # -> Because the text encoder is not trained on the same dataset as the image encoder.
-            torch.set_default_dtype(torch.float16)
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            print(pipeline.text_encoder.text_model.embeddings)
-            # Make the text encoder longer
+            # Trying to increase the max length of the text encoder to 512
             pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(512, 768).to("cuda:0")
             pipeline.text_encoder.config.max_position_embeddings = 512
             pipeline.text_encoder.config.model_max_length = 512
-            pipeline.text_encoder.__init__(pipeline.text_encoder.config)
-
+            pipeline.text_encoder = CLIPTextModel(CLIPTextConfig(pipeline.text_encoder.config)).to("cuda:0")
             pipeline.tokenizer.model_max_length = 512
-
             pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-            print(pipeline.text_encoder.text_model.embeddings)
+            ###############################
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
