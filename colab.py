@@ -71,9 +71,18 @@ def init(ModelName):
             sentenceTransformer = SentenceTransformer("clip-ViT-L-14")
             # get clip text config from sentenceTransformer
             config = sentenceTransformer._modules['0'].model.config
-            # Needs to be 768x320
             config.hidden_size = 320
             config.intermediate_size = 768
+            config.num_attention_heads = 8
+            config.num_hidden_layers = 12
+            config.vocab_size = 49408
+            config.attention_dropout = 0.1
+            config.hidden_dropout = 0.1
+            config.max_position_embeddings = 512
+            config.type_vocab_size = 1
+            config.initializer_range = 0.02
+            config.layer_norm_eps = 1e-05
+            config.hidden_act = "gelu_new"
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer.model_max_length = 512
