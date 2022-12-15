@@ -65,11 +65,11 @@ def init(ModelName):
             config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch16", torch_dtype=torch.float16)
             #config.max_position_embeddings = 512
             tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch16", torch_dtype=torch.float16)
-            #tokenizer.model_max_length = 512
+            tokenizer.model_max_length = 512
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             #pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer = tokenizer
-            #pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
+            pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
