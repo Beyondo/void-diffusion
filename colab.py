@@ -60,7 +60,7 @@ def modify_clip_limit(limit):
     #pipeline.tokenizer.pad_token_id = pipeline.tokenizer.eos_token_id
     print (pipeline.text_encoder.text_model.embeddings.position_embedding, end=" -> ")
     old_embedding = pipeline.text_encoder.text_model.embeddings.position_embedding #.weight.data
-    pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768)
+    pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_embedding.weight.data.shape[0]] = old_embedding.weight.data
     print (pipeline.text_encoder.text_model.embeddings.position_embedding)
     print (pipeline.text_encoder.config.max_position_embeddings, end=" -> ")
