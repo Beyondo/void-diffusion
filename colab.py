@@ -64,9 +64,6 @@ def modify_clip_limit(limit):
     print (pipeline.text_encoder.config.max_position_embeddings, end=" -> ")
     pipeline.text_encoder.config.max_position_embeddings = limit
     print (pipeline.text_encoder.config.max_position_embeddings)
-    print (pipeline.text_encoder.config.max_length, end=" -> ")
-    pipeline.text_encoder.config.max_length = limit
-    print (pipeline.text_encoder.config.max_length)
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     ready = False
