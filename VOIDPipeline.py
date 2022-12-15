@@ -26,7 +26,6 @@ from diffusers.pipelines.stable_diffusion import StableDiffusionSafetyChecker
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
 def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt):
-    print("Max length: ", self.tokenizer.model_max_length)
     r"""
     Encodes the prompt into text encoder hidden states.
     Args:
@@ -143,17 +142,15 @@ def generate_text2img(
     self.check_inputs(prompt, height, width, callback_steps)
     # 2. Define call parameters
     batch_size = 1 if isinstance(prompt, str) else len(prompt)
-    device = self._execution_device
+    device = "cuda:0"
     # here `guidance_scale` is defined analog to the guidance weight `w` of equation (2)
     # of the Imagen paper: https://arxiv.org/pdf/2205.11487.pdf . `guidance_scale = 1`
     # corresponds to doing no classifier free guidance.
     do_classifier_free_guidance = guidance_scale > 1.0
     # 3. Encode input prompt
-    print("prompt", prompt)
     text_embeddings = self._encode_prompt(
         prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt
     )
-    print("text_embeddings", text_embeddings)
     # 4. Prepare timesteps
     self.scheduler.set_timesteps(num_inference_steps, device=device)
     timesteps = self.scheduler.timesteps
