@@ -6,6 +6,7 @@ from diffusers.schedulers import PNDMScheduler, LMSDiscreteScheduler, DDIMSchedu
 from transformers import CLIPFeatureExtractor, CLIPModel, CLIPTokenizer, CLIPTextModel
 import ClipGuided
 from diffusers.pipelines.stable_diffusion import StableDiffusionPipelineOutput
+import VOIDPipeline
 model_name = ""
 ready = False
 tokenizer = None
@@ -61,6 +62,7 @@ def init(ModelName):
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             print("Done.")
+            VOIDPipeline.Take_Over()
             ready = True
             from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
