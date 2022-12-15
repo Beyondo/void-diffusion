@@ -215,8 +215,6 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
         print(self.tokenizer.model_max_length)
         # print max embedding length of text_encoder
         print(self.text_encoder.config.max_position_embeddings)
-        # print max embedding length of clip_model
-        print(self.clip_model.config.max_position_embeddings)
         text_embeddings = self.text_encoder(text_input.input_ids.to(device))[0]
 
         if clip_guidance_scale > 0:
