@@ -62,11 +62,11 @@ def init(ModelName):
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Take_Over()
             torch.set_default_dtype(torch.float16)
-            config = CLIPTextConfig.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K", torch_dtype=torch.float16)
+            config = CLIPTextConfig.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K")
             config.max_position_embeddings = 77
-            tokenizer = CLIPTokenizer.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K", torch_dtype=torch.float16)
+            tokenizer = CLIPTokenizer.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K")
             tokenizer.model_max_length = 77
-            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer = tokenizer
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
