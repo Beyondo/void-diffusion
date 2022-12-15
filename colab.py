@@ -46,6 +46,7 @@ def create_guided_pipeline(pipeline):
     )
     return guided_pipeline
 def modify_clip_limit(limit):
+    global pipeline
     # I gave up on this. It generates random images for anything other than 77.
     # I think it has something to do with the tokenizer.
     # If someone with more knowledge of CLIP wants to fix this, feel free to do so.
