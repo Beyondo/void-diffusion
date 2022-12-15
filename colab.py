@@ -62,7 +62,7 @@ def init(ModelName):
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Take_Over()
             # CLIPTextConfig
-            config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16).to("cuda:0")
+            config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16)
             config.max_position_embeddings = 512
             tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16).to("cuda:0")
             tokenizer.model_max_length = 512
