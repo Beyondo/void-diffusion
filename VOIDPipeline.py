@@ -34,7 +34,6 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
         truncation=True,
         return_tensors="pt",
     )
-    print("Text inputs: ", text_inputs)
     text_embeddings = self.text_encoder(text_inputs.input_ids.to(self.device))[0]
     print("Text embeddings: ", text_embeddings)
     text_embeddings = text_embeddings[0]
