@@ -3,7 +3,7 @@ from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
 from diffusers.schedulers import PNDMScheduler, LMSDiscreteScheduler, DDIMScheduler, DDPMScheduler
-from transformers import CLIPFeatureExtractor, CLIPModel, CLIPTokenizer, CLIPTextModel
+from transformers import CLIPFeatureExtractor, CLIPModel, CLIPTokenizer, CLIPTextModel, CLIPTextConfig
 import ClipGuided
 from diffusers.pipelines.stable_diffusion import StableDiffusionPipelineOutput
 import VOIDPipeline
@@ -61,15 +61,17 @@ def init(ModelName):
             import importlib
             importlib.reload(VOIDPipeline)
             VOIDPipeline.Take_Over()
-            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
-            # Create tokenizer with bigger max length
+            # CLIPTextConfig
+            config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch32")
+            config.max_position_embeddings = 512
             tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32")
             tokenizer.model_max_length = 512
+            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+            pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer = tokenizer
-            pipeline.text_encoder = CLIPTextModel.from_pretrained("openai/clip-vit-base-patch32", torch_dtype=torch.float16).to("cuda:0")
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
-            print(len(tokenizer))
             pipeline.text_encoder.load_state_dict(pipeline.text_encoder.state_dict())
+            # How to increase the max length of the ClipTextModel?
             #pipeline.text_encoder.resize_token_embeddings(512)
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
