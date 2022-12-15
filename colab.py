@@ -61,7 +61,7 @@ def init(ModelName):
             import importlib
             importlib.reload(VOIDPipeline)
             VOIDPipeline.Take_Over()
-            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16)
             # Create tokenizer with bigger max length
             tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32")
             tokenizer.model_max_length = 512
