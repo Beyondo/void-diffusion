@@ -51,7 +51,7 @@ def modify_clip_limit(limit):
     old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     pipeline.text_encoder.config.max_position_embeddings = limit
     # Bug: The following line is supposed to be a hack to make the model reload everything using the new config but it makes the model generate random images
-    #pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
+    pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
     #
     pipeline.text_encoder.text_model.to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
