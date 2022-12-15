@@ -70,9 +70,10 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
             feature_extractor=feature_extractor,
         )
 
+        self.tokenizer.model_max_length = 512
+
         self.normalize = transforms.Normalize(mean=feature_extractor.image_mean, std=feature_extractor.image_std)
         self.make_cutouts = MakeCutouts(feature_extractor.size)
-        self.tokenizer.model_max_length = 512
         set_requires_grad(self.text_encoder, False)
         set_requires_grad(self.clip_model, False)
 
@@ -111,6 +112,9 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
         num_cutouts,
         use_cutouts=True,
     ):
+        self.tokenizer.model_max_length = 512
+
+        # detach the latents to prevent backpropagation through the encoder
         latents = latents.detach().requires_grad_()
 
         if isinstance(self.scheduler, LMSDiscreteScheduler):
@@ -207,6 +211,12 @@ class CLIPGuidedStableDiffusion(DiffusionPipeline):
             truncation=True,
             return_tensors="pt",
         )
+        # print max length
+        print(self.tokenizer.model_max_length)
+        # print max embedding length of text_encoder
+        print(self.text_encoder.config.max_position_embeddings)
+        # print max embedding length of clip_model
+        print(self.clip_model.config.max_position_embeddings)
         text_embeddings = self.text_encoder(text_input.input_ids.to(device))[0]
 
         if clip_guidance_scale > 0:
