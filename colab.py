@@ -56,7 +56,7 @@ def modify_clip_limit(limit):
     # load all missing attributes from the checkpoint in the existing module
     pipeline.text_encoder.text_model.embeddings = copy_embeddings
     print("Hi")
-    pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
+    #pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
     #print("Hi")
     #pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_weights.shape[0]] = old_weights
     #print("Hi")
