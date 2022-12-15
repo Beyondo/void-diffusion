@@ -66,13 +66,16 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
         text_input_ids.to(device),
         attention_mask=attention_mask,
     )
+    print("A")
     text_embeddings = text_embeddings[0]
     # duplicate text embeddings for each generation per prompt, using mps friendly method
     bs_embed, seq_len, _ = text_embeddings.shape
     text_embeddings = text_embeddings.repeat(1, num_images_per_prompt, 1)
     text_embeddings = text_embeddings.view(bs_embed * num_images_per_prompt, seq_len, -1)
     # get unconditional embeddings for classifier free guidance
+    print("B")
     if do_classifier_free_guidance:
+        print("C")
         uncond_tokens: List[str]
         if negative_prompt is None:
             uncond_tokens = [""] * batch_size
