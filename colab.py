@@ -47,84 +47,16 @@ def create_guided_pipeline(pipeline):
     return guided_pipeline
 def modify_clip_limit(limit):
     global pipeline
-    # I gave up on this. It generates random images for anything other than 77.
-    # I think it has something to do with the tokenizer.
-    # If someone with more knowledge of CLIP wants to fix this, feel free to do so.
-
-    #import VOIDPipeline, importlib
-    #importlib.reload(VOIDPipeline)
-    #VOIDPipeline.Take_Over()
-    #pipeline.tokenizer.model_max_length = limit
-    #pipeline.tokenizer.padding_side = "right"
-    #pipeline.tokenizer.pad_token = pipeline.tokenizer.eos_token
-    #pipeline.tokenizer.pad_token_id = pipeline.tokenizer.eos_token_id
-
+    if limit <= pipeline.text_encoder.config.max_position_embeddings: return
     # Text Encoder
     print (pipeline.text_encoder.text_model.embeddings.position_embedding, end=" -> ")
+    # Resize position embedding without losing the old weights (unless you like random noise)
     old_embedding = pipeline.text_encoder.text_model.embeddings.position_embedding #.weight.data
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_embedding.weight.data.shape[0]] = old_embedding.weight.data
-    print (pipeline.text_encoder.text_model.embeddings.position_embedding)
-    print (pipeline.text_encoder.config.max_position_embeddings, end=" -> ")
     pipeline.text_encoder.config.max_position_embeddings = limit
-    print (pipeline.text_encoder.config.max_position_embeddings)
     # Tokenizer
-    print (pipeline.tokenizer.model_max_length, end=" -> ")
     pipeline.tokenizer.model_max_length = limit
-    print (pipeline.tokenizer.model_max_length)
-    print (pipeline.tokenizer.padding_side, end=" -> ")
-    pipeline.tokenizer.padding_side = "right"
-    print (pipeline.tokenizer.padding_side)
-    print (pipeline.tokenizer.pad_token, end=" -> ")
-    pipeline.tokenizer.pad_token = pipeline.tokenizer.eos_token
-    print (pipeline.tokenizer.pad_token)
-    print (pipeline.tokenizer.pad_token_id, end=" -> ")
-    pipeline.tokenizer.pad_token_id = pipeline.tokenizer.eos_token_id
-    print (pipeline.tokenizer.pad_token_id)
-    # VAE
-    print (pipeline.vae.text_encoder.text_model.embeddings.position_embedding, end=" -> ")
-    old_embedding = pipeline.vae.text_encoder.text_model.embeddings.position_embedding #.weight.data
-    pipeline.vae.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
-    pipeline.vae.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_embedding.weight.data.shape[0]] = old_embedding.weight.data
-    print (pipeline.vae.text_encoder.text_model.embeddings.position_embedding)
-    print (pipeline.vae.text_encoder.config.max_position_embeddings, end=" -> ")
-    pipeline.vae.text_encoder.config.max_position_embeddings = limit
-    print (pipeline.vae.text_encoder.config.max_position_embeddings)
-    # VAE Tokenizer
-    print (pipeline.vae.tokenizer.model_max_length, end=" -> ")
-    pipeline.vae.tokenizer.model_max_length = limit
-    print (pipeline.vae.tokenizer.model_max_length)
-    print (pipeline.vae.tokenizer.padding_side, end=" -> ")
-    pipeline.vae.tokenizer.padding_side = "right"
-    print (pipeline.vae.tokenizer.padding_side)
-    print (pipeline.vae.tokenizer.pad_token, end=" -> ")
-    pipeline.vae.tokenizer.pad_token = pipeline.vae.tokenizer.eos_token
-    print (pipeline.vae.tokenizer.pad_token)
-    print (pipeline.vae.tokenizer.pad_token_id, end=" -> ")
-    pipeline.vae.tokenizer.pad_token_id = pipeline.vae.tokenizer.eos_token_id
-    print (pipeline.vae.tokenizer.pad_token_id)
-    # UNET
-    print (pipeline.unet.text_encoder.text_model.embeddings.position_embedding, end=" -> ")
-    old_embedding = pipeline.unet.text_encoder.text_model.embeddings.position_embedding #.weight.data
-    pipeline.unet.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
-    pipeline.unet.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_embedding.weight.data.shape[0]] = old_embedding.weight.data
-    print (pipeline.unet.text_encoder.text_model.embeddings.position_embedding)
-    print (pipeline.unet.text_encoder.config.max_position_embeddings, end=" -> ")
-    pipeline.unet.text_encoder.config.max_position_embeddings = limit
-    print (pipeline.unet.text_encoder.config.max_position_embeddings)
-    # UNET Tokenizer
-    print (pipeline.unet.tokenizer.model_max_length, end=" -> ")
-    pipeline.unet.tokenizer.model_max_length = limit
-    print (pipeline.unet.tokenizer.model_max_length)
-    print (pipeline.unet.tokenizer.padding_side, end=" -> ")
-    pipeline.unet.tokenizer.padding_side = "right"
-    print (pipeline.unet.tokenizer.padding_side)
-    print (pipeline.unet.tokenizer.pad_token, end=" -> ")
-    pipeline.unet.tokenizer.pad_token = pipeline.unet.tokenizer.eos_token
-    print (pipeline.unet.tokenizer.pad_token)
-    print (pipeline.unet.tokenizer.pad_token_id, end=" -> ")
-    pipeline.unet.tokenizer.pad_token_id = pipeline.unet.tokenizer.eos_token_id
-    print (pipeline.unet.tokenizer.pad_token_id)
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     ready = False
