@@ -45,7 +45,6 @@ def generate_text2img(
     callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
     callback_steps: Optional[int] = 1,
 ):
-    print ("Custom Text2Img")
     # 0. Default height and width to unet
     height = height or self.unet.config.sample_size * self.vae_scale_factor
     width = width or self.unet.config.sample_size * self.vae_scale_factor
@@ -59,9 +58,11 @@ def generate_text2img(
     # corresponds to doing no classifier free guidance.
     do_classifier_free_guidance = guidance_scale > 1.0
     # 3. Encode input prompt
+    print("prompt", prompt)
     text_embeddings = self._encode_prompt(
         prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt
     )
+    print("text_embeddings", text_embeddings)
     # 4. Prepare timesteps
     self.scheduler.set_timesteps(num_inference_steps, device=device)
     timesteps = self.scheduler.timesteps
