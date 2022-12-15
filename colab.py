@@ -57,10 +57,10 @@ def init(ModelName):
         try:
             #rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             print("-> Initializing model " + model_name + ":")
-            import VOIDPipeline
-            import importlib
-            importlib.reload(VOIDPipeline)
-            VOIDPipeline.Take_Over()
+            #import VOIDPipeline
+            #import importlib
+            #importlib.reload(VOIDPipeline)
+            #VOIDPipeline.Take_Over()
             # CLIPTextConfig
             config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch16")
             config.max_position_embeddings = 512
