@@ -63,9 +63,9 @@ def init(ModelName):
             VOIDPipeline.Take_Over()
             # CLIPTextConfig(max_position_embeddings=1024)
             #config.max_position_embeddings = 512
-            tokenizer = CLIPTokenizer.from_pretrained("clip-vit-large-patch14", torch_dtype=torch.float16)
+            tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-large-patch14", torch_dtype=torch.float16)
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
-            pipeline.text_encoder = CLIPTextModel.from_pretrained("clip-vit-large-patch14", torch_dtype=torch.float16).to("cuda:0")
+            pipeline.text_encoder = CLIPTextModel.from_pretrained("openai/clip-vit-large-patch14", torch_dtype=torch.float16).to("cuda:0")
             pipeline.tokenizer = tokenizer
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
             text2img = StableDiffusionPipeline(**pipeline.components)
