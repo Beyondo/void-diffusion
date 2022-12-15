@@ -57,13 +57,7 @@ def modify_clip_limit(limit):
     pipeline.text_encoder.config.max_position_embeddings = limit
     # Tokenizer
     pipeline.tokenizer.model_max_length = limit
-    pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-    # Image Encoder
-    pipeline.vae.config.max_position_embeddings = limit
-    # Unet
-    pipeline.unet.config.max_position_embeddings = limit
-
-    
+    pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))    
     
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
@@ -80,6 +74,10 @@ def init(ModelName):
             print("-> Initializing model " + model_name + ":")
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
+            # Hook VOIDPipeline to StableDiffusionPipeline
+            import VOIDPipeline, importlib
+            importlib.reload(VOIDPipeline)
+            VOIDPipeline.Hook()
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             modify_clip_limit(78)
             text2img = pipeline
