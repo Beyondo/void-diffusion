@@ -61,6 +61,8 @@ def init(ModelName):
             text2img = pipeline
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
+            import importlib
+            importlib.reload(VOIDPipeline)
             VOIDPipeline.Take_Over()
             print("Done.")
             ready = True
