@@ -53,12 +53,13 @@ def modify_clip_limit(limit):
     #pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
     #pipeline.text_encoder.text_model.to("cuda:0")
     pipeline.text_encoder.text_model = CLIPTextModel(config=pipeline.text_encoder.config).to("cuda:0")
-    pipeline.text_encoder.text_model.load_state_dict(copy_embeddings.state_dict())
+    # load all missing attributes from the checkpoint in the existing module
+    pipeline.text_encoder.text_model.embeddings = copy_embeddings
     print("Hi")
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
-    print("Hi")
-    pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_weights.shape[0]] = old_weights
-    print("Hi")
+    #print("Hi")
+    #pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_weights.shape[0]] = old_weights
+    #print("Hi")
     # Tokenizer
     pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
