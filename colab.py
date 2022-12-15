@@ -70,7 +70,7 @@ def init(ModelName):
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer.model_max_length = 512
-            pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
+            pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
