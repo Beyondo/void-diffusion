@@ -60,17 +60,12 @@ def init(ModelName):
             print("-> Initializing model " + model_name + ":")
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
-            # - The text encoder needs to be trained on the same dataset as the image encoder.
-            #import VOIDPipeline
-            #import importlib
-            #importlib.reload(VOIDPipeline)
-            #VOIDPipeline.Take_Over()
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            # Trying to increase the max length of the text encoder to 512
+            # Failed attempt to make to increase the max length of the text encoder, it produces random results:
             #pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(512, 768).to("cuda:0")
             #pipeline.text_encoder.config.max_position_embeddings = 512
             #pipeline.text_encoder.config.model_max_length = 512
-            pipeline.text_encoder.text_model = CLIPTextModel(pipeline.text_encoder.config).to("cuda:0")
+            #pipeline.text_encoder.text_model = CLIPTextModel(pipeline.text_encoder.config).to("cuda:0")
             #pipeline.tokenizer.model_max_length = 512
             #pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
             ###############################
