@@ -23,11 +23,8 @@ def get_current_image_seed():
     return settings['InitialSeed'] + image_id
 def get_current_image_uid():
     return "text2img-%d" % get_current_image_seed()
-# v1.4 = laion/CLIP-ViT-B-32-laion2B-s34B-b79K
-# v1.5 = sentence-transformers/clip-ViT-L-14
-def create_guided_pipeline(pipeline, clip_model_name):
-    import importlib
-    importlib.reload(ClipGuided)
+def create_guided_pipeline(pipeline):
+    clip_model_name = "laion/CLIP-ViT-B-32-laion2B-s34B-b79K"
     clip_model = CLIPModel.from_pretrained(clip_model_name, torch_dtype=torch.float16).to("cuda:0")
     feature_extractor = CLIPFeatureExtractor.from_pretrained(clip_model_name, torch_dtype=torch.float16)
     scheduler = PNDMScheduler(
@@ -58,30 +55,27 @@ def init(ModelName):
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
-            print("-> Initializing model " + model_name + ":")
-            torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
-            # Creating the pipeline
-            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            # Setting the max length to 512
-            pipeline.text_encoder = CLIPTextModel.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K").to("cuda:0")
-            pipeline.tokenizer = CLIPTokenizer.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K").to("cuda:0")
-            pipeline.text_encoder.config.max_position_embeddings = 512
-            pipeline.tokenizer.model_max_length = 512
-            pipeline.tokenizer.init_kwargs["model_max_length"] = 512
-            # Resizing the token embeddings
-            pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-            # Initializing the Text To Image pipeline
-            text2img = pipeline
-            print("Text To Image pipeline initialized.")
-            # Initializing the Image To Image pipeline
-            #img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
-            #print("Image To Image pipeline initialized.")
-            # Initializing the Inpaint pipeline
-            #inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
-            #print("Inpaint pipeline initialized.")
-            ready = True
+            print("-> Initializing model " + model_name + ":")
+            #import VOIDPipeline
+            #import importlib
+            #importlib.reload(VOIDPipeline)
+            #VOIDPipeline.Take_Over()
+            torch.set_default_dtype(torch.float16)
+            config = CLIPTextConfig.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K", torch_dtype=torch.float16)
+            config.max_position_embeddings = 77
+            tokenizer = CLIPTokenizer.from_pretrained("laion/CLIP-ViT-B-32-laion2B-s34B-b79K", torch_dtype=torch.float16)
+            tokenizer.model_max_length = 77
+            pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+            pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
+            pipeline.tokenizer = tokenizer
+            pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
+
+            text2img = StableDiffusionPipeline(**pipeline.components)
+            img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
+            inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             print("Done.")
+            ready = True
             #from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
         except Exception as e:
