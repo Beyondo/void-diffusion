@@ -53,7 +53,7 @@ def modify_clip_limit(limit):
     input_embeddings = pipeline.text_encoder.text_model.embeddings.token_embedding
     pipeline.text_encoder.config.max_position_embeddings = limit
     # Bug: The following line is supposed to be a hack to make the model reload everything using the new config but it makes the model generate random images
-    pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
+    #pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
     #
     pipeline.text_encoder.text_model.to("cuda:0")
     pipeline.text_encoder.text_model.embeddings.token_embedding = input_embeddings
