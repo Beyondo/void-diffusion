@@ -142,7 +142,7 @@ def generate_text2img(
     self.check_inputs(prompt, height, width, callback_steps)
     # 2. Define call parameters
     batch_size = 1 if isinstance(prompt, str) else len(prompt)
-    device = "cuda:0"
+    device = torch.device("cuda:0")
     # here `guidance_scale` is defined analog to the guidance weight `w` of equation (2)
     # of the Imagen paper: https://arxiv.org/pdf/2205.11487.pdf . `guidance_scale = 1`
     # corresponds to doing no classifier free guidance.
