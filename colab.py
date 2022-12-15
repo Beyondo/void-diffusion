@@ -67,12 +67,9 @@ def init(ModelName):
             # Why does it generate an image that has nothing to do with the text?
             # -> Because the text encoder is not trained on the same dataset as the image encoder.
             torch.set_default_dtype(torch.float16)
-            from sentence_transformers import SentenceTransformer, util
-            sentenceTransformer = SentenceTransformer("clip-ViT-L-14")
             # get CLIPTextConfig from sentenceTransformer
-            config = sentenceTransformer._modules['0'] 
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
-            pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
+            pipeline.text_encoder = CLIPTextModel.from_pretrained("clip-ViT-L-14").to("cuda:0")
             pipeline.text_encoder.config.max_length = 512
             pipeline.text_encoder.config.max_position_embeddings = 512
             pipeline.tokenizer.model_max_length = 512
