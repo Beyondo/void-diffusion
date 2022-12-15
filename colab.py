@@ -70,7 +70,9 @@ def init(ModelName):
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer = tokenizer
             pipeline.text_encoder.resize_token_embeddings(len(tokenizer))
+            pipeline.text_encoder.load_state_dict(pipeline.text_encoder.state_dict())
             text2img = StableDiffusionPipeline(**pipeline.components)
+            text2img = create_guided_pipeline(text2img)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             print("Done.")
