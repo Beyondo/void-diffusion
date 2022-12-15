@@ -58,10 +58,18 @@ def modify_clip_limit(limit):
     #pipeline.tokenizer.padding_side = "right"
     #pipeline.tokenizer.pad_token = pipeline.tokenizer.eos_token
     #pipeline.tokenizer.pad_token_id = pipeline.tokenizer.eos_token_id
+    print (pipeline.text_encoder.text_model.embeddings.position_embedding, end=" -> ")
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0")
+    print (pipeline.text_encoder.text_model.embeddings.position_embedding)
+    print (pipeline.text_encoder.config.max_position_embeddings, end=" -> ")
     pipeline.text_encoder.config.max_position_embeddings = limit
+    print (pipeline.text_encoder.config.max_position_embeddings)
+    print (pipeline.text_encoder.config.model_max_length, end=" -> ")
     pipeline.text_encoder.config.model_max_length = limit
+    print (pipeline.text_encoder.config.model_max_length)
+    print (pipeline.text_encoder.config.max_length, end=" -> ")
     pipeline.text_encoder.config.max_length = limit
+    print (pipeline.text_encoder.config.max_length)
 def init(ModelName):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     ready = False
