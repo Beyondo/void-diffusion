@@ -25,7 +25,7 @@ from diffusers.pipelines.stable_diffusion import StableDiffusionSafetyChecker
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
-def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt):
+def text2img_encode_longer_prompt(self, prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt):
     print("Custom encoder")
     r"""
     Encodes the prompt into text encoder hidden states.
@@ -205,4 +205,4 @@ def generate_text2img(
 def Take_Over():
     from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
     StableDiffusionPipeline.__call__ = generate_text2img
-    StableDiffusionPipeline._encode_prompt = text2img_encode_prompt
+    StableDiffusionPipeline._encode_prompt = text2img_encode_longer_prompt

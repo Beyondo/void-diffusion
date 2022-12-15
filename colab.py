@@ -57,13 +57,13 @@ def init(ModelName):
         try:
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
             print("-> Initializing model " + model_name + ":")
+            importlib.reload(VOIDPipeline)
+            VOIDPipeline.Take_Over()
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
-            text2img = pipeline
+            text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             import importlib
-            importlib.reload(VOIDPipeline)
-            VOIDPipeline.Take_Over()
             print("Done.")
             ready = True
             from IPython.display import clear_output; clear_output()
