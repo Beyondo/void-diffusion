@@ -63,6 +63,7 @@ def init(ModelName):
             pipeline.text_encoder.config.max_position_embeddings = 512
             pipeline.tokenizer.model_max_length = 512
             pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
+            pipeline = create_guided_pipeline(pipeline, "sentence-transformers/clip-ViT-L-14")
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
