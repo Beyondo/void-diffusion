@@ -79,7 +79,7 @@ def init(ModelName):
             config.initializer_range = 0.02
             config.intermediate_size = 3072
             config.layer_norm_eps = 1e-05
-            config.max_position_embeddings = 512
+            config.max_position_embeddings = 77
             config.model_type = "clip_text_model"
             config.num_attention_heads = 12
             config.num_hidden_layers = 12
@@ -92,7 +92,7 @@ def init(ModelName):
 
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
-            pipeline.tokenizer.model_max_length = 512
+            pipeline.tokenizer.model_max_length = 77
             pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
             text2img = StableDiffusionPipeline(**pipeline.components)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
