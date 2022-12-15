@@ -63,9 +63,9 @@ def init(ModelName):
             #VOIDPipeline.Take_Over()
             # CLIPTextConfig
             config = CLIPTextConfig.from_pretrained("openai/clip-vit-base-patch32")
-            config.max_position_embeddings = 512
+            config.max_position_embeddings = 77
             tokenizer = CLIPTokenizer.from_pretrained("openai/clip-vit-base-patch32")
-            tokenizer.model_max_length = 512
+            tokenizer.model_max_length = 77
             pipeline = StableDiffusionPipeline.from_pretrained(model_name).to("cuda:0")
             pipeline.text_encoder = CLIPTextModel(config).to("cuda:0")
             pipeline.tokenizer = tokenizer
