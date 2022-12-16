@@ -18,8 +18,9 @@ def upscale(upscaler, scale, image_input_path):
     if upscaler.lower() == "bicubic":
         image = image.resize((image.width * scale, image.height * scale), PIL.Image.BICUBIC)
     elif upscaler.lower() == "gfpgan":
-        # create temp folder
-        if not os.path.exists("temp/input"): os.mkdir("temp/input")
+        # create temp folder with subfolders
+        os.makedirs("temp/input", exist_ok=True)
+        os.makedirs("temp/output", exist_ok=True)
         image.save("temp/input/upload.png")
         IPython.get_ipython().system("python inference_gfpgan.py -i temp/input -o temp/output -v 1.3.8 -s " + str(scale) + " --bg_upsampler realesrgan")
         image = PIL.Image.open("temp/output.png")
