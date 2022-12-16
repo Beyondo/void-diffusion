@@ -1,4 +1,5 @@
-import patcher, torch, random, time
+import patcher, torch, random, time, importlib
+importlib.reload(patcher)
 from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
