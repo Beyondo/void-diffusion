@@ -70,7 +70,6 @@ def init(ModelName):
     ready = False
     model_name = ModelName
     settings['ModelName'] = ModelName
-    patcher.patch()
     if not torch.cuda.is_available():
         print("No GPU found. If you are on Colab, go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
     else:
@@ -79,6 +78,7 @@ def init(ModelName):
         try:
             print("-> Initializing model " + model_name + ":")
             torch.set_default_dtype(torch.float16)
+            patcher.patch()
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "" if model_name == "prompthero/openjourney" else "fp16"
             # Hook VOIDPipeline to StableDiffusionPipeline
             #import VOIDPipeline, importlib
@@ -88,7 +88,7 @@ def init(ModelName):
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             else:
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
-            modify_clip_limit(77)
+            #modify_clip_limit(77)
             text2img = pipeline
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
