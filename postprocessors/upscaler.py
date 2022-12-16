@@ -14,7 +14,7 @@ import importlib
 def upscale(upscaler, scale, image_input_path):
     image = TF.to_tensor(PIL.Image.open(image_input_path))
     # Upscale image
-    if upscaler == "bicubic":
+    if upscaler.lower() == "bicubic":
         image = TF.to_pil_image(image)
         image = image.resize((image.width * scale, image.height * scale), PIL.Image.BICUBIC)
         image = TF.to_tensor(image)
