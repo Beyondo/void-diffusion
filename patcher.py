@@ -28,6 +28,7 @@ def patch(pipe):
             importlib.invalidate_caches()
             importlib.reload(StableDiffusionPipeline)
         pipe.safety_checker = empty_safety_checker
+        return True
     except Exception as e:
         print("Couldn't patch NSFW: ", e)
-        sys.exit(1)
+        return False
