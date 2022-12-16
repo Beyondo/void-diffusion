@@ -26,7 +26,6 @@ def patch(pipe):
             shutil.copyfile(patched_script, target_script)
             from diffusers import StableDiffusionPipeline
             importlib.invalidate_caches()
-            importlib.reload(StableDiffusionPipeline)
         pipe.safety_checker = empty_safety_checker
         return True
     except Exception as e:
