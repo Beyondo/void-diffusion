@@ -15,7 +15,6 @@ def show(img = None):
 def callback(iter, t, latents):
     global last_image_time
     if time.time() - last_image_time > 3:
-        print(iter)
         last_image_time = time.time()
         with torch.no_grad():
             latents = 1 / 0.18215 * latents
