@@ -47,6 +47,18 @@ def save_settings(filename, mode):
             f.write("Website: https://voidops.com\n")
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
-def post_process(img, filename):
-    imgSavePath = get_save_path(filename)
-    imgFile = imgSavePath + "-2x.png"
+def post_process(img, imageName, gdrive = True):
+    if gdrive:
+        path = save_gdrive(img, imageName)
+        print("Saved to " + path)
+    imgSavePath = get_save_path(imageName)
+    if colab.settings['Upscale'] != "1x":
+        from postprocessors import upscaler
+        img.save("tmp_input.png")
+        scale = int(colab.settings['Upscale'][:-1])
+        scaled_image = upscaler.upscale(colab.settings['Upscaler'], scale, "tmp_input.png", "tmp_output.png")
+        if gdrive:
+            path = save_gdrive(scaled_image, imageName + "-%dx" % scale)
+            print("Saved to " + path)
+        else:
+            scaled_image.save(imgSavePath + "-%dx.png" % scale)
