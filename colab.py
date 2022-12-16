@@ -124,7 +124,7 @@ def install_vendor():
     # make dir
     os.makedirs("vendor", exist_ok=True)
     # GFPGAN
-    !rm -rf vendor/GFPGAN &> /dev/null
+    os.remove("vendor/GFPGAN") if os.path.exists("vendor/GFPGAN") else None
     !git clone https://github.com/TencentARC/GFPGAN.git vendor/GFPGAN &> /dev/null
     !pip install basicsr &> /dev/null
     !pip install facexlib &> /dev/null
