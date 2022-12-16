@@ -121,7 +121,8 @@ def prepare(mode):
 def install_vendor():
     print("Downloading upscalers...")
     # Into vendor
-    !mkdir -p vendor &> /dev/null
+    # make dir
+    !mkdir vendor
     # GFPGAN
     !rm -rf vendor/GFPGAN &> /dev/null
     !git clone https://github.com/TencentARC/GFPGAN.git vendor/GFPGAN &> /dev/null
