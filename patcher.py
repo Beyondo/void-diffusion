@@ -24,7 +24,6 @@ def patch(pipe):
         target_script = os.path.join(get_python_modules_dir(), 'diffusers', 'pipelines', 'stable_diffusion', 'safety_checker.py')
         if(os.path.exists(patched_script)):
             shutil.copyfile(patched_script, target_script)
-            from diffusers import StableDiffusionPipeline
             importlib.invalidate_caches()
         pipe.safety_checker = empty_safety_checker
         return True
