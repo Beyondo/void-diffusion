@@ -1,4 +1,4 @@
-import patcher, torch, random, time, importlib
+import patcher, torch, random, time, importlib, os
 importlib.reload(patcher)
 from IPython import display
 from IPython.display import HTML
@@ -122,7 +122,7 @@ def install_vendor():
     print("Downloading upscalers...")
     # Into vendor
     # make dir
-    !mkdir vendor
+    os.makedirs("vendor", exist_ok=True)
     # GFPGAN
     !rm -rf vendor/GFPGAN &> /dev/null
     !git clone https://github.com/TencentARC/GFPGAN.git vendor/GFPGAN &> /dev/null
