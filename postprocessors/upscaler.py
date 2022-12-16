@@ -6,19 +6,21 @@ import PIL.Image
 import io
 import base64
 import IPython.display
+import IPython
 import math
 import time
 import colab
 import postprocessor
 import importlib
 def upscale(upscaler, scale, image_input_path):
-    image = TF.to_tensor(PIL.Image.open(image_input_path))
+    image = PIL.Image.open(image_input_path)
     # Upscale image
     if upscaler.lower() == "bicubic":
-        image = TF.to_pil_image(image)
         image = image.resize((image.width * scale, image.height * scale), PIL.Image.BICUBIC)
-        image = TF.to_tensor(image)
-        image = image.unsqueeze(0)
+    elif upscaler.lower() == "gfpgan":
+        # Copy image to inputs/upload.png
+        image.save("inputs/upload.png")
+        IPython.get_ipython().system("python inference_gfpgan.py -i temp/input -o temp/output -v 1.3.8 -s " + str(scale) + " --bg_upsampler realesrgan")
+        image = PIL.Image.open("temp/output.png")
     # Convert back to PIL image
-    image = TF.to_pil_image(image[0])
     return image
