@@ -77,7 +77,9 @@ def init(ModelName):
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
-            print("-> Initializing model " + model_name + ":")
+            print("Installing vendors:")
+            install_vendor()
+            print("Initializing model " + model_name + ":")
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "" if model_name == "prompthero/openjourney" else "fp16"
             # Hook VOIDPipeline to StableDiffusionPipeline
@@ -115,3 +117,18 @@ def prepare(mode):
         settings['InitialSeed'] = settings['Seed']
     current_mode = mode
     torch.cuda.empty_cache()
+
+def install_vendor():
+    print("Downloading upscalers...")
+    # Into vendor
+    !mkdir -p vendor &> /dev/null
+    # GFPGAN
+    !rm -rf vendor/GFPGAN &> /dev/null
+    !git clone https://github.com/TencentARC/GFPGAN.git vendor/GFPGAN &> /dev/null
+    !pip install basicsr &> /dev/null
+    !pip install facexlib &> /dev/null
+    !pip install -q -r vendor/GFPGAN/requirements.txt &> /dev/null
+    !python vendor/GFPGAN/setup.py develop
+    !pip install realesrgan  # used for enhancing the background (non-face) regions
+    !wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.8/GFPGANv1.3.pth -P experiments/pretrained_models
+    # ESRGAN
