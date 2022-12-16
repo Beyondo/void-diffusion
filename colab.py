@@ -84,7 +84,7 @@ def init(ModelName):
             #import VOIDPipeline, importlib
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Hook()
-            if rev:
+            if rev != "":
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev).to("cuda:0")
             else:
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name).to("cuda:0")
