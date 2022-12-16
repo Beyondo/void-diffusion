@@ -120,9 +120,9 @@ def prepare(mode):
 def install_vendor():
     print("Installing vendors...")
     import os, IPython
-    # Into vendor
-    # make dir
-    os.makedirs("vendor", exist_ok=True)
+    if(os.path.exists("vendor")):
+        return
+    os.mkdir("vendor")
     # GFPGAN
     os.remove("vendor/GFPGAN") if os.path.exists("vendor/GFPGAN") else None
     # git clone using IPython magic
