@@ -77,7 +77,6 @@ def init(ModelName):
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
-            print("Installing vendors:")
             install_vendor()
             print("Initializing model " + model_name + ":")
             torch.set_default_dtype(torch.float16)
@@ -119,8 +118,8 @@ def prepare(mode):
     torch.cuda.empty_cache()
 
 def install_vendor():
+    print("Installing vendors...")
     import os, IPython
-    print("Downloading upscalers...")
     # Into vendor
     # make dir
     os.makedirs("vendor", exist_ok=True)
