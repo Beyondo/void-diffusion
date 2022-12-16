@@ -55,7 +55,7 @@ def post_process(img, imageName, gdrive = True):
     if colab.settings['Scale'] != "1x":
         from postprocessors import upscaler
         img.save("tmp_input.png")
-        scale = int(colab.settings['Upscale'][:-1])
+        scale = int(colab.settings['Scale'][:-1])
         scaled_image = upscaler.upscale(colab.settings['Upscaler'], scale, "tmp_input.png", "tmp_output.png")
         if gdrive:
             path = save_gdrive(scaled_image, imageName + "-%dx" % scale)
