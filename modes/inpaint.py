@@ -29,6 +29,11 @@ def process(ShouldSave, ShouldPreview = True):
         mask = mask.permute(2, 0, 1).unsqueeze(0)
         # apply the mask to the latent space
         latent_image = latent * mask + (1 - mask) * 0.5
+        latent_image = latent_image.permute(0, 2, 3, 1).squeeze(0)
+        latent_image = latent_image.cpu().numpy()
+        latent_image = Image.fromarray((latent_image * 255).astype("uint8"))
+        latent_image = latent_image.resize(init_image.size)
+        latents = [latent]
         grid = colab.image_grid([init_image, mask_image, mask_applied_image, latent_image], 1, 4)
     else:
         grid = colab.image_grid([init_image, mask_image, mask_applied_image, latent_image], 1, 3)
