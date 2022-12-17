@@ -18,8 +18,8 @@ def upscale(upscaler, scale, image_input_path):
     elif upscaler.lower() == "gfpgan":
         os.makedirs("temp/input", exist_ok=True)
         os.makedirs("temp/output", exist_ok=True)
-        image.save("temp/input/upload.png")
+        image.save("temp/input/image.png")
         IPython.get_ipython().system("python vendor/GFPGAN/inference_gfpgan.py -i temp/input -o temp/output -v 1.3 -s " + str(scale) + " --bg_upsampler realesrgan")
-        image = PIL.Image.open("temp/output.png")
+        image = PIL.Image.open("temp/output/restored_imgs/image.png")
     # Convert back to PIL image
     return image

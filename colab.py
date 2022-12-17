@@ -131,7 +131,7 @@ def install_vendor():
     IPython.get_ipython().system("pip install basicsr &> /dev/null")
     IPython.get_ipython().system("pip install facexlib &> /dev/null")
     IPython.get_ipython().system("pip install -q -r vendor/GFPGAN/requirements.txt &> /dev/null")
-    IPython.get_ipython().system("python vendor/GFPGAN/setup.py develop")
+    IPython.get_ipython().system("python vendor/GFPGAN/setup.py develop &> /dev/null")
     # used for enhancing the background (non-face) regions
     IPython.get_ipython().system("pip install realesrgan")
      # used for enhancing the background (non-face) regions
