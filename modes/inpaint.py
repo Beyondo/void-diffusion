@@ -27,9 +27,10 @@ def process(ShouldSave, ShouldPreview = True):
     print("Applying mask to image")
     # blend the mask into the image with 0.5 alpha
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
-    image_without_mask = init_image.copy()
-    # delete the masked area from the image
-    image_without_mask.paste((0, 0, 0), mask=mask_image)
+    # rgba
+    image_without_mask = init_image.convert("RGBA")
+    # set the masked 
+    image_without_mask.paste((0, 0, 0, 0), mask=mask_image)
     print("Displaying images")
     display(colab.image_grid([init_image, mask_image, mask_applied_image, image_without_mask], 1, 4))
     # Process image
