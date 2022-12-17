@@ -18,8 +18,11 @@ def process(ShouldSave, ShouldPreview = True):
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert('RGB')
     mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
+    # mask is black and white, so convert to RGB
+    mask_image = mask_image.convert("L").convert("RGB")
+    # apply mask to image
     mask_applied_image = init_image.copy()
-    mask_applied_image.paste(mask_image, (0, 0), mask_image)
+    mask_applied_image.paste((0, 0, 0), mask=mask_image)
     display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
     # Process image
     for i in range(num_iterations):
