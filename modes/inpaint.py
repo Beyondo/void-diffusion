@@ -22,8 +22,9 @@ def process(ShouldSave, ShouldPreview = True):
     print("Converting mask to RGB")
     mask_image = mask_image.convert("L").convert("RGB")
     # apply mask to image
-    print("Applying mask to image")
+    print("Copying image")
     mask_applied_image = init_image.copy()
+    print("Applying mask to image")
     mask_applied_image.paste((0, 0, 0), mask=mask_image)
     print("Displaying images")
     display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
