@@ -63,3 +63,4 @@ def post_process(img, imageName, gdrive = True):
             print("Saved to " + path)
         else:
             scaled_image.save(imgSavePath + "-%dx.png" % scale)
+        display(scaled_image, display_id=colab.get_current_image_uid() + ("-%dx" % scale))
