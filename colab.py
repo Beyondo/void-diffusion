@@ -66,7 +66,7 @@ def modify_clip_limit(limit):
     pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
     
-def init(ModelName):
+def init(ModelName, debug=False):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     ready = False
     model_name = ModelName
@@ -97,7 +97,7 @@ def init(ModelName):
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             print("Done.")
             ready = True
-            #from IPython.display import clear_output; clear_output()
+            if not debug: from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
         except Exception as e:
             # if contains "502 Server Error"
