@@ -47,7 +47,6 @@ def save_settings(filename, mode):
                 f.write("Initial Seed: %s\n" % colab.settings['InitialSeed'])
                 f.write("Prompt: %s\n" % colab.settings['Prompt'])
                 f.write("Negative Prompt: %s\n" % colab.settings['NegativePrompt'])
-                f.write("Strength: %s\n" % colab.settings['Strength'])
                 f.write("Initial Image URL: %s\n" % colab.settings['InitialImageURL'])
                 f.write("Mask Image URL: %s\n" % colab.settings['MaskImageURL'])
                 write_general_settings(f)
