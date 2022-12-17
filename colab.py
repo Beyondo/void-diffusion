@@ -120,7 +120,7 @@ def prepare(mode):
 def install_vendor():
     print("Installing vendors...")
     import os, IPython
-    if(os.path.exists("vendor")):
+    if(os.path.exists("/void-diffusion/vendor")):
         print("Vendor already installed.")
         return
     os.mkdir("vendor")
