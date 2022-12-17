@@ -16,12 +16,11 @@ def process(ShouldSave, ShouldPreview = True):
     # Load image
     init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
-    mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert('RGB')
+    mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert('RGBA')
     mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     # Create an image called "mask_applied" which is basically the initial image with the mask applied to it, the mask is black and white, so we can just multiply the two images together
     mask_applied = Image.new("RGB", init_image.size)
-    mask_image = mask_image.convert("RGB")
-    mask_applied = Image.blend(init_image, mask_image, 0.5)
+    mask_applied.paste(init_image, (0, 0), mask_image)
     grid = colab.image_grid([init_image, mask_image, mask_applied], 1, 3)
     display(grid)
     # Process image
