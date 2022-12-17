@@ -25,7 +25,8 @@ def process(ShouldSave, ShouldPreview = True):
     print("Copying image")
     mask_applied_image = init_image.copy()
     print("Applying mask to image")
-    mask_applied_image.paste((0, 0, 0), mask=mask_image)
+    # blend the mask into the image with the mask as the alpha channel
+    mask_applied_image.paste(mask_image, (0, 0), mask_image)
     print("Displaying images")
     display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
     # Process image
