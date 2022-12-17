@@ -20,6 +20,7 @@ def process(ShouldSave, ShouldPreview = True):
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
     # rgba
     image_rgba_mask_removed = init_image.convert("RGBA")
+    print("Apply mask to image: ", image_rgba_mask_removed.size, mask_image.size)
     image_rgba_mask_removed.putalpha(mask_image)
     display(colab.image_grid([init_image, mask_image, mask_applied_image, image_rgba_mask_removed], 1, 4))
     # Process image
