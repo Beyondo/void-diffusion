@@ -31,11 +31,6 @@ def process(ShouldSave, ShouldPreview = True):
         if True: #colab.settings["Strength"] > 0:
             # generate random image latents for inpainting
             latents = torch.randn(1, 18, 512, device="cuda")
-            latent_image = torch.nn.functional.interpolate(
-                generator.synthesis(latents, noise_mode="const"),
-                size=init_image.size,
-                mode="bilinear",
-                align_corners=False)[0].cpu().clamp_(0, 1).permute(1, 2, 0).numpy()
         image = colab.inpaint(
             prompt=colab.settings['Prompt'],
             image=init_image,
