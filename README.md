@@ -3,7 +3,7 @@ An easy-to-use Stable Diffusion toolkit with NSFW filter disabled.
 
 Features:
 - **Upscaling:** Scale your images up to 8x their original size
-- **Facial corrections:** Correct your characters facial expressions using a post-processor like GFPGAN; CAN BE off
+- **Facial corrections:** Correct your characters facial expressions using a post-processor like GFPGAN; can be off
 - **Text2Img:** Generate images using a prompt; you can also specifiy what you don't want using a negative prompt
 - **Preview:** You can now preview images while they're generating! Makes a fun guessing game
 - **Img2Img:**  Generate images using an initial image and a prompt describing it with many options
