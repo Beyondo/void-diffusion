@@ -28,8 +28,6 @@ def process(ShouldSave, ShouldPreview = True):
     # blend the mask into the image with 0.5 alpha
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
     image_without_mask = init_image.copy()
-    # convert black and white mask to a transparent RGBA mask
-    mask_image = mask_image.convert("L").point(lambda x: x, mode="1")
     # delete the masked area from the image
     image_without_mask.paste((0, 0, 0), mask=mask_image)
     print("Displaying images")
