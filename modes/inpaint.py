@@ -18,11 +18,12 @@ def process(ShouldSave, ShouldPreview = True):
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert('RGB')
     mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
-    init_and_mask_grids = torch.cat([colab.image_to_grid(init_image), colab.image_to_grid(mask_image)], dim=2)
-    # also add a third column with the image & mask combined with the mask applied with opacity 0.5
-    combined_image = Image.composite(init_image, Image.new('RGB', init_image.size, (0, 0, 0)), mask_image)
-    init_and_mask_grids = torch.cat([init_and_mask_grids, colab.image_to_grid(combined_image)], dim=2)
-    display(colab.grid_to_image(init_and_mask_grids))
+    # Create an image called "mask_applied" which is basically the initial image with the mask applied to it, the mask is black and white, so we can just multiply the two images together
+    mask_applied = Image.new("RGB", init_image.size)
+    mask_applied.paste(init_image, (0, 0), mask_image)
+    # Show them in a 3x1 grid
+    grid = colab.image_grid([init_image, mask_image, mask_applied], 3, 1)
+    display(grid)
     # Process image
     for i in range(num_iterations):
         colab.image_id = i # needed for progress.py

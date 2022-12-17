@@ -145,8 +145,14 @@ def install_vendor():
     except Exception as e:
         print("Error: %s" % e)
 
-def image_to_grid(image, rows=1, columns=1, size=256):
-    if rows == 1 and columns == 1:
-        return image
-    image = image.resize((size * columns, size * rows))
-    return image
+def image_grid(imgs, rows, cols):
+    assert len(imgs) == rows*cols
+    import PIL.Image
+
+    w, h = imgs[0].size
+    grid = PIL.Image.new('RGB', size=(cols*w, rows*h))
+    grid_w, grid_h = grid.size
+    
+    for i, img in enumerate(imgs):
+        grid.paste(img, box=(i%cols*w, i//cols*h))
+    return grid
