@@ -36,7 +36,6 @@ def process(ShouldSave, ShouldPreview = True):
             mask_image=mask_image,
             negative_prompt=colab.settings['NegativePrompt'],
             guidance_scale=colab.settings['GuidanceScale'],
-            strength=colab.settings['Strength'],
             num_inference_steps=colab.settings['Steps'],
             generator=generator,
             callback=progress.callback if ShouldPreview else None,
