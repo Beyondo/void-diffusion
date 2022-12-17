@@ -1,4 +1,4 @@
-import torch, os, time, datetime, colab
+import torch, os, time, datetime, colab, importlib
 from IPython.display import Image
 from IPython.display import display
 
@@ -47,6 +47,20 @@ def save_settings(filename, mode):
             f.write("Website: https://voidops.com\n")
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
-def post_process(img, filename):
-    imgSavePath = get_save_path(filename)
-    imgFile = imgSavePath + "-2x.png"
+def post_process(img, imageName, gdrive = True):
+    if gdrive:
+        path = save_gdrive(img, imageName)
+        print("Saved to " + path)
+    imgSavePath = get_save_path(imageName)
+    if colab.settings['Scale'] != "1x":
+        from postprocessors import upscaler
+        importlib.reload(upscaler)
+        img.save("tmp_input.png")
+        scale = int(colab.settings['Scale'][:-1])
+        scaled_image = upscaler.upscale(colab.settings['Upscaler'], scale, "tmp_input.png")
+        if gdrive:
+            path = save_gdrive(scaled_image, imageName + "-%dx" % scale)
+            print("Saved to " + path)
+        else:
+            scaled_image.save(imgSavePath + "-%dx.png" % scale)
+        display(scaled_image, display_id=colab.get_current_image_uid() + ("-%dx" % scale))

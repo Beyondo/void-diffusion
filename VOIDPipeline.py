@@ -41,6 +41,7 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
             The prompt or prompts not to guide the image generation. Ignored when not using guidance (i.e., ignored
             if `guidance_scale` is less than `1`).
     """
+    max_length = self.tokenizer.model_max_length
     batch_size = len(prompt) if isinstance(prompt, list) else 1
     text_inputs = self.tokenizer(
         prompt,
@@ -50,6 +51,8 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
         return_tensors="pt",
     )
     text_input_ids = text_inputs.input_ids
+    # Print their size
+    print("text_input_ids.shape: ", text_input_ids.shape)
     untruncated_ids = self.tokenizer(prompt, padding="longest", return_tensors="pt").input_ids
     if untruncated_ids.shape[-1] >= text_input_ids.shape[-1] and not torch.equal(text_input_ids, untruncated_ids):
         removed_text = self.tokenizer.batch_decode(untruncated_ids[:, self.tokenizer.model_max_length - 1 : -1])
@@ -61,6 +64,9 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
         attention_mask = text_inputs.attention_mask.to(device)
     else:
         attention_mask = None
+        
+    print("Size: ", self.text_encoder.config.max_position_embeddings)
+
     text_embeddings = self.text_encoder(
         text_input_ids.to(device),
         attention_mask=attention_mask,
@@ -148,15 +154,16 @@ def generate_text2img(
     # corresponds to doing no classifier free guidance.
     do_classifier_free_guidance = guidance_scale > 1.0
     # 3. Encode input prompt
+    print("3. Encoding prompt")
     text_embeddings = self._encode_prompt(
         prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt
     )
     # 4. Prepare timesteps
-    print("Testing 4")
+    print("4. Prepare timesteps")
     self.scheduler.set_timesteps(num_inference_steps, device=device)
     timesteps = self.scheduler.timesteps
     # 5. Prepare latent variables
-    print("Testing 5")
+    print("5. Prepare latent variables")
     num_channels_latents = self.unet.in_channels
     latents = self.prepare_latents(
         batch_size * num_images_per_prompt,
@@ -169,12 +176,12 @@ def generate_text2img(
         latents,
     )
     # 6. Prepare extra step kwargs. TODO: Logic should ideally just be moved out of the pipeline
-    print("Testing 6")
+    print("6. Prepare extra step kwargs.")
     extra_step_kwargs = self.prepare_extra_step_kwargs(generator, eta)
     # 7. Denoising loop
-    print("Testing 7")
+    print("7. Denoising loop")
     num_warmup_steps = len(timesteps) - num_inference_steps * self.scheduler.order
-    print("Testing Final:")
+    print("Starting denoising loop...")
     with self.progress_bar(total=num_inference_steps) as progress_bar:
         for i, t in enumerate(timesteps):
             # expand the latents if we are doing classifier free guidance
@@ -204,7 +211,7 @@ def generate_text2img(
         return (image, has_nsfw_concept)
     return StableDiffusionPipelineOutput(images=image, nsfw_content_detected=has_nsfw_concept)
 
-def Take_Over():
+def Hook():
     from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
     StableDiffusionPipeline.__call__ = generate_text2img
     StableDiffusionPipeline._encode_prompt = text2img_encode_prompt
