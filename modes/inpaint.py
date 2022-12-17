@@ -16,7 +16,7 @@ def process(ShouldSave, ShouldPreview = True):
     # Load image
     init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
-    mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert('RGBA')
+    mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert('RGB')
     mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_applied_image = Image.new("RGB", init_image.size)
     mask_applied_image.paste(init_image, (0, 0), mask_image)
@@ -28,9 +28,11 @@ def process(ShouldSave, ShouldPreview = True):
         progress.reset()
         progress.show()
         latents = None
-        if True: #colab.settings["Strength"] > 0:
+        if True:
             # generate random image latents for inpainting
             latents = torch.randn(1, 4, 64, 64, device="cuda")
+            # blend the mask into the latents
+            latents = latents * (1 - mask_image.convert("L").resize((64, 64), Image.BILINEAR).convert("RGB"))
         image = colab.inpaint(
             prompt=colab.settings['Prompt'],
             image=init_image,
