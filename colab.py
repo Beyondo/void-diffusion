@@ -97,7 +97,8 @@ def init(ModelName, debug=False):
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             print("Done.")
             ready = True
-            if not debug: from IPython.display import clear_output; clear_output()
+            if not debug:
+                from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
         except Exception as e:
             # if contains "502 Server Error"
