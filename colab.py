@@ -83,9 +83,9 @@ def init(ModelName, debug=False):
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "" if model_name == "prompthero/openjourney" else "fp16"
             # Hook VOIDPipeline to StableDiffusionPipeline
-            #import VOIDPipeline, importlib
-            #importlib.reload(VOIDPipeline)
-            #VOIDPipeline.Hook()
+            import VOIDPipeline, importlib
+            importlib.reload(VOIDPipeline)
+            VOIDPipeline.Hook()
             if rev != "":
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             else:

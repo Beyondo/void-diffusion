@@ -45,9 +45,6 @@ def text2img_encode_prompt(self, prompt, device, num_images_per_prompt, do_class
     batch_size = len(prompt) if isinstance(prompt, list) else 1
     text_inputs = self.tokenizer(
         prompt,
-        padding="max_length",
-        max_length=self.tokenizer.model_max_length,
-        truncation=True,
         return_tensors="pt",
     )
     text_input_ids = text_inputs.input_ids
