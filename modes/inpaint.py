@@ -28,7 +28,7 @@ def process(ShouldSave, ShouldPreview = True):
     # blend the mask into the image with 0.5 alpha
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
     # rgba
-    transparent_mask = transparent_mask.convert("L")
+    transparent_mask = mask_image.convert("L")
     image_without_mask = init_image.convert("RGBA")
     # delete the mask from the image
     print("Deleting mask from image")
