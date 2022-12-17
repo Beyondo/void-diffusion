@@ -121,6 +121,7 @@ def install_vendor():
     print("Installing vendors...")
     import os, IPython
     if(os.path.exists("vendor")):
+        print("Vendor already installed.")
         return
     os.mkdir("vendor")
     # GFPGAN
