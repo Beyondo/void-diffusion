@@ -126,13 +126,14 @@ def install_vendor():
     # GFPGAN
     os.remove("vendor/GFPGAN") if os.path.exists("vendor/GFPGAN") else None
     # git clone using IPython magic
-    IPython.get_ipython().system_raw("git clone https://github.com/TencentARC/GFPGAN.git vendor/GFPGAN &> /dev/null")
-    IPython.get_ipython().system_raw("pip install basicsr &> /dev/null")
-    IPython.get_ipython().system_raw("pip install facexlib &> /dev/null")
-    IPython.get_ipython().system_raw("pip install -q -r vendor/GFPGAN/requirements.txt &> /dev/null")
-    IPython.get_ipython().system_raw("python vendor/GFPGAN/setup.py develop")
+    IPython.get_ipython().system("git clone https://github.com/TencentARC/GFPGAN.git vendor/GFPGAN &> /dev/null")
+    IPython.get_ipython().system("pip install basicsr &> /dev/null")
+    IPython.get_ipython().system("pip install facexlib &> /dev/null")
+    IPython.get_ipython().system("pip install -q -r vendor/GFPGAN/requirements.txt &> /dev/null")
+    IPython.get_ipython().system("python vendor/GFPGAN/setup.py develop")
     # used for enhancing the background (non-face) regions
-    IPython.get_ipython().system_raw("pip install realesrgan")
+    IPython.get_ipython().systeM("pip install realesrgan")
      # used for enhancing the background (non-face) regions
-    IPython.get_ipython().system_raw("wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.8/GFPGANv1.3.pth -P experiments/pretrained_models")
+    IPython.get_ipython().system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth -p experiments/pretrained_models")
+    IPython.get_ipython().system("wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.8/GFPGANv1.3.pth -P experiments/pretrained_models")
     # ESRGAN

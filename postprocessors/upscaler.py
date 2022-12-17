@@ -1,6 +1,4 @@
 import torch, os
-import torchvision.transforms.functional as TF
-import torchvision.transforms as transforms
 import numpy as np
 import PIL.Image
 import io
@@ -18,7 +16,6 @@ def upscale(upscaler, scale, image_input_path):
     if upscaler.lower() == "bicubic":
         image = image.resize((image.width * scale, image.height * scale), PIL.Image.BICUBIC)
     elif upscaler.lower() == "gfpgan":
-        # create temp folder with subfolders
         os.makedirs("temp/input", exist_ok=True)
         os.makedirs("temp/output", exist_ok=True)
         image.save("temp/input/upload.png")
