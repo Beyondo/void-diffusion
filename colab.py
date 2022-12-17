@@ -144,3 +144,9 @@ def install_vendor():
         print("Done.")
     except Exception as e:
         print("Error: %s" % e)
+
+def image_to_grid(image, rows=1, columns=1, size=256):
+    if rows == 1 and columns == 1:
+        return image
+    image = image.resize((size * columns, size * rows))
+    return image
