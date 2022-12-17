@@ -149,7 +149,8 @@ def image_grid(imgs, rows, cols):
     assert len(imgs) == rows*cols
     import PIL.Image
     w, h = imgs[0].size
-    grid = PIL.Image.new('RGB', size=(cols*w, rows*h))
+    grid = PIL.Image.new('RGBA', size=(cols*w, rows*h))
     for i, img in enumerate(imgs):
+        if img.mode != 'RGBA': img = img.convert('RGBA')
         grid.paste(img, box=(i%cols*w, i//cols*h))
     return grid
