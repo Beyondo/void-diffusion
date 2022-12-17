@@ -79,6 +79,7 @@ def init(ModelName):
         try:
             install_vendor()
             print("Initializing model " + model_name + ":")
+            os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb=512"
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "" if model_name == "prompthero/openjourney" else "fp16"
             # Hook VOIDPipeline to StableDiffusionPipeline
