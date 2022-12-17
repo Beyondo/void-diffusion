@@ -22,7 +22,7 @@ def process(ShouldSave, ShouldPreview = True):
     mask_applied = Image.new("RGB", init_image.size)
     mask_image = mask_image.convert("RGB")
     mask_applied = Image.blend(init_image, mask_image, 0.5)
-    grid = colab.image_grid([init_image, mask_image, mask_applied], 3, 1)
+    grid = colab.image_grid([init_image, mask_image, mask_applied], 1, 3)
     display(grid)
     # Process image
     for i in range(num_iterations):
