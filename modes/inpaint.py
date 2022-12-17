@@ -11,8 +11,6 @@ def process(ShouldSave, ShouldPreview = True):
     colab.prepare("inpaint")
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if colab.save_settings: postprocessor.save_settings(timestamp, mode="inpaint")
-    num_iterations = colab.settings['Iterations']
-    display("Iterations: 0/%d" % num_iterations, display_id="iterations")
     # Load image
     init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
@@ -21,12 +19,11 @@ def process(ShouldSave, ShouldPreview = True):
     mask_applied_image = init_image.copy()
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
     # rgba
-    image_without_mask = init_image.paste(mask_image, (0, 0), mask_image)
-    # delete the mask from the image
-    print("Deleting mask from image")
-    print("Displaying images")
-    display(colab.image_grid([init_image, mask_image, mask_applied_image, image_without_mask], 1, 4))
+    image_rgba_mask_removed = init_image.copy().putalpha(mask_image)
+    display(colab.image_grid([init_image, mask_image, mask_applied_image, image_rgba_mask_removed], 1, 4))
     # Process image
+    num_iterations = colab.settings['Iterations']
+    display("Iterations: 0/%d" % num_iterations, display_id="iterations")
     for i in range(num_iterations):
         colab.image_id = i # needed for progress.py
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
