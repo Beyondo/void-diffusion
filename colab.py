@@ -132,7 +132,7 @@ def install_vendor():
     IPython.get_ipython().system("pip install -q -r vendor/GFPGAN/requirements.txt &> /dev/null")
     IPython.get_ipython().system("python vendor/GFPGAN/setup.py develop")
     # used for enhancing the background (non-face) regions
-    IPython.get_ipython().systeM("pip install realesrgan")
+    IPython.get_ipython().system("pip install realesrgan")
      # used for enhancing the background (non-face) regions
     IPython.get_ipython().system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth -p experiments/pretrained_models")
     IPython.get_ipython().system("wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.8/GFPGANv1.3.pth -P experiments/pretrained_models")
