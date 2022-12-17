@@ -22,6 +22,7 @@ def process(ShouldSave, ShouldPreview = True):
     mask_applied = Image.new("RGB", init_image.size)
     mask_applied.paste(init_image, (0, 0), mask_image)
     # Show them in a 3x1 grid
+    print('Initial image, mask image, and mask applied to initial image: '')
     grid = colab.image_grid([init_image, mask_image, mask_applied], 3, 1)
     display(grid)
     # Process image
