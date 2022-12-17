@@ -22,18 +22,15 @@ def process(ShouldSave, ShouldPreview = True):
     mask_applied_image.paste(init_image, (0, 0), mask_image)
     latents = None
     if True: #colab.settings["Strength"] > 0:
-        # generate latent space from the mask using torch
-        latent = torch.randn(1, 512, device="cuda")
-        # generate a mask from the mask image
-        mask = torch.tensor(mask_image, device="cuda").float() / 255
-        mask = mask.permute(2, 0, 1).unsqueeze(0)
-        # apply the mask to the latent space
-        latent_image = latent * mask + (1 - mask) * 0.5
-        latent_image = latent_image.permute(0, 2, 3, 1).squeeze(0)
-        latent_image = latent_image.cpu().numpy()
-        latent_image = Image.fromarray((latent_image * 255).astype("uint8"))
-        latent_image = latent_image.resize(init_image.size)
-        latents = [latent]
+        # generate random image latents for inpainting
+        latents = torch.randn(1, 18, 512, device="cuda")
+        latent_image = torch.nn.functional.interpolate(
+            colab.generator.synthesis(latents, noise_mode="const"),
+            size=init_image.size,
+            mode="bilinear",
+            align_corners=False)[0].cpu().clamp_(0, 1).permute(1, 2, 0).numpy()
+        import numpy as np
+        latent_image = Image.fromarray((latent_image * 255).astype(np.uint8))
         grid = colab.image_grid([init_image, mask_image, mask_applied_image, latent_image], 1, 4)
     else:
         grid = colab.image_grid([init_image, mask_image, mask_applied_image, latent_image], 1, 3)
