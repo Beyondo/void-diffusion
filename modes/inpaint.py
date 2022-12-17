@@ -16,24 +16,16 @@ def process(ShouldSave, ShouldPreview = True):
     # Load image
     init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
-    mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert('RGB')
+    mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("L")
     mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
-    # mask is black and white, so convert to RGB
-    print("Converting mask to RGB")
-    mask_image = mask_image.convert("L").convert("RGB")
-    # apply mask to image
-    print("Copying image")
     mask_applied_image = init_image.copy()
-    print("Applying mask to image")
-    # blend the mask into the image with 0.5 alpha
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
     # rgba
-    transparent_mask = mask_image.convert("L")
-    image_without_mask = init_image.convert("RGBA")
+    image_without_mask = init_image.paste(mask_image, (0, 0), mask_image)
     # delete the mask from the image
     print("Deleting mask from image")
     print("Displaying images")
-    display(colab.image_grid([init_image, mask_image, mask_applied_image, transparent_mask], 1, 4))
+    display(colab.image_grid([init_image, mask_image, mask_applied_image, image_without_mask], 1, 4))
     # Process image
     for i in range(num_iterations):
         colab.image_id = i # needed for progress.py
