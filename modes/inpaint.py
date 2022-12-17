@@ -19,8 +19,9 @@ def process(ShouldSave, ShouldPreview = True):
     mask_applied_image = init_image.copy()
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
     # rgba
-    image_rgba_mask_removed = init_image.copy().putalpha(mask_image)
-    display(colab.image_grid([init_image, mask_image, mask_applied_image, image_rgba_mask_removed], 1, 4))
+    image_rgba_mask_removed = init_image.convert("RGBA")
+    image_rgba_mask_removed.putalpha(mask_image)
+    display(colab.image_grid([init_image, mask_image, mask_applied_image, image_without_mask], 1, 4))
     # Process image
     num_iterations = colab.settings['Iterations']
     display("Iterations: 0/%d" % num_iterations, display_id="iterations")
