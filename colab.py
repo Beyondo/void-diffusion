@@ -46,9 +46,27 @@ def create_guided_pipeline(pipeline):
         feature_extractor=feature_extractor,
     )
     return guided_pipeline
+def replace_everything(target_dir, from_text, to_text):
+    global pipeline, model_name
+    (repository_id, name) = model_name.split("/")
+    for root, dirs, files in os.walk(target_dir):
+        for file in files:
+            if file.endswith(".json"):
+                path = os.path.join(root, file)
+                with open(path, "r") as f:
+                    data = f.read()
+                data = data.replace(from_text, to_text)
+                with open(path, "w") as f:
+                    f.write(data)
+                    print("Wrote to " + path)
 def modify_clip_limit(limit):
-    global pipeline
-    # Text Encoder
+    global pipeline, model_name
+    (repository_id, name) = model_name.split("/")
+    replace_everything("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "model_max_length\": 77", "model_max_length\": %d" % limit)
+    replace_everything("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "max_position_embeddings\": 77", "max_position_embeddings\": %d" % limit)
+    from shutil import copytree, ignore_patterns
+    copytree("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "/content/void-diffusion/stable-diffusion-1.5v")
+    pipeline =  StableDiffusionPipeline.from_pretrained("/content/void-diffusion/stable-diffusion-1.5v/ded79e214aa69e42c24d3f5ac14b76d568679cc2", revision="fp16", torch_dtype=torch.float16).to("cuda:0")
     old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     input_embeddings = pipeline.text_encoder.text_model.embeddings.token_embedding
     pipeline.text_encoder.config.max_position_embeddings = limit
@@ -63,10 +81,11 @@ def modify_clip_limit(limit):
     pipeline.text_encoder.text_model.embeddings.position_embedding = torch.nn.Embedding(limit, 768).to("cuda:0") # Zero padding
     pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data[:old_weights.shape[0]] = old_weights
     # Tokenizer
-    pipeline.tokenizer.model_max_length = limit
+    #pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
+    return pipeline
     
-def init(ModelName):
+def init(ModelName, debug=False):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
     ready = False
     model_name = ModelName
@@ -79,6 +98,7 @@ def init(ModelName):
         try:
             install_vendor()
             print("Initializing model " + model_name + ":")
+            os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb=512"
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "" if model_name == "prompthero/openjourney" else "fp16"
             # Hook VOIDPipeline to StableDiffusionPipeline
@@ -89,14 +109,17 @@ def init(ModelName):
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             else:
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
-            #modify_clip_limit(77)
+            #print ("Before: ", pipeline.tokenizer.model_max_length)
+            pipeline = modify_clip_limit(512)
+            #print ("After: ", pipeline.tokenizer.model_max_length)
             patcher.patch(pipeline)
             text2img = pipeline
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             print("Done.")
             ready = True
-            #from IPython.display import clear_output; clear_output()
+            if not debug:
+                from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
         except Exception as e:
             # if contains "502 Server Error"
@@ -142,3 +165,13 @@ def install_vendor():
         print("Done.")
     except Exception as e:
         print("Error: %s" % e)
+
+def image_grid(imgs, rows, cols):
+    assert len(imgs) == rows*cols
+    import PIL.Image
+    w, h = imgs[0].size
+    grid = PIL.Image.new('RGBA', size=(cols*w, rows*h))
+    for i, img in enumerate(imgs):
+        if img.mode != 'RGBA': img = img.convert('RGBA')
+        grid.paste(img, box=(i%cols*w, i//cols*h))
+    return grid

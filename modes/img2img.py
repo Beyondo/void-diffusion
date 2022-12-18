@@ -11,14 +11,14 @@ def process(ShouldSave, ShouldPreview = True):
     colab.prepare("img2img")
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if colab.save_settings: postprocessor.save_settings(timestamp, mode="img2img")
-    num_iterations = colab.settings['Iterations']
-    display("Iterations: 0/%d" % num_iterations, display_id="iterations")
     # Load image
     response = requests.get(colab.settings['InitialImageURL'])
     init_image = Image.open(BytesIO(response.content)).convert('RGB')
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     display(init_image)
     # Process image
+    num_iterations = colab.settings['Iterations']
+    display("Iterations: 0/%d" % num_iterations, display_id="iterations")
     for i in range(num_iterations):
         colab.image_id = i # needed for progress.py
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
