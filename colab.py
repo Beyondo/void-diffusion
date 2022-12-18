@@ -79,7 +79,7 @@ def modify_clip_limit(limit):
     # Tokenizer
     pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-    pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
+    return StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
     
 def init(ModelName, debug=False):
     global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
@@ -106,7 +106,7 @@ def init(ModelName, debug=False):
             else:
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
             modify_clip_limit(512)
-            patcher.patch(pipeline)
+            pipeline = patcher.patch(pipeline)
             text2img = pipeline
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
