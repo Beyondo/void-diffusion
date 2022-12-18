@@ -110,7 +110,7 @@ def init(ModelName, debug=False):
             else:
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
             #print ("Before: ", pipeline.tokenizer.model_max_length)
-            pipeline = modify_clip_limit(512)
+            #pipeline = modify_clip_limit(512)
             #print ("After: ", pipeline.tokenizer.model_max_length)
             patcher.patch(pipeline)
             text2img = pipeline
