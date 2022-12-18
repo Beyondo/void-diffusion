@@ -46,23 +46,26 @@ def create_guided_pipeline(pipeline):
         feature_extractor=feature_extractor,
     )
     return guided_pipeline
+def replace_everything(target_dir, from_text, to_text):
+    global pipeline, model_name
+    (repository_id, name) = model_name.split("/")
+    for root, dirs, files in os.walk(target_dir):
+        for file in files:
+            if file.endswith(".json"):
+                path = os.path.join(root, file)
+                with open(path, "r") as f:
+                    data = f.read()
+                data = data.replace(from_text, to_text)
+                with open(path, "w") as f:
+                    f.write(data)
+                    print("Wrote to " + path)
 def modify_clip_limit(limit):
     # search the entire filestystem for the file tokenizer_config.json
     global pipeline, model_name
     # runwayml--stable-diffusion-v1-5/snapshots/"
     (repository_id, name) = model_name.split("/")
-    target_dir = "/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name)
-    for root, dirs, files in os.walk(target_dir):
-        for file in files:
-            if file == "tokenizer_config.json":
-                path = os.path.join(root, file)
-                with open(path, "r") as f:
-                    data = f.read()
-                data = data.replace("77", str(limit))
-                with open(path, "w") as f:
-                    f.write(data)
-                    print("Wrote to " + path)
-    # Text Encoder
+    replace_everything("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "model_max_length\": 77", "model_max_length\": %d" % limit)
+    replace_everything("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "max_position_embeddings\": 77", "max_position_embeddings\": %d" % limit)
     old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     input_embeddings = pipeline.text_encoder.text_model.embeddings.token_embedding
     pipeline.text_encoder.config.max_position_embeddings = limit
