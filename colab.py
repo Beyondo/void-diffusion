@@ -79,6 +79,8 @@ def modify_clip_limit(limit):
     # Tokenizer
     pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
+    import importlib
+    from diffusers import StableDiffusionPipeline
     importlib.reload(StableDiffusionPipeline)
     
 def init(ModelName, debug=False):
