@@ -82,6 +82,7 @@ def modify_clip_limit(limit):
     # Tokenizer
     #pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
+    importlib.reload(StableDiffusionPipeline)
     return StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
     
 def init(ModelName, debug=False):
