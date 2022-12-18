@@ -47,7 +47,20 @@ def create_guided_pipeline(pipeline):
     )
     return guided_pipeline
 def modify_clip_limit(limit):
+    # search the entire filestystem for the file tokenizer_config.json
     global pipeline
+    # runwayml--stable-diffusion-v1-5/snapshots/"
+    target_dir = "/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (model_name.split("/"))
+    for root, dirs, files in os.walk(target_dir):
+        for file in files:
+            if file == "tokenizer_config.json":
+                path = os.path.join(root, file)
+                with open(path, "r") as f:
+                    data = f.read()
+                data = data.replace("77", str(limit))
+                with open(path, "w") as f:
+                    f.write(data)
+    print(target_dir)
     # Text Encoder
     old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     input_embeddings = pipeline.text_encoder.text_model.embeddings.token_embedding
@@ -90,7 +103,7 @@ def init(ModelName, debug=False):
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             else:
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
-            #modify_clip_limit(77)
+            modify_clip_limit(77)
             patcher.patch(pipeline)
             text2img = pipeline
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
