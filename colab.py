@@ -50,7 +50,8 @@ def modify_clip_limit(limit):
     # search the entire filestystem for the file tokenizer_config.json
     global pipeline
     # runwayml--stable-diffusion-v1-5/snapshots/"
-    target_dir = "/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (model_name.split("/"))
+    (repository_id, model_name) = model_name.split("/")
+    target_dir = "/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, model_name)
     for root, dirs, files in os.walk(target_dir):
         for file in files:
             if file == "tokenizer_config.json":
