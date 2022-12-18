@@ -11,6 +11,6 @@ Features:
 - **Img2Img:**  Generate images using an initial image and a prompt describing it with many options
 - **SaveDiffusionSettings:** Your settings are now automatically saved so you never lose a good config; can be off
 
-Link: https://colab.research.google.com/drive/1MRwvDBNc4jhlEXSAtdLe49A4C1k35pgp
+Link: https://voidops.com/diffusion
 
 This repository is intended only as source control ~ Usage is mainly through the colab.
