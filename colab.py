@@ -48,10 +48,10 @@ def create_guided_pipeline(pipeline):
     return guided_pipeline
 def modify_clip_limit(limit):
     # search the entire filestystem for the file tokenizer_config.json
-    global pipeline
+    global pipeline, model_name
     # runwayml--stable-diffusion-v1-5/snapshots/"
-    (repository_id, model_name) = model_name.split("/")
-    target_dir = "/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, model_name)
+    (repository_id, name) = model_name.split("/")
+    target_dir = "/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name)
     for root, dirs, files in os.walk(target_dir):
         for file in files:
             if file == "tokenizer_config.json":
