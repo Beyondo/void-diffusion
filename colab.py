@@ -60,13 +60,10 @@ def replace_everything(target_dir, from_text, to_text):
                     f.write(data)
                     print("Wrote to " + path)
 def modify_clip_limit(limit):
-    # search the entire filestystem for the file tokenizer_config.json
     global pipeline, model_name
-    # runwayml--stable-diffusion-v1-5/snapshots/"
     (repository_id, name) = model_name.split("/")
     replace_everything("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "model_max_length\": 77", "model_max_length\": %d" % limit)
     replace_everything("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "max_position_embeddings\": 77", "max_position_embeddings\": %d" % limit)
-    # copy "/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name) to "/content/void-diffusion/stable-diffusion-1.5v"
     from shutil import copytree, ignore_patterns
     copytree("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "/content/void-diffusion/stable-diffusion-1.5v")
     pipeline =  StableDiffusionPipeline.from_pretrained("/content/void-diffusion/stable-diffusion-1.5v/ded79e214aa69e42c24d3f5ac14b76d568679cc2", revision="fp16", torch_dtype=torch.float16).to("cuda:0")
@@ -74,7 +71,7 @@ def modify_clip_limit(limit):
     input_embeddings = pipeline.text_encoder.text_model.embeddings.token_embedding
     pipeline.text_encoder.config.max_position_embeddings = limit
     # Bug: The following line is supposed to be a hack to make the model reload everything using the new config but it also makes the model generate random images:
-    pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
+    #pipeline.text_encoder.text_model.__init__(config=pipeline.text_encoder.config)
     # Which might be because the model wasn't trained to receive N number of tokens to begin with,
     # however, that might not be the case since if I tried with the default value, that's "77" and uncommenting that line, it still generates random images.
     # So there's still the possibility that there might be a way to make it work, but I don't know how.
@@ -105,16 +102,16 @@ def init(ModelName, debug=False):
             torch.set_default_dtype(torch.float16)
             rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else "" if model_name == "prompthero/openjourney" else "fp16"
             # Hook VOIDPipeline to StableDiffusionPipeline
-            import VOIDPipeline, importlib
-            importlib.reload(VOIDPipeline)
-            VOIDPipeline.Hook()
+            #import VOIDPipeline, importlib
+            #importlib.reload(VOIDPipeline)
+            #VOIDPipeline.Hook()
             if rev != "":
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             else:
                 pipeline = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
-            print ("Before: ", pipeline.tokenizer.model_max_length)
+            #print ("Before: ", pipeline.tokenizer.model_max_length)
             pipeline = modify_clip_limit(512)
-            print ("After: ", pipeline.tokenizer.model_max_length)
+            #print ("After: ", pipeline.tokenizer.model_max_length)
             patcher.patch(pipeline)
             text2img = pipeline
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)

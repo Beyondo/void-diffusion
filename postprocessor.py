@@ -51,8 +51,7 @@ def save_settings(filename, mode):
                 f.write("Mask Image URL: %s\n" % colab.settings['MaskImageURL'])
                 write_general_settings(f)
             f.write(('-' * 64) + "\n")
-            f.write("Main Colab: https://colab.research.google.com/drive/1MRwvDBNc4jhlEXSAtdLe49A4C1k35pgp\n")
-            f.write("Website: https://voidops.com\n")
+            f.write("Latest version: https://voidops.com/diffusion\n")
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
 def post_process(img, imageName, gdrive = True):
