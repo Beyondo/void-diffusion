@@ -61,7 +61,7 @@ def modify_clip_limit(limit):
                 data = data.replace("77", str(limit))
                 with open(path, "w") as f:
                     f.write(data)
-    print(target_dir)
+                    print("Wrote to " + path)
     # Text Encoder
     old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     input_embeddings = pipeline.text_encoder.text_model.embeddings.token_embedding
