@@ -66,6 +66,9 @@ def modify_clip_limit(limit):
     (repository_id, name) = model_name.split("/")
     replace_everything("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "model_max_length\": 77", "model_max_length\": %d" % limit)
     replace_everything("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "max_position_embeddings\": 77", "max_position_embeddings\": %d" % limit)
+    # copy "/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name) to "/content/void-diffusion/stable-diffusion-1.5v"
+    from shutil import copytree, ignore_patterns
+    copytree("/root/.cache/huggingface/diffusers/models--%s--%s/snapshots/" % (repository_id, name), "/content/void-diffusion/stable-diffusion-1.5v")
     old_weights = pipeline.text_encoder.text_model.embeddings.position_embedding.weight.data.to("cuda:0")
     input_embeddings = pipeline.text_encoder.text_model.embeddings.token_embedding
     pipeline.text_encoder.config.max_position_embeddings = limit
@@ -82,7 +85,6 @@ def modify_clip_limit(limit):
     # Tokenizer
     #pipeline.tokenizer.model_max_length = limit
     pipeline.text_encoder.resize_token_embeddings(len(pipeline.tokenizer))
-    importlib.reload(StableDiffusionPipeline)
     return StableDiffusionPipeline.from_pretrained(model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
     
 def init(ModelName, debug=False):
