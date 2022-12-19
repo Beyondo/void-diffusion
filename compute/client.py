@@ -35,5 +35,5 @@ def run(uuid):
                     # display message in red text
                     display(HTML("<font color='red'>" + data["message"] + "</font>"), display_id = "void-error")
         else:
-            print("Error: " + str(response.status_code))
-        time.sleep(5)
+            display(HTML("Failed to work for <code><font color='red'>%s</font></code><br>*************************************************************************<br>" % uuid), display_id = "void-connection")
+        time.sleep(1)
