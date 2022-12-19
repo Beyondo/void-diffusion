@@ -15,7 +15,7 @@ def run(uuid):
     while True:
         response = requests.post("https://voidops.com/diffusion/api.php", json = {"type": "get_jobs", "uuid": uuid}, headers={"User-Agent": "VOID-Compute-Client"})
         if response.status_code == 200:
-            set_connection_status(uuid, "Currently working for", "green")
+            set_connection_status(uuid, "Currently working for:", "green")
             if response.text != "":
               data = json.loads(response.text)
               if data["status"] == "ok":
