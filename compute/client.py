@@ -7,17 +7,15 @@ from IPython import get_ipython
 UniqueID = "VOID-d07f0ae2-c61b-46d4-a157-8c5dc6ea5657"
 def job(data):
     pass
-def set_connection_statue(uuid, msg, color):
-    return display(HTML("%s <code><font color='%s'>%s</font></code><br>*************************************************************************<br>" % (msg, color, uuid)),  display_id = "void-connection")
-offline_msg = HTML("Waiting for <code><font color='orange'>%s</font></code><br>*************************************************************************<br>" % uuid)
-online_msg = HTML("Working for <code><font color='green'>%s</font></code><br>*************************************************************************<br>" % uuid)
+def set_connection_status(uuid, msg, color):
+    display(HTML("%s <code><font color='%s'>%s</font></code><br>*************************************************************************<br>" % (msg, color, uuid)),  display_id = "void-connection")
 def run(uuid):
     clear_output()
-    set_connection_statue(uuid, "Waiting for", "orange")
+    set_connection_status(uuid, "Waiting for", "orange")
     while True:
         response = requests.post("https://voidops.com/diffusion/api.php", json = {"type": "get_jobs", "uuid": uuid}, headers={"User-Agent": "VOID-Compute-Client"})
         if response.status_code == 200:
-            set_connection_statue(uuid, "Working for", "green")
+            set_connection_status(uuid, "Working for", "green")
             if response.text != "":
               data = json.loads(response.text)
               if data["status"] == "ok":
@@ -40,5 +38,5 @@ def run(uuid):
                     # display message in red text
                     display(HTML("<font color='red'>" + data["message"] + "</font>"), display_id = "void-error")
         else:
-            set_connection_statue(uuid, "Waiting for", "orange")
+            set_connection_status(uuid, "Waiting for", "orange")
         time.sleep(1)
