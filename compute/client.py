@@ -4,7 +4,6 @@ from IPython.display import HTML
 from IPython.display import clear_output;
 # import get_ipython()
 from IPython import get_ipython
-UniqueID = "VOID-d07f0ae2-c61b-46d4-a157-8c5dc6ea5657"
 def job(data):
     pass
 def set_connection_status(uuid, msg, color, end = ""):
