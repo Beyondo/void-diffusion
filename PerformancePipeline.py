@@ -9,8 +9,7 @@ def from_pretrained(name):
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb=512"
     torch.set_default_dtype(torch.float16)
     #VOIDPipeline.Hook()
-    rev = "diffusers-115k" if
-    model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16" if model_name in fp16_models else ""
+    rev = "diffusers-115k" if  model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16" if model_name in fp16_models else ""
     # Todo: add revision detection for any model using huggingface's model hub
     if(rev != ""):
         pipe = StableDiffusionPipeline.from_pretrained(name, revision=rev, torch_dtype=torch.float16)
