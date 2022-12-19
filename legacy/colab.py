@@ -8,7 +8,6 @@ model_name = ""
 ready = False
 tokenizer = None
 pipeline = None
-text2img = None
 img2img = None
 inpaint = None
 settings = { }
@@ -23,7 +22,7 @@ def get_current_image_uid():
     return "text2img-%d" % get_current_image_seed()
     
 def init(ModelName, debug=False):
-    global model_name, ready, pipeline, tokenizer, text2img, img2img, inpaint
+    global model_name, ready, pipeline, tokenizer, img2img, inpaint
     ready = False
     model_name = ModelName
     settings['ModelName'] = ModelName
@@ -35,7 +34,7 @@ def init(ModelName, debug=False):
         try:
             env.install_vendor()
             print("Initializing model " + model_name + ":")
-            text2img = PerformancePipeline.from_pretrained(model_name)
+            pipeline = PerformancePipeline.from_pretrained(model_name)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             print("Done.")
