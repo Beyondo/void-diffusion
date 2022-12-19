@@ -12,6 +12,7 @@ def gfpgan(image, scale, bg_sampler = None):
     if not os.path.exists(os.path.join(output_dir, "restored_imgs", "image.png")):
         raise Exception("Failed to upscale image using %s" % upscaler)
     image = PIL.Image.open(os.path.join(output_dir, "restored_imgs", "image.png"))
+    if os.path.exists(temp_dir): os.system("rm -rf %s" % temp_dir)
     return image
 
 upscalers = { }
