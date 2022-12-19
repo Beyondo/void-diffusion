@@ -82,4 +82,4 @@ def post_process(img, imageName, gdrive = True, replacePreview = True):
             display(downscaled_image, display_id=colab.get_current_image_uid() + ("-%dx" % scale))
         blob = scaled_image.tobytes()
         blob = base64.b64encode(blob).decode("utf-8")
-        display(HTML("<a href='data:image/png;base64,%s' target='_blank'>%d-Scaled Image</a>" % (blob, scale)))
+        display(HTML("<a href='data:image/png;base64,%s' target='_blank'>%dx-Scaled Image</a>" % (blob, scale)))
