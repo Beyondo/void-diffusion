@@ -11,6 +11,7 @@ def from_pretrained(model_name):
     #VOIDPipeline.Hook()
     rev = "diffusers-115k" if  model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16" if model_name in fp16_models else ""
     # Todo: add revision detection for any model using huggingface's model hub
+    pipe = None
     if(rev != ""):
         pipe = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16)
     else:
