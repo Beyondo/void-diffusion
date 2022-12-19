@@ -1,3 +1,4 @@
+import os, sys, IPython
 def install_vendor():
     print("Installing vendors -> ", end="")
     import os, IPython

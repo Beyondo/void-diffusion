@@ -1,4 +1,5 @@
 import torch, random, time
+import IPython
 from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
@@ -15,12 +16,19 @@ save_directory = "AI-Gen"
 save_settings = True
 image_id = 0
 current_mode = ""
+server_url = ""
 def get_current_image_seed():
     global settings, image_id
     return settings['InitialSeed'] + image_id
 def get_current_image_uid():
     return "text2img-%d" % get_current_image_seed()
-    
+
+def media_server():
+    global server_url
+    # get colab server url
+    from google.colab.output import eval_js
+    server_url = eval_js("google.colab.kernel.proxyPort(8000)")
+    IPython.get_ipython().system_raw("python -m http.server 8000 &")
 def init(ModelName, debug=False):
     global model_name, ready, pipeline, tokenizer, img2img, inpaint
     ready = False
@@ -29,6 +37,9 @@ def init(ModelName, debug=False):
     if not torch.cuda.is_available():
         print("No GPU found. If you are on Colab, go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
     else:
+        print("Starting local media server...")
+        from threading import Thread
+        Thread(target=media_server).start()
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
