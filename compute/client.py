@@ -33,10 +33,7 @@ def run(uuid):
                       else:
                           print("Error: " + str(response.status_code))
               else:
-                if data["code"] == 404:
-                    display(HTML("Waiting for jobs..."), display_id = "void-info")
-                else:
-                    # display message in red text
+                if data["code"] != 404:
                     display(HTML("<font color='red'>" + data["message"] + "</font>"), display_id = "void-error")
         else:
             set_connection_status(uuid, "Waiting for", "orange", "...")
