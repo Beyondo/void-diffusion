@@ -8,7 +8,7 @@ UniqueID = "VOID-d07f0ae2-c61b-46d4-a157-8c5dc6ea5657"
 def job(data):
     pass
 def set_connection_status(uuid, msg, color, end = ""):
-    n_stars = ((len(uuid) + len(msg) + len(end)) * 2) - 32
+    n_stars = ((len(uuid) + len(msg) + len(end)) * 2) - 42
     display(HTML("%s <code><font color='%s'>%s</font></code>%s<br>%s<br>" % (msg, color, uuid, end, ('*' * n_stars))),  display_id = "void-connection")
 def run(uuid):
     clear_output()
