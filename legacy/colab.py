@@ -1,9 +1,8 @@
-import patcher, torch, random, time, importlib, os
+import torch, random, time
 from IPython import display
 from IPython.display import HTML
-from diffusers import StableDiffusionPipeline, StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
+from diffusers import StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
 import env, PerformancePipeline
-import numpy as np
 model_name = ""
 ready = False
 tokenizer = None
