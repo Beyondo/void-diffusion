@@ -56,7 +56,8 @@ def save_settings(filename, mode):
             f.write("Latest version: https://voidops.com/diffusion\n")
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
-def post_process(img, imageName, gdrive = True, replacePreview = True):
+
+def post_process_thread(img, imageName, gdrive, replacePreview):
     if gdrive:
         path = save_gdrive(img, imageName)
         print("Saved to " + path)
@@ -80,6 +81,10 @@ def post_process(img, imageName, gdrive = True, replacePreview = True):
             display(downscaled_image, display_id=colab.get_current_image_uid())
         else:
             display(downscaled_image, display_id=colab.get_current_image_uid() + ("-%dx" % scale))
-        blob = scaled_image.tobytes()
-        blob = base64.b64encode(blob).decode("utf-8")
-        display(HTML("<a href='data:image/png;base64,%s' target='_blank'>%dx-Scaled Image</a>" % (blob, scale)))
+        display(HTML("<a href='data:image/png;base64,%s' target='_blank'>%dx-Scaled Image</a>" % (base64.b64encode(scaled_image.tobytes()).decode("utf-8"), scale)))
+
+def post_process(img, imageName, gdrive = True, replacePreview = True):
+    # run on a new thread to avoid blocking the main thread
+    import threading
+    thread = threading.Thread(target=post_process_thread, args=(img, imageName, gdrive, replacePreview))
+    thread.start()
