@@ -35,4 +35,3 @@ def run(uuid):
         else:
             print("Error: " + str(response.status_code))
         time.sleep(5)
-run()
