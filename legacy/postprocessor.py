@@ -3,6 +3,7 @@ from legacy import colab, postprocessor, progress
 from IPython.display import Image
 from IPython.display import display
 from IPython.display import HTML
+import PIL
 def get_save_path(filename):
     dir = '/content/gdrive/MyDrive/' + colab.save_directory
     if not os.path.exists(dir): os.makedirs(dir)
@@ -74,7 +75,7 @@ def post_process(img, imageName, gdrive = True, replacePreview = True):
         else:
             scaled_image.save(imgSavePath + "-%dx.png" % scale)
         # downscale the image to 1x for display
-        downscaled_image = scaled_image.resize((img.width, img.height), Image.LANCZOS)
+        downscaled_image = scaled_image.resize((img.width, img.height), PIL.Image.LANCZOS)
         if replacePreview:
             display(downscaled_image, display_id=colab.get_current_image_uid())
         else:
