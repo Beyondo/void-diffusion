@@ -46,7 +46,7 @@ def init(ModelName, debug=False):
         except Exception as e:
             if "502" in str(e):
                 print("Received 502 Server Error: Huggingface is currently down." % model_name)
-            print("Failed to initialize model %s with error %s" % (model_name, e))
+            print(e)
 
 def prepare(mode):
     global current_mode, settings
