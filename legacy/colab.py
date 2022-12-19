@@ -53,6 +53,7 @@ def init(ModelName, debug=False):
             if not debug:
                 from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
+            display.display(HTML("Media server: <a href='%s' target='_blank'>%s</a>" % (server_url, server_url)))
         except Exception as e:
             if "502" in str(e):
                 print("Received 502 Server Error: Huggingface is currently down." % model_name)
