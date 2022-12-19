@@ -2,7 +2,7 @@ import torch, os, time, datetime, importlib
 from legacy import colab, postprocessor, progress
 from IPython.display import Image
 from IPython.display import display
-
+from IPython.display import HTML
 def get_save_path(filename):
     dir = '/content/gdrive/MyDrive/' + colab.save_directory
     if not os.path.exists(dir): os.makedirs(dir)
@@ -55,7 +55,7 @@ def save_settings(filename, mode):
             f.write("Latest version: https://voidops.com/diffusion\n")
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
-def post_process(img, imageName, gdrive = True):
+def post_process(img, imageName, gdrive = True, replacePreview = True):
     if gdrive:
         path = save_gdrive(img, imageName)
         print("Saved to " + path)
@@ -73,4 +73,12 @@ def post_process(img, imageName, gdrive = True):
                 print("Saved to " + path)
         else:
             scaled_image.save(imgSavePath + "-%dx.png" % scale)
-        display(scaled_image, display_id=colab.get_current_image_uid() + ("-%dx" % scale))
+        # downscale the image to 1x for display
+        downscaled_image = scaled_image.resize((img.width, img.height), Image.LANCZOS)
+        if replacePreview:
+            display(downscaled_image, display_id=colab.get_current_image_uid())
+        else:
+            display(downscaled_image, display_id=colab.get_current_image_uid() + ("-%dx" % scale))
+        blob = scaled_image.tobytes()
+        blob = blob.encode("base64")
+        display(HTML("<a href='data:image/png;base64,%s' target='_blank'>Full resolution</a>" % (blob, scale)))
