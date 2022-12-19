@@ -8,7 +8,7 @@ UniqueID = "VOID-d07f0ae2-c61b-46d4-a157-8c5dc6ea5657"
 def job(data):
     pass
 def set_connection_status(uuid, msg, color, end = ""):
-    display(HTML("%s <code><font color='%s'>%s</font></code>%s<br>*********************************************************************************<br>" % (msg, color, uuid, end)),  display_id = "void-connection")
+    display(HTML("%s <code><font color='%s'>%s</font></code>%s<br>*************************************************************************************<br>" % (msg, color, uuid, end)),  display_id = "void-connection")
 def run(uuid):
     clear_output()
     set_connection_status(uuid, "Connecting to", "orange", "...")
