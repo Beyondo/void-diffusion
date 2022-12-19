@@ -37,10 +37,10 @@ def init(ModelName, debug=False):
     if not torch.cuda.is_available():
         print("No GPU found. If you are on Colab, go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
     else:
-        print("Starting local media server...")
+        print("Starting local media server ->")
         from threading import Thread
         Thread(target=media_server).start()
-        print("Running on -> ", end="")
+        print("Done.\nRunning on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
             env.install_vendor()
