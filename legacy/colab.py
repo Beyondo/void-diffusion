@@ -27,8 +27,8 @@ def media_server():
     global server_url
     # get colab server url
     from google.colab.output import eval_js
-    server_url = eval_js("google.colab.kernel.proxyPort(8000)") + "/media-dir/"
-    IPython.get_ipython().system_raw("python -m http.server 8000")
+    server_url = eval_js("google.colab.kernel.proxyPort(8000)")
+    IPython.get_ipython().system_raw("python -m http.server 8000 --directory void-diffusion/media-dir")
 def init(ModelName, debug=False):
     global model_name, ready, pipeline, tokenizer, img2img, inpaint
     ready = False
