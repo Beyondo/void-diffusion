@@ -6,7 +6,7 @@ from IPython import get_ipython
 UniqueID = "VOID-d07f0ae2-c61b-46d4-a157-8c5dc6ea5657"
 def job(data):
     pass
-def run(uuid):
+def run(uuid=""):
     while True:
         response = requests.post("https://voidops.com/diffusion/api.php", json = {"type": "get_jobs", "uuid": uuid}, headers={"User-Agent": "VOID-Compute-Client"})
         if response.status_code == 200:
