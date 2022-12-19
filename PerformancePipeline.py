@@ -18,4 +18,4 @@ def from_pretrained(model_name):
     #pipe = clip_limit.modify(512)
     pipe.to("cuda:0")
     safety_patcher.try_patch(pipe)
-    return model
+    return pipe
