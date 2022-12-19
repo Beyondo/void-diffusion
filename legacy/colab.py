@@ -2,7 +2,8 @@ import torch, random, time
 from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
-import env, PerformancePipeline
+import env, PerformancePipeline, importlib
+importlib.reload(PerformancePipeline)
 model_name = ""
 ready = False
 tokenizer = None
