@@ -67,7 +67,9 @@ def post_process(img, imageName, gdrive = True):
         scaled_image = upscaler.upscale(colab.settings['Upscaler'], scale, "tmp_input.png")
         if gdrive:
             path = save_gdrive(scaled_image, imageName + "-%dx" % scale)
-            print("Saved to " + path)
+            # if '/content/gdrive/MyDrive/path exists, then the image was saved to gdrive
+            if os.path.exists("/content/gdrive/MyDrive/" + path):
+                print("Saved to " + path)
         else:
             scaled_image.save(imgSavePath + "-%dx.png" % scale)
         display(scaled_image, display_id=colab.get_current_image_uid() + ("-%dx" % scale))

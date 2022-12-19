@@ -19,7 +19,7 @@ def get_python_modules_dir():
         return os.path.join(sys.prefix, 'lib', python_version, 'site-packages')
 def empty_safety_checker(images, **kwargs):
     return images, False
-def patch(pipe):
+def try_patch(pipe):
     try:
         target_script = os.path.join(get_python_modules_dir(), 'diffusers', 'pipelines', 'stable_diffusion', 'safety_checker.py')
         if(os.path.exists(patched_script)):

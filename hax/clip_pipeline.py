@@ -1,3 +1,4 @@
+# Todo: Add a way to have multiple tokens in the prompt by adding their embeddings together somehow and normalizing them, etc.
 import inspect
 from typing import Callable, List, Optional, Union
 
