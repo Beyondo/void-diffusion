@@ -3,7 +3,7 @@ from legacy import colab, postprocessor, progress
 from IPython.display import Image
 from IPython.display import display
 from IPython.display import HTML
-import PIL
+import PIL, base64
 def get_save_path(filename):
     dir = '/content/gdrive/MyDrive/' + colab.save_directory
     if not os.path.exists(dir): os.makedirs(dir)
