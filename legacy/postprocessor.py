@@ -61,7 +61,7 @@ def post_process(img, imageName, gdrive = True):
         print("Saved to " + path)
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
-        from postprocessors import upscaler
+        import upscaler
         importlib.reload(upscaler)
         img.save("tmp_input.png")
         scale = int(colab.settings['Scale'][:-1])
