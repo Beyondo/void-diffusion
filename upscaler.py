@@ -21,5 +21,5 @@ upscalers['gfpgan'] = lambda image, scale: gfpgan(image, scale)
 upscalers['gfpgan_realesrgan'] = lambda image, scale: gfpgan(image, scale, bg_sampler = "realesrgan")
 def upscale(upscaler, scale, image_input_path):
     image = PIL.Image.open(image_input_path)
-    image = upscalers[upscaler](image, scale)
+    image = upscalers[upscaler.lower()](image, scale)
     return image
