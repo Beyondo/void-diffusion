@@ -1,4 +1,5 @@
-import torch, os, time, datetime, colab, importlib
+import torch, os, time, datetime, importlib
+from legacy import colab, postprocessor, progress
 from IPython.display import Image
 from IPython.display import display
 
