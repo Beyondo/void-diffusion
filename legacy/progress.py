@@ -1,4 +1,5 @@
-import torch, colab, time
+import torch, time
+from legacy import colab
 from IPython.display import display
 rendering_start_time = 0
 last_image_time = 0
