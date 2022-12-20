@@ -3,6 +3,7 @@ from legacy import colab, postprocessor, progress
 from IPython.display import display
 importlib.reload(progress)
 importlib.reload(postprocessor)
+postprocessor.run()
 def process(ShouldSave, ShouldPreview = True):
     colab.prepare("text2img")
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
@@ -27,3 +28,4 @@ def process(ShouldSave, ShouldPreview = True):
         progress.show(image)
         postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
+    postprocessor.join()

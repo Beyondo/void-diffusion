@@ -99,5 +99,9 @@ def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True
         display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_saved")
     post_process_jobs.append((img, imageName, image_uid, gdrive, replacePreview))
 
+def run():
+    threading.Thread(target=job_queue).start()
 
-threading.Thread(target=job_queue).start()
+def join():
+    while len(post_process_jobs) > 0:
+        time.sleep(0.1)

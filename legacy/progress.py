@@ -11,7 +11,7 @@ def reset():
 def show(img = None):
     global rendering_start_time
     image_id = colab.get_current_image_uid()
-    display("Seed: %d" % colab.get_current_image_seed(), display_id=image_id + "_seed")
+    display(HTML("<label>Seed: <code>%d</code></label>" % colab.get_current_image_seed()), display_id=image_id + "_seed")
     display(HTML("<label>Execution time: %.2fs</label>" % (time.time() - rendering_start_time)), display_id=image_id + "_time")
     display(HTML("<label>Scaled: No</label>"), display_id=image_id + "_scaled")
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_saved")
