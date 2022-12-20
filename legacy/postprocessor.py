@@ -100,6 +100,7 @@ def queue_thread():
         else:
             time.sleep(1)
 def run_queue_thread():
+    global queueThread
     queueThread = threading.Thread(target=queue_thread)
     queueThread.start()
 
