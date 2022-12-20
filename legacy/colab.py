@@ -30,7 +30,10 @@ def media_server():
     server_url = eval_js("google.colab.kernel.proxyPort(8000)")
     # print current dir
     print("Current directory: " + os.getcwd())
-    print(IPython.get_ipython().system_raw("python -m http.server 8000 --directory media-dir"))
+    # close any existing server
+    IPython.get_ipython().system_raw("fuser -k 8000/tcp")
+    # start new server
+    IPython.get_ipython().system_raw("python -m http.server 8000 --directory media-dir")
 def init(ModelName, debug=False):
     global model_name, ready, pipeline, tokenizer, img2img, inpaint, settings, server_url
     ready = False
