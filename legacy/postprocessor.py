@@ -86,14 +86,16 @@ def start_post_processing(img, imageName, image_uid, gdrive, replaceResult):
         else:
             display(scaled_image, display_id=image_uid + "_image_scaled")
 import threading
-
+is_job_queue_running = False
 def job_queue():
-    while True:
+    while is_job_queue_running:
         if len(post_process_jobs) > 0:
             start_post_processing(*post_process_jobs[0])
             post_process_jobs.pop(0)
         else:
             time.sleep(0.1)
+        if len(post_process_jobs) == 0:
+            is_job_queue_running = False
 def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceResult = True):
     if not os.path.exists("media-dir"):
         os.makedirs("media-dir")
@@ -104,6 +106,7 @@ def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceRe
     html_link = "<a href='%s%s.png' target='_blank'>Original Image</a>" % (colab.server_url, image_uid)
     display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
     post_process_jobs.append((img, imageName, image_uid, gdrive, replaceResult))
+    is_job_queue_running = True
     run()
     while len(post_process_jobs) > maxNumJobs:
         time.sleep(0.1)
@@ -115,5 +118,5 @@ def run():
         th.start()
 
 def join():
-    while len(post_process_jobs) > 0:
-        time.sleep(0.1)
+    global th
+    th.join()
