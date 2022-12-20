@@ -58,7 +58,7 @@ def save_settings(filename, mode):
 
 
 def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
-    display(HTML("<label>Scaled: Scaling..."), display_id=image_uid + "_scaled")
+    display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
         import upscaler
