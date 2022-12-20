@@ -98,7 +98,7 @@ def job_queue():
         if len(post_process_jobs) == 0:
             is_job_queue_running = False
 def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceResult = True):
-    global is_job_queue_running
+    global is_job_queue_running, post_process_jobs
     if not os.path.exists("media-dir"):
         os.makedirs("media-dir")
     if gdrive:
