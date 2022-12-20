@@ -102,6 +102,7 @@ def queue_thread():
             runningThreads += 1
             print("Started thread. Running threads: %d" % runningThreads)
         time.sleep(1)
+    print("Queue thread finished.")
 def run_queue_thread():
     global queueThread, waitForNewThreads
     queueThread = threading.Thread(target=queue_thread)
@@ -118,7 +119,7 @@ def post_thread(args):
 def join_queue_thread():
     global queueThread, waitForNewThreads
     waitForNewThreads = False
-    queueThread.join()
+    queueThread.join() 
     print("Post-processing ended.")
 
 def post_process(img, imageName, image_uid, gdrive = True, replaceResult = True):
