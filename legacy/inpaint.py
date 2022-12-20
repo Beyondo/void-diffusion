@@ -19,7 +19,7 @@ def process(ShouldSave, ShouldPreview = True):
     mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_applied_image = init_image.copy()
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
-    #grey_mask = mask_image.convert("L")
+    grey_mask = mask_image.convert("L")
     #image_rgba_mask_removed = init_image.convert("RGBA")
     #image_rgba_mask_removed.putalpha(grey_mask)
     display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
@@ -40,7 +40,7 @@ def process(ShouldSave, ShouldPreview = True):
         image = colab.inpaint(
             prompt=colab.settings['Prompt'],
             image=init_image,
-            mask_image=mask_image,
+            mask_image=grey_mask,
             negative_prompt=colab.settings['NegativePrompt'],
             guidance_scale=colab.settings['GuidanceScale'],
             num_inference_steps=colab.settings['Steps'],
