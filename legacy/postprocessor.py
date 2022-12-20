@@ -65,7 +65,6 @@ import threading
 runningThreads = 0
 def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult):
     global runningThreads
-    print("Thread started.")
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
