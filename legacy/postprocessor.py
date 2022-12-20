@@ -1,5 +1,5 @@
-import torch, os, time, datetime, importlib
-from legacy import colab, postprocessor, progress
+import torch, os, time, importlib
+from legacy import colab
 from IPython.display import Image
 from IPython.display import display
 from IPython.display import HTML
@@ -96,6 +96,9 @@ def job_queue():
             time.sleep(0.1)
 def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True):
     print("Current dir %s" % os.getcwd())
+    # create dir X if it doesn't exist
+    if not os.path.exists("media-dir"):
+        os.makedirs("media-dir")
     if gdrive:
         path = save_gdrive(img, imageName)
         display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_saved")
