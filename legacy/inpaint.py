@@ -19,9 +19,9 @@ def process(ShouldSave, ShouldPreview = True):
     mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_applied_image = init_image.copy()
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
-    grey_mask = mask_image.convert("L")
-    image_rgba_mask_removed = init_image.convert("RGBA")
-    image_rgba_mask_removed.putalpha(grey_mask)
+    #grey_mask = mask_image.convert("L")
+    #image_rgba_mask_removed = init_image.convert("RGBA")
+    #image_rgba_mask_removed.putalpha(grey_mask)
     display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
     # Process image
     num_iterations = colab.settings['Iterations']
@@ -32,7 +32,7 @@ def process(ShouldSave, ShouldPreview = True):
         progress.reset()
         progress.show()
         latents = None
-        if True:
+        if False:
             # generate random image latents for inpainting
             latents = torch.randn(1, 4, 64, 64, device="cuda")
             # blend the mask into the latents
