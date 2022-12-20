@@ -95,7 +95,7 @@ def job_queue():
         else:
             time.sleep(0.1)
 def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True):
-    print("Current dir %s" % os.chdir())
+    print("Current dir %s" % os.getcwd())
     if gdrive:
         path = save_gdrive(img, imageName)
         display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_saved")
