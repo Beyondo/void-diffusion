@@ -8,7 +8,7 @@ from PIL import Image
 from io import BytesIO
 importlib.reload(progress)
 importlib.reload(postprocessor)
-def process(ShouldSave, ShouldPreview = True):
+def process(ShouldSave, ShouldPreview = True, ReplacePreview = True):
     colab.prepare("img2img")
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if colab.save_settings: postprocessor.save_settings(timestamp, mode="img2img")
