@@ -1,4 +1,4 @@
-# Or PP for convenience (Hahah- ok, I'm sorry)
+# PerformancePipeline Or PP for convenience (Hahah- ok, I'm sorry)
 from diffusers import StableDiffusionPipeline
 import torch, os, importlib
 from hax import safety_patcher, clip_pipeline, clip_limit

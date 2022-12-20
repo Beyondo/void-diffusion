@@ -30,7 +30,7 @@ def media_server():
     server_url = eval_js("google.colab.kernel.proxyPort(8000)")
     IPython.get_ipython().system_raw("fuser -k 8000/tcp")
     IPython.get_ipython().system_raw("python -m http.server 8000 --directory media-dir")
-def init(ModelName, debug=False):
+def init(ModelName, InpaintingModel, debug=False):
     global model_name, ready, pipeline, tokenizer, img2img, inpaint, settings, server_url
     ready = False
     model_name = ModelName
@@ -46,7 +46,14 @@ def init(ModelName, debug=False):
             print("Initializing model " + model_name + ":")
             pipeline = PerformancePipeline.from_pretrained(model_name)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
-            inpaint = StableDiffusionInpaintPipeline.from_pretrained("runwayml/stable-diffusion-inpainting", revision="fp16", torch_dtype=torch.float16).to("cuda:0")
+            try:
+                inpaint = StableDiffusionInpaintPipeline.from_pretrained(InpaintingModel, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
+            except:
+                try:
+                    inpaint = StableDiffusionInpaintPipeline.from_pretrained(InpaintingModel, torch_dtype=torch.float16).to("cuda:0")
+                except:
+                    print("Couldn't load %s as an Inpainting model." % InpaintingModel)
+                    return
             from hax import safety_patcher
             safety_patcher.try_patch(inpaint)
             print("Done.")
