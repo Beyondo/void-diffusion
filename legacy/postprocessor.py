@@ -112,4 +112,6 @@ def run():
 
 def join():
     while len(post_process_jobs) > 0:
+        if not th.is_alive():
+            th.start()
         time.sleep(0.1)
