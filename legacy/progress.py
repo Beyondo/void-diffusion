@@ -13,8 +13,10 @@ def show(img = None):
     image_id = colab.get_current_image_uid()
     display(HTML("<label>Seed: <code>%d</code></label>" % colab.get_current_image_seed()), display_id=image_id + "_seed")
     display(HTML("<label>Execution time: %.2fs</label>" % (time.time() - rendering_start_time)), display_id=image_id + "_time")
-    display(HTML("<label>Scaled: No</label>"), display_id=image_id + "_scaled")
+    display(HTML("<label>Original: Emerging...</label>"), display_id=image_id + "_original")
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_saved")
+    display(HTML("<label>Scaled: Waiting...</label>"), display_id=image_id + "_scaled")
+    display(HTML("<label>Saved: No</label>"), display_id=image_id + "_scaled_saved")
     if not img == None: display(img, display_id=image_id)
     else: display("...", display_id=image_id)
 def callback(iter, t, latents):

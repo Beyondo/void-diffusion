@@ -58,6 +58,7 @@ def save_settings(filename, mode):
 
 
 def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
+    display(HTML("<label>Scaled: Scaling..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
         import upscaler
@@ -68,14 +69,14 @@ def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
             path = save_gdrive(scaled_image, imageName + "-%dx" % scale)
             # if '/content/gdrive/MyDrive/path exists, then the image was saved to gdrive
             if os.path.exists("/content/gdrive/MyDrive/" + path):
-                display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_saved")
+                display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_scaled_saved")
         else:
             scaled_image.save(imgSavePath + "-%dx.png" % scale)
             
         # Save the 2x image in media-dir
-        scaled_image.save("media-dir/%s.png" % image_uid)
+        scaled_image.save("media-dir/%s-%dx.png" % (image_uid, scale))
         # dispaly the 2x image as a link
-        html_link = "<a href='%s%s.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale)
+        html_link = "<a href='%s%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale, scale)
         display(HTML("<label>Scaled: %s" % html_link), display_id=image_uid + "_scaled")
         # downscale the image to 1x for display
         downscaled_image = scaled_image.resize((img.width, img.height), PIL.Image.LANCZOS)
@@ -97,6 +98,9 @@ def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True
     if gdrive:
         path = save_gdrive(img, imageName)
         display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_saved")
+    img.save("media-dir/%s.png" % image_uid)
+    html_link = "<a href='%s%s.png' target='_blank'>Original Image</a>" % (colab.server_url, image_uid)
+    display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
     post_process_jobs.append((img, imageName, image_uid, gdrive, replacePreview))
 
 def run():
