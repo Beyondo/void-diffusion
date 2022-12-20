@@ -11,6 +11,7 @@ def show(img = None):
     global rendering_start_time
     display("Seed: %d" % colab.get_current_image_seed(), display_id=colab.get_current_image_uid() + "_seed")
     display("Execution time: %.2fs" % (time.time() - rendering_start_time), display_id=colab.get_current_image_uid() + "_time")
+    display("Scaled: No.", display_id=colab.get_current_image_uid() + "_scaled")
     if not img == None: display(img, display_id=colab.get_current_image_uid())
     else: display("...", display_id=colab.get_current_image_uid())
 def callback(iter, t, latents):
