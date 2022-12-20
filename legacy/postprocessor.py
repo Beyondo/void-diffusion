@@ -57,6 +57,7 @@ def save_settings(filename, mode):
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
 
+post_process_jobs = []
 def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
@@ -81,14 +82,13 @@ def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
             display(scaled_image, display_id=image_uid)
         else:
             display(scaled_image, display_id=image_uid + ("-%dx" % scale))
-post_process_jobs = []
+    post_process_jobs.pop(0)
 import threading
 
 def job_queue():
     while True:
         if len(post_process_jobs) > 0:
             start_post_processing(*post_process_jobs[0])
-            post_process_jobs.pop(0)
         else:
             time.sleep(0.1)
 def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True):
@@ -102,8 +102,9 @@ def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True
     display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
     post_process_jobs.append((img, imageName, image_uid, gdrive, replacePreview))
 
+th = threading.Thread(target=job_queue)
 def run():
-    threading.Thread(target=job_queue).start()
+    th.start()
 
 def join():
     while len(post_process_jobs) > 0:

@@ -61,6 +61,8 @@ def init(ModelName, debug=False):
 def prepare(mode):
     from threading import Thread
     Thread(target=media_server).start()
+    from legacy import postprocessor
+    postprocessor.th.start()
     global current_mode, settings
     torch.set_default_dtype(torch.float16)
     if 'Seed' not in settings:
