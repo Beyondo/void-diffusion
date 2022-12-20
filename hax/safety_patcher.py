@@ -1,5 +1,5 @@
 import shutil, sys, importlib, os
-patched_script = 'safety_checker_patched.py'
+patched_script = 'hax/safety_checker_patched.py'
 
 def get_python_modules_dir():
     # get where python modules are installed for every operating system
