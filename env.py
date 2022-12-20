@@ -21,6 +21,9 @@ def install_vendor():
         IPython.get_ipython().system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth -p experiments/pretrained_models &> /dev/null")
         IPython.get_ipython().system("wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.8/GFPGANv1.3.pth -P experiments/pretrained_models &> /dev/null")
         # ESRGAN
+        os.remove("vendor/ESRGAN") if os.path.exists("vendor/ESRGAN") else None
+        IPython.get_ipython().system("pip install numpy opencv-python &> /dev/null")
+        IPython.get_ipython().system("git clone https://github.com/xinntao/ESRGAN.git vendor/ESRGAN &> /dev/null")
         print("Done.")
     except Exception as e:
         print("Error: %s" % e)
