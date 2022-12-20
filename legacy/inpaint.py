@@ -18,8 +18,10 @@ def process(ShouldSave, ShouldPreview = True):
     mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("L")
     mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_applied_image = init_image.copy()
+    print("Apply mask to image: ", mask_applied_image.size, mask_image.size)
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
     # rgba
+    print ("init_image: ", init_image.size)
     image_rgba_mask_removed = init_image.convert("RGBA")
     print("Apply mask to image: ", image_rgba_mask_removed.size, mask_image.size)
     image_rgba_mask_removed.putalpha(mask_image)
