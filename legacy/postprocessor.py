@@ -115,5 +115,5 @@ def run():
         th.start()
 
 def join():
-    global th
-    th.join()
+    while len(post_process_jobs) > 0:
+        time.sleep(0.1)
