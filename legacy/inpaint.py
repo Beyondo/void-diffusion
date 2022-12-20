@@ -18,11 +18,11 @@ def process(ShouldSave, ShouldPreview = True):
     mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("RGB")
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_applied_image = Image.blend(init_image, mask_image, 0.5)
-    grey_mask = mask_image.convert("L")
     display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
     size = init_image.size
     init_image = init_image.resize((512, 512))
     mask_image = mask_image.resize((512, 512))
+    grey_mask = mask_image.convert("L")
     # Process image
     num_iterations = colab.settings['Iterations']
     display("Iterations: 0/%d" % num_iterations, display_id="iterations")
