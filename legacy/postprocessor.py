@@ -57,7 +57,7 @@ def save_settings(filename, mode):
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
 
-def post_process_thread(img, imageName, gdrive, replacePreview):
+def start_post_processing(img, imageName, gdrive, replacePreview):
     if gdrive:
         path = save_gdrive(img, imageName)
         print("Saved to " + path)
