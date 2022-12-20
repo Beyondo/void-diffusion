@@ -62,7 +62,7 @@ def save_settings(filename, mode):
 
 
 import threading
-running = 0
+runningThreads = 0
 def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult):
     global running
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
@@ -86,22 +86,22 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
             display(scaled_image, display_id=image_uid)
         else:
             display(scaled_image, display_id=image_uid + "_image_scaled")
-    running -= 1
+    runningThreads -= 1
 
 queueThread = None
 postQueueThreads = []
 running = False
 def queue_thread():
-    global postQueueThreads, running
-    while running and len(postQueueThreads) > 0:
-        if running < 3:
+    global postQueueThreads, running, runningThreads
+    while running or len(postQueueThreads) > 0:
+        if runningThreads < 3:
             t = postQueueThreads.pop(0)
             t.start()
-            running += 1
+            runningThreads += 1
         else:
             time.sleep(1)
 def run_queue_thread():
-    global queueThread
+    global queueThread, running
     queueThread = threading.Thread(target=queue_thread)
     running = True
     queueThread.start()
@@ -112,7 +112,7 @@ def post_thread(args):
     postQueueThreads.append(t)
 
 def join_queue_thread():
-    global queueThread
+    global queueThread, running
     running = False
     queueThread.join()
 
