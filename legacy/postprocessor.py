@@ -63,13 +63,8 @@ post_process_jobs = []
 def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
-<<<<<<< HEAD:postprocessor.py
-    if len(colab.settings['Scale']) == 2:
-        from postprocessors import upscaler
-=======
     if colab.settings['Scale'] != "1x":
         import upscaler
->>>>>>> Dev:legacy/postprocessor.py
         importlib.reload(upscaler)
         scale = int(colab.settings['Scale'][:-1])
         scaled_image = upscaler.upscale(colab.settings['Upscaler'], scale, img)
