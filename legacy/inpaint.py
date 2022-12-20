@@ -16,8 +16,8 @@ def process(ShouldSave, ShouldPreview = True):
     init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
     mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("RGB")
     # inpaint only accepts a tensor size of 64x64 thus we need to resize the image to 512x512
-    init_image = init_image.resize((2048, 2048))
-    mask_image = mask_image.resize((2048, 2048))
+    init_image = init_image.resize((512, 512))
+    mask_image = mask_image.resize((512, 512))
     mask_applied_image = Image.blend(init_image, mask_image, 0.5)
     grey_mask = mask_image.convert("L")
     #image_rgba_mask_removed = init_image.convert("RGBA")
@@ -31,7 +31,7 @@ def process(ShouldSave, ShouldPreview = True):
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
         progress.reset()
         progress.show()
-        latents = torch.randn(1, 4, 512, 512, device="cuda")
+        latents = None
         if False:
             # generate random image latents for inpainting
             latents = torch.randn(1, 4, 64, 64, device="cuda")
@@ -45,7 +45,6 @@ def process(ShouldSave, ShouldPreview = True):
             guidance_scale=colab.settings['GuidanceScale'],
             num_inference_steps=colab.settings['Steps'],
             generator=generator,
-            latents=latents,
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
         progress.show(image)
