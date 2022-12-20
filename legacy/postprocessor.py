@@ -116,7 +116,7 @@ def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceRe
 th = threading.Thread(target=job_queue)
 def run():
     global th
-    if not th.is_alive() and not is_job_queue_running:
+    if not th.is_alive() or not is_job_queue_running:
         th.start()
 
 def join():
