@@ -103,6 +103,7 @@ def queue_thread():
                 runningThreads += 1
                 print("Started thread. Running threads: %d" % runningThreads)
         elif not waitForNewThreads:
+            for t in postQueueThreads: t.join()
             break
         time.sleep(1)
     print("Queue thread finished.")
