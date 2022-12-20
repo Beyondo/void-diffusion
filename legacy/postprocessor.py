@@ -4,6 +4,8 @@ from IPython.display import Image
 from IPython.display import display
 from IPython.display import HTML
 import PIL, base64
+import upscaler
+importlib.reload(upscaler)
 def get_save_path(filename):
     dir = '/content/gdrive/MyDrive/' + colab.save_directory
     if not os.path.exists(dir): os.makedirs(dir)
@@ -86,8 +88,6 @@ def start_post_processing(img, imageName, image_uid, gdrive, replaceResult):
 import threading
 
 def job_queue():
-    import upscaler
-    importlib.reload(upscaler)
     while True:
         if len(post_process_jobs) > 0:
             start_post_processing(*post_process_jobs[0])
