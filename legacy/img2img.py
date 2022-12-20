@@ -8,7 +8,7 @@ from PIL import Image
 from io import BytesIO
 importlib.reload(progress)
 importlib.reload(postprocessor)
-def process(ShouldSave, ShouldPreview = True, ReplaceResult = True):
+def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
     progress.replace_result = ReplaceResult
     colab.prepare("img2img")
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
@@ -42,6 +42,6 @@ def process(ShouldSave, ShouldPreview = True, ReplaceResult = True):
             callback_steps=20).images[0]
         colab.last_generated_image = image
         progress.show(image)
-        postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave, ReplaceResult)
+        postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), maxNumJobs, ShouldSave, ReplaceResult)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
     postprocessor.join()

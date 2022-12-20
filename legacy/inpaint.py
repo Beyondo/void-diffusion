@@ -8,7 +8,7 @@ from PIL import Image
 from io import BytesIO
 importlib.reload(progress)
 importlib.reload(postprocessor)
-def process(ShouldSave, ShouldPreview = True, ReplaceResult = True):
+def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
     progress.replace_result = ReplaceResult
     colab.prepare("inpaint")
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
@@ -57,6 +57,6 @@ def process(ShouldSave, ShouldPreview = True, ReplaceResult = True):
         image = image.resize(colab.image_size)
         colab.last_generated_image = image
         progress.show(image)
-        postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave, ReplaceResult)
+        postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), maxNumJobs, ShouldSave, ReplaceResult)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
     postprocessor.join()
