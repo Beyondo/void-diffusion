@@ -48,6 +48,8 @@ def init(ModelName, debug=False):
             pipeline = PerformancePipeline.from_pretrained(model_name)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline.from_pretrained("runwayml/stable-diffusion-inpainting", revision="fp16", torch_dtype=torch.float16).to("cuda:0")
+            from hax import safety_patcher
+            safety_patcher.try_patch(inpaint)
             print("Done.")
             ready = True
             if not debug:
