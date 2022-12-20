@@ -60,7 +60,7 @@ def save_settings(filename, mode):
 
 
 post_process_jobs = []
-def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
+def start_post_processing(img, imageName, image_uid, gdrive, replaceResult):
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
@@ -80,10 +80,10 @@ def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
         html_link = "<a href='%s%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale, scale)
         display(HTML("<label>Scaled: %s" % html_link), display_id=image_uid + "_scaled")
         scaled_image.thumbnail(img.size, PIL.Image.ANTIALIAS)
-        if replacePreview:
+        if replaceResult:
             display(scaled_image, display_id=image_uid)
         else:
-            display(scaled_image, display_id=image_uid + ("-%dx" % scale))
+            display(scaled_image, display_id=image_uid + "_image_scaled")
     post_process_jobs.pop(0)
 import threading
 
@@ -93,7 +93,7 @@ def job_queue():
             start_post_processing(*post_process_jobs[0])
         else:
             time.sleep(0.1)
-def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True):
+def post_process(img, imageName, image_uid, gdrive = True, replaceResult = True):
     if not os.path.exists("media-dir"):
         os.makedirs("media-dir")
     if gdrive:
@@ -102,7 +102,7 @@ def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True
     img.save("media-dir/%s.png" % image_uid) 
     html_link = "<a href='%s%s.png' target='_blank'>Original Image</a>" % (colab.server_url, image_uid)
     display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
-    post_process_jobs.append((img, imageName, image_uid, gdrive, replacePreview))
+    post_process_jobs.append((img, imageName, image_uid, gdrive, replaceResult))
 
 th = threading.Thread(target=job_queue)
 def run():

@@ -4,6 +4,7 @@ from IPython.display import display
 from IPython.display import HTML
 rendering_start_time = 0
 last_image_time = 0
+replace_result = True
 def reset():
     global rendering_start_time
     rendering_start_time = time.time()
@@ -17,8 +18,11 @@ def show(img = None):
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_saved")
     display(HTML("<label>Scaled: Waiting...</label>"), display_id=image_id + "_scaled")
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_scaled_saved")
-    if not img == None: display(img, display_id=image_id)
-    else: display("...", display_id=image_id)
+    if not img == None:
+        display(img, display_id=image_id)
+        if not replace_result: display("[Scaled Image...]", display_id=image_id + "_image_scaled")
+    else:
+        display("...", display_id=image_id)
 def callback(iter, t, latents):
     global last_image_time
     if time.time() - last_image_time > 3:
