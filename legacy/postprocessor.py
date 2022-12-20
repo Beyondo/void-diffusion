@@ -81,7 +81,10 @@ def post_process_thread(img, imageName, gdrive, replacePreview):
             display(downscaled_image, display_id=colab.get_current_image_uid())
         else:
             display(downscaled_image, display_id=colab.get_current_image_uid() + ("-%dx" % scale))
-        display(HTML("<a href='data:image/png;base64,%s' target='_blank'>%dx-Scaled Image</a>" % (base64.b64encode(scaled_image.tobytes()).decode("utf-8"), scale)))
+        # Save the 2x image in media-dir
+        scaled_image.save("media-dir/%s-%dx.png" %(imageName, scale))
+        # dispaly the 2x image as a link
+        display(HTML("<a href='%s/%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, imageName, scale, scale)))
 
 def post_process(img, imageName, gdrive = True, replacePreview = True):
     # run on a new thread to avoid blocking the main thread
