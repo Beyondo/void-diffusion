@@ -73,12 +73,9 @@ def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
         else:
             scaled_image.save(imgSavePath + "-%dx.png" % scale)
             
-        # Save the 2x image in media-dir
         scaled_image.save("media-dir/%s-%dx.png" % (image_uid, scale))
-        # dispaly the 2x image as a link
         html_link = "<a href='%s%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale, scale)
         display(HTML("<label>Scaled: %s" % html_link), display_id=image_uid + "_scaled")
-        # downscale the image to 1x for display
         scaled_image.thumbnail(img.size, Image.ANTIALIAS)
         if replacePreview:
             display(scaled_image, display_id=image_uid)
@@ -95,16 +92,12 @@ def job_queue():
         else:
             time.sleep(0.1)
 def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True):
-    print("Current dir %s" % os.getcwd())
-    # create dir X if it doesn't exist
     if not os.path.exists("media-dir"):
         os.makedirs("media-dir")
     if gdrive:
         path = save_gdrive(img, imageName)
         display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_saved")
-    img.save("media-dir/%s.png" % image_uid) # why does this say "no such file or directory media-dir"? -> because it's not created yet
-    # but it is supposed to be created by the time this is called?
-    
+    img.save("media-dir/%s.png" % image_uid) 
     html_link = "<a href='%s%s.png' target='_blank'>Original Image</a>" % (colab.server_url, image_uid)
     display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
     post_process_jobs.append((img, imageName, image_uid, gdrive, replacePreview))

@@ -1,4 +1,8 @@
-import os, PIL.Image, IPython.display, IPython, hashlib
+try:
+    import os, PIL.Image, IPython.display, IPython, hashlib
+    import cv2, torch
+    import vendor.ESRGAN.RRDBNet_arch as arch
+except: print("Upscaling error: %s" % e)
 def bicubic(image, scale):
     return image.resize((image.width * scale, image.height * scale), PIL.Image.BICUBIC)
 def nearest(image, scale):
@@ -16,8 +20,6 @@ def gfpgan(image, scale, bg_sampler = None):
     image = PIL.Image.open(os.path.join(output_dir, "restored_imgs", "image.png"))
     if os.path.exists(temp_dir): os.system("rm -rf %s" % temp_dir)
     return image
-import cv2, torch
-import vendor.ESRGAN.RRDBNet_arch as arch
 model = arch.RRDBNet(3, 3, 64, 23, gc=32)
 model.load_state_dict(torch.load(model_path), strict=True)
 model.eval()
