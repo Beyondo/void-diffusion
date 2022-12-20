@@ -11,7 +11,7 @@ def from_pretrained(model_name):
     rev = "diffusers-115k" if  model_name == "naclbit/trinart_stable_diffusion_v2" else "fp16"
     pipe = None
     try:
-        pipe = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16)
+        pipe = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16)
     except:
         try:
             pipe = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16)

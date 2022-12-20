@@ -46,7 +46,7 @@ def init(ModelName, debug=False):
             print("Initializing model " + model_name + ":")
             pipeline = PerformancePipeline.from_pretrained(model_name)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
-            inpaint = StableDiffusionInpaintPipeline("runwayml/stable-diffusion-inpainting", revision="fp16", torch_dtype=torch.float16)
+            inpaint = StableDiffusionInpaintPipeline("runwayml/stable-diffusion-inpainting",  torch_dtype=torch.float16)
             print("Done.")
             ready = True
             if not debug:
