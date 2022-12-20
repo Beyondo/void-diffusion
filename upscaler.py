@@ -17,7 +17,7 @@ def gfpgan(image, scale, bg_sampler = None):
     try:
         image = PIL.Image.open(os.path.join(output_dir, "restored_imgs", "image.png"))
         if os.path.exists(temp_dir): os.system("rm -rf %s" % temp_dir)
-    except: pass
+    except Exception as e: print("Scaling failed. Try again.")
     return image
 def realesrgan(image, scale):
     model = arch.RRDBNet(3, 3, 64, 23, gc=32)
