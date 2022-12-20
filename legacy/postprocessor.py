@@ -112,6 +112,9 @@ def run():
 
 def join():
     while len(post_process_jobs) > 0:
+        for job in post_process_jobs:
+            if os.path.exists("media-dir/%s-%d.png" % (job[2], int(colab.settings['Scale'][:-1]))):
+                post_process_jobs.remove(job)
         if not th.is_alive():
             th.start()
         time.sleep(0.1)
