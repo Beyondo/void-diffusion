@@ -104,28 +104,16 @@ def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceRe
     html_link = "<a href='%s%s.png' target='_blank'>Original Image</a>" % (colab.server_url, image_uid)
     display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
     post_process_jobs.append((img, imageName, image_uid, gdrive, replaceResult))
-    
     run()
     while len(post_process_jobs) > maxNumJobs:
         time.sleep(0.1)
 
 th = threading.Thread(target=job_queue)
 def run():
+    global th
     if not th.is_alive():
         th.start()
 
 def join():
-    while len(post_process_jobs) > 0:
-        for job in post_process_jobs:
-            if os.path.exists("media-dir/%s-%d.png" % (job[2], int(colab.settings['Scale'][:-1]))):
-                # Set the image to the scaled image and remove the job from the queue
-                scaled_image = PIL.Image.open("media-dir/%s-%d.png" % (job[2], int(colab.settings['Scale'][:-1])))
-                if job[4]:
-                    scaled_image.thumbnail(job[0], PIL.Image.ANTIALIAS)
-                    display(scaled_image, display_id=image_uid)
-                else:
-                    display(scaled_image, display_id=image_uid + "_image_scaled")
-                post_process_jobs.remove(job)
-        if not th.is_alive():
-            th.start()
-        time.sleep(0.1)
+    global th
+    th.join()
