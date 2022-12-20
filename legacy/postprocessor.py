@@ -92,7 +92,7 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
 
 queueThread = None
 postQueueThreads = []
-waitForNewThreads = False
+waitForNewThreads = True
 def queue_thread():
     global postQueueThreads, waitForNewThreads, runningThreads
     while True:
