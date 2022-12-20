@@ -1,6 +1,7 @@
 import torch, time
 from legacy import colab
 from IPython.display import display
+from IPython.display import HTML
 rendering_start_time = 0
 last_image_time = 0
 def reset():
@@ -9,12 +10,13 @@ def reset():
 
 def show(img = None):
     global rendering_start_time
-    display("Seed: %d" % colab.get_current_image_seed(), display_id=colab.get_current_image_uid() + "_seed")
-    display("Execution time: %.2fs" % (time.time() - rendering_start_time), display_id=colab.get_current_image_uid() + "_time")
-    display("Scaled: No", display_id=colab.get_current_image_uid() + "_scaled")
-    display("Saved: No", display_id=colab.get_current_image_uid() + "_saved")
-    if not img == None: display(img, display_id=colab.get_current_image_uid())
-    else: display("...", display_id=colab.get_current_image_uid())
+    image_id = colab.get_current_image_uid()
+    display("Seed: %d" % colab.get_current_image_seed(), display_id=image_id + "_seed")
+    display(HTML("<label>Execution time: %.2fs</label>" % (time.time() - rendering_start_time)), display_id=image_id + "_time")
+    display(HTML("<label>Scaled: No</label>"), display_id=image_id + "_scaled")
+    display(HTML("<label>Saved: No</label>"), display_id=image_id + "_saved")
+    if not img == None: display(img, display_id=image_id)
+    else: display("...", display_id=image_id)
 def callback(iter, t, latents):
     global last_image_time
     if time.time() - last_image_time > 3:
