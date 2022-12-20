@@ -21,7 +21,7 @@ def get_current_image_seed():
     global settings, image_id
     return settings['InitialSeed'] + image_id
 def get_current_image_uid():
-    return "text2img-%d" % get_current_image_seed()
+    return "%s-%d" % (model_name, get_current_image_seed())
 
 def media_server():
     global server_url
