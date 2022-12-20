@@ -41,6 +41,7 @@ def process(ShouldSave, ShouldPreview = True, ReplacePreview = True):
             latents = torch.randn(1, 4, 64, 64, device="cuda")
             # blend the mask into the latents
             latents = latents * (1 - mask_image.convert("L").resize((64, 64), Image.BILINEAR).convert("RGB"))
+        torch.cuda.empty_cache()
         image = colab.inpaint(
             prompt=colab.settings['Prompt'],
             image=init_image,
