@@ -57,10 +57,10 @@ def save_settings(filename, mode):
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
 
-def start_post_processing(img, imageName, gdrive, replacePreview):
+def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
     if gdrive:
         path = save_gdrive(img, imageName)
-        print("Saved to " + path)
+            display("Saved: %s" % path, display_id=image_uid + "_saved")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
         import upscaler
@@ -72,20 +72,20 @@ def start_post_processing(img, imageName, gdrive, replacePreview):
             path = save_gdrive(scaled_image, imageName + "-%dx" % scale)
             # if '/content/gdrive/MyDrive/path exists, then the image was saved to gdrive
             if os.path.exists("/content/gdrive/MyDrive/" + path):
-                print("Saved to " + path)
+                display("Saved: %s" % path, display_id=image_uid + "_saved")
         else:
             scaled_image.save(imgSavePath + "-%dx.png" % scale)
         # downscale the image to 1x for display
         downscaled_image = scaled_image.resize((img.width, img.height), PIL.Image.LANCZOS)
         if replacePreview:
-            display(downscaled_image, display_id=colab.get_current_image_uid())
+            display(downscaled_image, display_id=image_uid)
         else:
-            display(downscaled_image, display_id=colab.get_current_image_uid() + ("-%dx" % scale))
+            display(downscaled_image, display_id=image_uid + ("-%dx" % scale))
         # Save the 2x image in media-dir
         scaled_image.save("media-dir/%s-%dx.png" %(imageName, scale))
         # dispaly the 2x image as a link
         html_link = HTML("<a href='%s%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, imageName, scale, scale))
-        display("Scaled: ", html_link, display_id=colab.get_current_image_uid() + "_scaled")
+        display("Scaled: ", html_link, display_id=image_uid + "_scaled")
 post_process_jobs = []
 import threading
 def job_queue():
@@ -95,8 +95,8 @@ def job_queue():
             post_process_jobs.pop(0)
         else:
             time.sleep(0.1)
-def post_process(img, imageName, gdrive = True, replacePreview = True):
-    post_process_jobs.append((img, imageName, gdrive, replacePreview))
+def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True):
+    post_process_jobs.append((img, imageName, image_uid, gdrive, replacePreview))
 
 
 threading.Thread(target=job_queue).start()
