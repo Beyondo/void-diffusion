@@ -16,7 +16,7 @@ def gfpgan(image, scale, bg_sampler = None):
     IPython.get_ipython().system("python vendor/GFPGAN/inference_gfpgan.py -i %s -o %s -v 1.3 -s %s %s &> /dev/null" % (input_dir, output_dir, scale, "--bg_upsampler %s" % bg_sampler if bg_sampler else ""))
     try:
         image = PIL.Image.open(os.path.join(output_dir, "restored_imgs", "image.png"))
-    except: print("Scaling failed: %s" % e)
+    except Exception as e: print("Scaling failed: %s" % e)
     return image
 def realesrgan(image, scale):
     model = arch.RRDBNet(3, 3, 64, 23, gc=32)
