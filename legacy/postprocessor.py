@@ -95,11 +95,10 @@ def job_queue():
         else:
             time.sleep(0.1)
 def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True):
+    print("Current dir %s" % os.chdir())
     if gdrive:
         path = save_gdrive(img, imageName)
         display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_saved")
-    print(os.chdir())
-    print("media-dir/%s.png" % image_uid)
     img.save("media-dir/%s.png" % image_uid) # why does this say "no such file or directory media-dir"? -> because it's not created yet
     # but it is supposed to be created by the time this is called?
     
