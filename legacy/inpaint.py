@@ -19,11 +19,8 @@ def process(ShouldSave, ShouldPreview = True):
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_applied_image = Image.blend(init_image, mask_image, 0.5)
     grey_mask = mask_image.convert("L")
-    #image_rgba_mask_removed = init_image.convert("RGBA")
-    #image_rgba_mask_removed.putalpha(grey_mask)
     display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
     size = init_image.size
-    # inpaint only accepts a tensor size of 64x64 thus we need to resize the image to 512x512
     init_image = init_image.resize((512, 512))
     mask_image = mask_image.resize((512, 512))
     # Process image
