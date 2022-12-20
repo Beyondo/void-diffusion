@@ -95,16 +95,15 @@ postQueueThreads = []
 waitForNewThreads = False
 def queue_thread():
     global postQueueThreads, waitForNewThreads, runningThreads
-    runLoop = True
-    while runLoop:
+    while True:
         if len(postQueueThreads) > 0 and runningThreads < 3:
             t = postQueueThreads.pop(0)
             t.start()
             runningThreads += 1
             print("Started thread. Running threads: %d" % runningThreads)
-        time.sleep(1)
         elif not waitForNewThreads:
-            runLoop = False
+            break
+        time.sleep(1)
     print("Queue thread finished.")
 def run_queue_thread():
     global queueThread, waitForNewThreads
