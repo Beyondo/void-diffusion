@@ -20,10 +20,12 @@ def install_vendor():
         # used for enhancing the background (non-face) regions
         IPython.get_ipython().system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth -p experiments/pretrained_models &> /dev/null")
         IPython.get_ipython().system("wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.8/GFPGANv1.3.pth -P experiments/pretrained_models &> /dev/null")
-        # ESRGAN
-        os.remove("vendor/ESRGAN") if os.path.exists("vendor/ESRGAN") else None
-        IPython.get_ipython().system("pip install numpy opencv-python &> /dev/null")
-        IPython.get_ipython().system("git clone https://github.com/xinntao/ESRGAN.git vendor/ESRGAN &> /dev/null")
+        # Real-ESRGAN
+        os.remove("vendor/Real-ESRGAN") if os.path.exists("vendor/Real-ESRGAN") else None
+        IPython.get_ipython().system("git clone https://github.com/xinntao/Real-ESRGAN.git vendor/Real-ESRGAN &> /dev/null")
+        IPython.get_ipython().system("pip install -q -r vendor/Real-ESRGAN/requirements.txt &> /dev/null")
+        IPython.get_ipython().system("python vendor/Real-ESRGAN/setup.py develop &> /dev/null")
+        # StyleGAN2
         print("Done.")
     except Exception as e:
         print("Error: %s" % e)

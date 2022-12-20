@@ -1,7 +1,5 @@
 try:
     import os, PIL.Image, IPython.display, IPython, hashlib
-    import cv2, torch
-    import vendor.ESRGAN.RRDBNet_arch as arch
 except: print("Upscaling error: %s" % e)
 def bicubic(image, scale):
     return image.resize((image.width * scale, image.height * scale), PIL.Image.BICUBIC)
@@ -20,11 +18,14 @@ def gfpgan(image, scale, bg_sampler = None):
     image = PIL.Image.open(os.path.join(output_dir, "restored_imgs", "image.png"))
     if os.path.exists(temp_dir): os.system("rm -rf %s" % temp_dir)
     return image
-model = arch.RRDBNet(3, 3, 64, 23, gc=32)
-model.load_state_dict(torch.load(model_path), strict=True)
-model.eval()
-model = model.to("cuda:0")
+def realesrgan(image, scale):
+    model = arch.RRDBNet(3, 3, 64, 23, gc=32)
+    model.load_state_dict(torch.load("vendor/Real-ESRGAN/experiments/pretrained_models/RealESRGAN_x2plus.pth"), strict=True)
+    model.eval()
+    model = model.to("cuda:0")
 def esrgan(image, scale):
+    import cv2, torch
+    import vendor.ESRGAN.RRDBNet_arch as arch
     img = cv2.cvtColor(np.array(bicubic(image, scale)), cv2.COLOR_RGB2BGR)
     img = img * 1.0 / 255
     img = torch.from_numpy(np.transpose(img[:, :, [2, 1, 0]], (2, 0, 1))).float()
