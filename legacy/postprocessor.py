@@ -84,13 +84,13 @@ def start_post_processing(img, imageName, image_uid, gdrive, replaceResult):
             display(scaled_image, display_id=image_uid)
         else:
             display(scaled_image, display_id=image_uid + "_image_scaled")
-    post_process_jobs.pop(0)
 import threading
 
 def job_queue():
     while True:
         if len(post_process_jobs) > 0:
             start_post_processing(*post_process_jobs[0])
+            post_process_jobs.pop(0)
         else:
             time.sleep(0.1)
 def post_process(img, imageName, image_uid, gdrive = True, replaceResult = True):
