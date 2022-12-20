@@ -90,20 +90,19 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
 
 queueThread = None
 postQueueThreads = []
-running = False
+waitForNewThreads = False
 def queue_thread():
-    global postQueueThreads, running, runningThreads
-    while running or len(postQueueThreads) > 0:
-        if runningThreads < 3:
+    global postQueueThreads, waitForNewThreads, runningThreads
+    while waitForNewThreads:
+        if len(postQueueThreads) > 0 and runningThreads < 3:
             t = postQueueThreads.pop(0)
             t.start()
             runningThreads += 1
-        else:
-            time.sleep(1)
+        time.sleep(1)
 def run_queue_thread():
-    global queueThread, running
+    global queueThread, waitForNewThreads
     queueThread = threading.Thread(target=queue_thread)
-    running = True
+    waitForNewThreads = True
     queueThread.start()
 
 def post_thread(args):
@@ -112,8 +111,8 @@ def post_thread(args):
     postQueueThreads.append(t)
 
 def join_queue_thread():
-    global queueThread, running
-    running = False
+    global queueThread, waitForNewThreads
+    waitForNewThreads = False
     queueThread.join()
 
 def post_process(img, imageName, image_uid, gdrive = True, replaceResult = True):
