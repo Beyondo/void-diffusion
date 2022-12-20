@@ -101,8 +101,7 @@ def queue_thread():
             t.start()
             runningThreads += 1
             print("Started thread. Running threads: %d" % runningThreads)
-        elif not waitForNewThreads:
-            break
+        elif not waitForNewThreads: break
         time.sleep(1)
     print("Queue thread finished.")
 def run_queue_thread():
@@ -114,8 +113,8 @@ def run_queue_thread():
 
 def post_thread(args):
     global postQueueThreads
-    t = threading.Thread(target=post_processing_thread_func, args=args)
-    postQueueThreads.append(t)
+    postQueueThreads.append(threading.Thread(target=post_processing_thread_func, args=args))
+    postQueueThreads[-1].start()
     print("Added thread to queue.")
 
 def join_queue_thread():
