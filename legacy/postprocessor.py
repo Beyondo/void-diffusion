@@ -75,7 +75,7 @@ def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
         # Save the 2x image in media-dir
         scaled_image.save("media-dir/%s.png" % image_uid)
         # dispaly the 2x image as a link
-        html_link = HTML("<a href='%s%s.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale))
+        html_link = "<a href='%s%s.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale)
         display(HTML("<label>Scaled: %s" % html_link), display_id=image_uid + "_scaled")
         # downscale the image to 1x for display
         downscaled_image = scaled_image.resize((img.width, img.height), PIL.Image.LANCZOS)
