@@ -6,6 +6,7 @@ from diffusers import StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipe
 import env, PerformancePipeline, importlib
 importlib.reload(PerformancePipeline)
 model_name = ""
+inpaint_model_name = ""
 ready = False
 tokenizer = None
 pipeline = None
@@ -35,7 +36,7 @@ def init(ModelName, InpaintingModel, debug=False):
     global model_name, ready, pipeline, tokenizer, img2img, inpaint, settings, server_url
     ready = False
     model_name = ModelName
-    settings['ModelName'] = ModelName
+    inpaint_model_name = InpaintingModel
     if not torch.cuda.is_available():
         print("No GPU found. If you are on Colab, go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
     else:
@@ -48,12 +49,12 @@ def init(ModelName, InpaintingModel, debug=False):
             pipeline = PerformancePipeline.from_pretrained(model_name)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             try:
-                inpaint = StableDiffusionInpaintPipeline.from_pretrained(InpaintingModel, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
+                inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
             except:
                 try:
-                    inpaint = StableDiffusionInpaintPipeline.from_pretrained(InpaintingModel, torch_dtype=torch.float16).to("cuda:0")
+                    inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16).to("cuda:0")
                 except:
-                    print("Couldn't load %s as an Inpainting model." % InpaintingModel)
+                    print("Couldn't load %s as an Inpainting model." % inpaint_model_name)
                     return
             from hax import safety_patcher
             safety_patcher.try_patch(inpaint)
@@ -61,7 +62,8 @@ def init(ModelName, InpaintingModel, debug=False):
             ready = True
             if not debug:
                 from IPython.display import clear_output; clear_output()
-            display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
+            display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected for Text2Img and Img2Img." % model_name))
+            display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected for inpainting." % inpaint_model_name))
         except Exception as e:
             if "502" in str(e):
                 print("Received 502 Server Error: Huggingface is currently down." % model_name)
