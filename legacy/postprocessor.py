@@ -102,8 +102,8 @@ def queue_thread():
             runningThreads += 1
             print("Started thread. Running threads: %d" % runningThreads)
         time.sleep(1)
-        else if not waitForNewThreads:
-        break
+        elif not waitForNewThreads:
+            break
     print("Queue thread finished.")
 def run_queue_thread():
     global queueThread, waitForNewThreads
