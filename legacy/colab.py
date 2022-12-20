@@ -40,6 +40,7 @@ def init(ModelName, debug=False):
         from threading import Thread
         Thread(target=media_server).start()
         print("%s.\nRunning on -> " % server_url, end="")
+        torch.set_default_dtype(torch.float16)
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
             env.install_vendor()
@@ -59,6 +60,7 @@ def init(ModelName, debug=False):
 
 def prepare(mode):
     global current_mode, settings
+    torch.set_default_dtype(torch.float16)
     if 'Seed' not in settings:
         print("Please set your settings first.")
         return
