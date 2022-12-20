@@ -71,17 +71,18 @@ def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
                 display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_saved")
         else:
             scaled_image.save(imgSavePath + "-%dx.png" % scale)
+            
+        # Save the 2x image in media-dir
+        scaled_image.save("media-dir/%s.png" % image_uid)
+        # dispaly the 2x image as a link
+        html_link = HTML("<a href='%s%s.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale))
+        display(HTML("<label>Scaled: %s" % html_link), display_id=image_uid + "_scaled")
         # downscale the image to 1x for display
         downscaled_image = scaled_image.resize((img.width, img.height), PIL.Image.LANCZOS)
         if replacePreview:
             display(downscaled_image, display_id=image_uid)
         else:
             display(downscaled_image, display_id=image_uid + ("-%dx" % scale))
-        # Save the 2x image in media-dir
-        scaled_image.save("media-dir/%s-%dx.png" %(imageName, scale))
-        # dispaly the 2x image as a link
-        html_link = HTML("<a href='%s%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, imageName, scale, scale))
-        display(HTML("<label>Scaled: %s" % html_link), display_id=image_uid + "_scaled")
 post_process_jobs = []
 import threading
 
