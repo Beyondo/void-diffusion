@@ -38,3 +38,4 @@ def process(ShouldSave, ShouldPreview = True):
         progress.show(image)
         postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
+    postprocessor.join()
