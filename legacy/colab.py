@@ -17,6 +17,7 @@ save_settings = True
 image_id = 0
 current_mode = ""
 server_url = ""
+image_size = (512, 512)
 def get_current_image_seed():
     global settings, image_id
     return settings['InitialSeed'] + image_id

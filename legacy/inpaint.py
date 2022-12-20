@@ -19,7 +19,7 @@ def process(ShouldSave, ShouldPreview = True):
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_applied_image = Image.blend(init_image, mask_image, 0.5)
     display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
-    size = init_image.size
+    colab.image_size = init_image.size
     init_image = init_image.resize((512, 512))
     mask_image = mask_image.resize((512, 512))
     grey_mask = mask_image.convert("L")
@@ -48,7 +48,7 @@ def process(ShouldSave, ShouldPreview = True):
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
         # convert the image back to the original size
-        image = image.resize(size)
+        image = image.resize(colab.image_size)
         progress.show(image)
         postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
