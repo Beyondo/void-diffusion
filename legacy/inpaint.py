@@ -18,8 +18,8 @@ def process(ShouldSave, ShouldPreview = True):
     mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("RGB")
     mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     # make divisible by 16
-    mask_image = mask_image.resize((512, 512))
-    init_image = init_image.resize((512, 512))
+    mask_image = mask_image.resize((colab.settings['Width'], colab.settings['Height']))
+    init_image = init_image.resize((colab.settings['Width'], colab.settings['Height']))
     mask_applied_image = init_image.copy()
     mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
     grey_mask = mask_image.convert("L")
