@@ -61,9 +61,8 @@ def save_settings(filename, mode):
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
 
-post_process_jobs = []
-
-def start_post_processing(img, imageName, image_uid, gdrive, replaceResult):
+import threading
+def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult):
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
@@ -85,20 +84,13 @@ def start_post_processing(img, imageName, image_uid, gdrive, replaceResult):
             display(scaled_image, display_id=image_uid)
         else:
             display(scaled_image, display_id=image_uid + "_image_scaled")
-import threading
-is_job_queue_running = False
-def job_queue():
-    global is_job_queue_running
-    while is_job_queue_running:
-        if len(post_process_jobs) > 0:
-            start_post_processing(*post_process_jobs[0])
-            post_process_jobs.pop(0)
-        else:
-            time.sleep(0.1)
-        if len(post_process_jobs) == 0:
-            is_job_queue_running = False
+current_threads = []
+def post_thread(args):
+    global current_threads
+    t = threading.Thread(target=post_processing_thread_func, args=args)
+    t.start()
+    current_threads.append(t)
 def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceResult = True):
-    global is_job_queue_running, post_process_jobs
     if not os.path.exists("media-dir"):
         os.makedirs("media-dir")
     if gdrive:
@@ -107,18 +99,9 @@ def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceRe
     img.save("media-dir/%s.png" % image_uid) 
     html_link = "<a href='%s%s.png' target='_blank'>Original Image</a>" % (colab.server_url, image_uid)
     display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
-    post_process_jobs.append((img, imageName, image_uid, gdrive, replaceResult))
-    is_job_queue_running = True
-    try: run()
-    except: pass
-    while len(post_process_jobs) > maxNumJobs:
-        run()
-        time.sleep(0.1)
-th = threading.Thread(target=job_queue)
-def run():
-    global th
-    th.start()
+    post_thread((img, imageName, image_uid, gdrive, replaceResult))
 
 def join():
-    global th
-    th.join()
+    global current_threads
+    for t in current_threads:
+        t.join()

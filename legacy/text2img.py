@@ -7,6 +7,7 @@ postprocessor.run()
 def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
     progress.replace_result = ReplaceResult
     colab.prepare("text2img")
+    postprocessor.run()
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if ShouldSave and colab.save_settings: postprocessor.save_settings(timestamp, mode="text2img")
     num_iterations = colab.settings['Iterations']
