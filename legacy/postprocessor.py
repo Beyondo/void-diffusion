@@ -97,8 +97,6 @@ def job_queue():
             time.sleep(0.1)
 def post_process(img, imageName, gdrive = True, replacePreview = True):
     post_process_jobs.append((img, imageName, gdrive, replacePreview))
-    if len(post_process_jobs) == 1:
-        start_post_processing(*post_process_jobs[0])
 
 
 threading.Thread(target=job_queue).start()
