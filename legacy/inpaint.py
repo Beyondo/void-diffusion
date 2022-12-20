@@ -16,8 +16,8 @@ def process(ShouldSave, ShouldPreview = True):
     init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
     mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("RGB")
     # inpaint only accepts a tensor size of 64x64 thus we need to resize the image to 512x512
-    mask_image = mask_image.thumbnail((512, 512))
-    init_image = init_image.thumbnail((512, 512))
+    mask_image = mask_image.resize((512, 512))
+    init_image = init_image.resize((512, 512))
     mask_applied_image = Image.blend(init_image, mask_image, 0.5)
     grey_mask = mask_image.convert("L")
     #image_rgba_mask_removed = init_image.convert("RGBA")
