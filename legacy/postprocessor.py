@@ -65,6 +65,7 @@ import threading
 runningThreads = 0
 def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult):
     global runningThreads
+    print("Thread started.")
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
@@ -86,6 +87,7 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
             display(scaled_image, display_id=image_uid)
         else:
             display(scaled_image, display_id=image_uid + "_image_scaled")
+    print("Thread finished.")
     runningThreads -= 1
 
 queueThread = None
@@ -98,22 +100,26 @@ def queue_thread():
             t = postQueueThreads.pop(0)
             t.start()
             runningThreads += 1
+            print("Started thread. Running threads: %d" % runningThreads)
         time.sleep(1)
 def run_queue_thread():
     global queueThread, waitForNewThreads
     queueThread = threading.Thread(target=queue_thread)
     waitForNewThreads = True
     queueThread.start()
+    print("Post-processing started.")
 
 def post_thread(args):
     global postQueueThreads
     t = threading.Thread(target=post_processing_thread_func, args=args)
     postQueueThreads.append(t)
+    print("Added thread to queue.")
 
 def join_queue_thread():
     global queueThread, waitForNewThreads
     waitForNewThreads = False
     queueThread.join()
+    print("Post-processing ended.")
 
 def post_process(img, imageName, image_uid, gdrive = True, replaceResult = True):
     if not os.path.exists("media-dir"):
