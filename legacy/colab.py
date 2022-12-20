@@ -27,7 +27,6 @@ def media_server():
     global server_url
     from google.colab.output import eval_js
     server_url = eval_js("google.colab.kernel.proxyPort(8000)")
-    print("Current directory: " + os.getcwd())
     IPython.get_ipython().system_raw("fuser -k 8000/tcp")
     IPython.get_ipython().system_raw("python -m http.server 8000 --directory media-dir")
 def init(ModelName, debug=False):
@@ -38,7 +37,6 @@ def init(ModelName, debug=False):
     if not torch.cuda.is_available():
         print("No GPU found. If you are on Colab, go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
     else:
-        print("Starting local media server -> ", end="")
         from threading import Thread
         Thread(target=media_server).start()
         print("%s.\nRunning on -> " % server_url, end="")
@@ -54,7 +52,6 @@ def init(ModelName, debug=False):
             if not debug:
                 from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected." % model_name))
-            display.display(HTML("Media server: <a href='%s' target='_blank'>%s</a>" % (server_url, server_url)))
         except Exception as e:
             if "502" in str(e):
                 print("Received 502 Server Error: Huggingface is currently down." % model_name)
