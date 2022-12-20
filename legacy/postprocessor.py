@@ -62,9 +62,9 @@ def save_settings(filename, mode):
 
 
 import threading
-runningThreads = 0
+runningThreadsNum = 0
 def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult):
-    global runningThreads
+    global runningThreadsNum
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
@@ -87,30 +87,35 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
         else:
             display(scaled_image, display_id=image_uid + "_image_scaled")
     print("Thread finished.")
-    runningThreads -= 1
+    runningThreadsNum -= 1
 
 queueThread = None
 postQueueThreads = []
-waitForNewThreads = True
+runningThreads = []
+finished = False
 def queue_thread():
-    global postQueueThreads, waitForNewThreads, runningThreads
+    global postQueueThreads, waitForNewThreads, runningThreadsNum
     while True:
         # Run a maximum of 3 threads at a time
-        if len(postQueueThreads) > 0:
-            if runningThreads < 3:
-                t = postQueueThreads.pop(0)
-                t.start()
-                runningThreads += 1
-                print("Started thread. Running threads: %d" % runningThreads)
-        elif not waitForNewThreads:
-            for t in postQueueThreads: t.join()
-            break
-        time.sleep(1)
+        # Wait for threads to finish before starting new ones
+        if runningThreadsNum < 3:
+            if len(postQueueThreads) > 0:
+                runningThreads.append(postQueueThreads.pop(0))
+                runningThreadsNum += 1
+                runningThreads[-1].start()
+                print("Started thread. Running threads: %d" % runningThreadsNum)
+            elif finished:
+                for thread in runningThreads:
+                    thread.join()
+                break
+
+        else:
+            time.sleep(1)
     print("Queue thread finished.")
 def run_queue_thread():
-    global queueThread, waitForNewThreads
+    global queueThread, finished
     queueThread = threading.Thread(target=queue_thread)
-    waitForNewThreads = True
+    finished = False
     queueThread.start()
     print("Post-processing started.")
 
@@ -120,8 +125,8 @@ def post_thread(args):
     print("Added thread to queue.")
 
 def join_queue_thread():
-    global queueThread, waitForNewThreads
-    waitForNewThreads = False
+    global queueThread, finished
+    finished = True
     queueThread.join() 
     print("Post-processing ended.")
 
