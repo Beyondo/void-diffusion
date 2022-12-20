@@ -1,4 +1,4 @@
-import torch, random, time
+import torch, random, time, os
 import IPython
 from IPython import display
 from IPython.display import HTML
@@ -28,7 +28,10 @@ def media_server():
     # get colab server url
     from google.colab.output import eval_js
     server_url = eval_js("google.colab.kernel.proxyPort(8000)")
+    # print current dir
+    print("Current directory: " + os.getcwd())
     IPython.get_ipython().system_raw("python -m http.server 8000 --directory void-diffusion/media-dir")
+    print("Server stopped.")
 def init(ModelName, debug=False):
     global model_name, ready, pipeline, tokenizer, img2img, inpaint
     ready = False
