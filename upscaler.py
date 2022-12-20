@@ -19,7 +19,7 @@ upscalers = { }
 upscalers['bicubic'] = lambda image, scale: image.resize((image.width * scale, image.height * scale), PIL.Image.BICUBIC)
 upscalers['nearest'] = lambda image, scale: image.resize((image.width * scale, image.height * scale), PIL.Image.NEAREST)
 upscalers['gfpgan'] = lambda image, scale: gfpgan(image, scale)
-upscalers['gfpgan_realesrgan'] = lambda image, scale: gfpgan(image, scale, bg_sampler = "realesrgan")
+upscalers['gfpgan+real-esrgan'] = lambda image, scale: gfpgan(image, scale, bg_sampler = "realesrgan")
 def upscale(upscaler, scale, image_input_path):
     image = PIL.Image.open(image_input_path)
     image = upscalers[upscaler.lower()](image, scale)
