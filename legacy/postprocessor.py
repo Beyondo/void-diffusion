@@ -76,7 +76,7 @@ def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
         scaled_image.save("media-dir/%s-%dx.png" % (image_uid, scale))
         html_link = "<a href='%s%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale, scale)
         display(HTML("<label>Scaled: %s" % html_link), display_id=image_uid + "_scaled")
-        scaled_image.thumbnail(img.size, Image.ANTIALIAS)
+        scaled_image.thumbnail(img.size, PIL.Image.ANTIALIAS)
         if replacePreview:
             display(scaled_image, display_id=image_uid)
         else:
