@@ -3,7 +3,6 @@ from legacy import colab, postprocessor, progress
 from IPython.display import display
 importlib.reload(progress)
 importlib.reload(postprocessor)
-postprocessor.run()
 def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
     progress.replace_result = ReplaceResult
     colab.prepare("text2img")
