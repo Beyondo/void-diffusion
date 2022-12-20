@@ -65,8 +65,6 @@ def start_post_processing(img, imageName, image_uid, gdrive, replaceResult):
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
-        import upscaler
-        importlib.reload(upscaler)
         scale = int(colab.settings['Scale'][:-1])
         scaled_image = upscaler.upscale(colab.settings['Upscaler'], scale, img)
         if gdrive:
@@ -88,6 +86,8 @@ def start_post_processing(img, imageName, image_uid, gdrive, replaceResult):
 import threading
 
 def job_queue():
+    import upscaler
+    importlib.reload(upscaler)
     while True:
         if len(post_process_jobs) > 0:
             start_post_processing(*post_process_jobs[0])
