@@ -14,8 +14,10 @@ def gfpgan(image, scale, bg_sampler = None):
     os.makedirs(output_dir, exist_ok=True)
     image.save(os.path.join(input_dir, "image.png"))
     IPython.get_ipython().system("python vendor/GFPGAN/inference_gfpgan.py -i %s -o %s -v 1.3 -s %s %s &> /dev/null" % (input_dir, output_dir, scale, "--bg_upsampler %s" % bg_sampler if bg_sampler else ""))
-    image = PIL.Image.open(os.path.join(output_dir, "restored_imgs", "image.png"))
-    if os.path.exists(temp_dir): os.system("rm -rf %s" % temp_dir)
+    try:
+        image = PIL.Image.open(os.path.join(output_dir, "restored_imgs", "image.png"))
+        if os.path.exists(temp_dir): os.system("rm -rf %s" % temp_dir)
+    except: pass
     return image
 def realesrgan(image, scale):
     model = arch.RRDBNet(3, 3, 64, 23, gc=32)
