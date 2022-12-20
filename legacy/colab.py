@@ -37,9 +37,7 @@ def init(ModelName, debug=False):
     if not torch.cuda.is_available():
         print("No GPU found. If you are on Colab, go to Runtime -> Change runtime type, and choose \"GPU\" then click Save.")
     else:
-        from threading import Thread
-        Thread(target=media_server).start()
-        print("%s.\nRunning on -> " % server_url, end="")
+        print("Running on -> ", end="")
         torch.set_default_dtype(torch.float16)
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
@@ -61,6 +59,8 @@ def init(ModelName, debug=False):
             print(e)
 
 def prepare(mode):
+    from threading import Thread
+    Thread(target=media_server).start()
     global current_mode, settings
     torch.set_default_dtype(torch.float16)
     if 'Seed' not in settings:
