@@ -96,12 +96,21 @@ waitForNewThreads = False
 def queue_thread():
     global postQueueThreads, waitForNewThreads, runningThreads
     while True:
+        # Run a maximum of 3 threads at a time
         if len(postQueueThreads) > 0 and runningThreads < 3:
             t = postQueueThreads.pop(0)
             t.start()
             runningThreads += 1
             print("Started thread. Running threads: %d" % runningThreads)
         elif not waitForNewThreads: break
+        
+
+        #if len(postQueueThreads) > 0 and runningThreads < 3:
+        #    t = postQueueThreads.pop(0)
+        #    t.start()
+        #    runningThreads += 1
+        #    print("Started thread. Running threads: %d" % runningThreads)
+        #elif not waitForNewThreads: break
         time.sleep(1)
     print("Queue thread finished.")
 def run_queue_thread():
@@ -114,7 +123,6 @@ def run_queue_thread():
 def post_thread(args):
     global postQueueThreads
     postQueueThreads.append(threading.Thread(target=post_processing_thread_func, args=args))
-    postQueueThreads[-1].start()
     print("Added thread to queue.")
 
 def join_queue_thread():
