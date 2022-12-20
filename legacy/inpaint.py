@@ -13,7 +13,11 @@ def process(ShouldSave, ShouldPreview = True):
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if colab.save_settings: postprocessor.save_settings(timestamp, mode="inpaint")
     # Load image
-    init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
+    init_image = None
+    if colab.settings['UseLastOutputAsInitialImage'] and colab.last_generated_image is not None:
+        init_image = colab.last_generated_image
+    else:
+        init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("RGB")
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
@@ -49,6 +53,7 @@ def process(ShouldSave, ShouldPreview = True):
             callback_steps=20).images[0]
         # convert the image back to the original size
         image = image.resize(colab.image_size)
+        colab.last_generated_image = image
         progress.show(image)
         postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
