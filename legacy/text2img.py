@@ -1,7 +1,9 @@
-import torch, os, time, datetime, colab, postprocessor, progress, importlib
+import torch, os, time, datetime, importlib
+from legacy import colab, postprocessor, progress
 from IPython.display import display
 importlib.reload(progress)
 importlib.reload(postprocessor)
+postprocessor.run()
 def process(ShouldSave, ShouldPreview = True):
     colab.prepare("text2img")
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
@@ -13,7 +15,12 @@ def process(ShouldSave, ShouldPreview = True):
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
         progress.reset()
         progress.show()
+<<<<<<< HEAD:modes/text2img.py
         image = colab.text2img(
+=======
+        image = colab.pipeline(
+            prompt=colab.settings['Prompt'],
+>>>>>>> Dev:legacy/text2img.py
             width=colab.settings['Width'],
             height=colab.settings['Height'],
             prompt=colab.settings['Prompt'],
@@ -23,6 +30,8 @@ def process(ShouldSave, ShouldPreview = True):
             generator=generator,
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
+        colab.last_generated_image = image
         progress.show(image)
-        postprocessor.post_process(image, "%d_%d" % (timestamp, i), ShouldSave)
+        postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
+    postprocessor.join()

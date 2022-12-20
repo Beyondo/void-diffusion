@@ -1,4 +1,5 @@
-import torch, os, time, datetime, colab, postprocessor, progress, importlib
+import torch, os, time, datetime, importlib
+from legacy import colab, postprocessor, progress
 from IPython.display import Image
 from IPython.display import display
 
@@ -12,17 +13,20 @@ def process(ShouldSave, ShouldPreview = True):
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if colab.save_settings: postprocessor.save_settings(timestamp, mode="inpaint")
     # Load image
-    init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
+    init_image = None
+    if colab.settings['UseLastOutputAsInitialImage'] and colab.last_generated_image is not None:
+        init_image = colab.last_generated_image
+    else:
+        init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
-    mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("L")
-    mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
-    mask_applied_image = init_image.copy()
-    mask_applied_image = Image.blend(mask_applied_image, mask_image, 0.5)
-    # rgba
-    image_rgba_mask_removed = init_image.convert("RGBA")
-    print("Apply mask to image: ", image_rgba_mask_removed.size, mask_image.size)
-    image_rgba_mask_removed.putalpha(mask_image)
-    display(colab.image_grid([init_image, mask_image, mask_applied_image, image_rgba_mask_removed], 1, 4))
+    mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("RGB")
+    init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
+    mask_applied_image = Image.blend(init_image, mask_image, 0.5)
+    display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
+    colab.image_size = init_image.size
+    init_image = init_image.resize((512, 512))
+    mask_image = mask_image.resize((512, 512))
+    grey_mask = mask_image.convert("L")
     # Process image
     num_iterations = colab.settings['Iterations']
     display("Iterations: 0/%d" % num_iterations, display_id="iterations")
@@ -32,7 +36,7 @@ def process(ShouldSave, ShouldPreview = True):
         progress.reset()
         progress.show()
         latents = None
-        if True:
+        if False:
             # generate random image latents for inpainting
             latents = torch.randn(1, 4, 64, 64, device="cuda")
             # blend the mask into the latents
@@ -40,14 +44,17 @@ def process(ShouldSave, ShouldPreview = True):
         image = colab.inpaint(
             prompt=colab.settings['Prompt'],
             image=init_image,
-            mask_image=mask_image,
+            mask_image=grey_mask,
             negative_prompt=colab.settings['NegativePrompt'],
             guidance_scale=colab.settings['GuidanceScale'],
             num_inference_steps=colab.settings['Steps'],
             generator=generator,
-            latents=latents,
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
+        # convert the image back to the original size
+        image = image.resize(colab.image_size)
+        colab.last_generated_image = image
         progress.show(image)
-        postprocessor.post_process(image, "%d_%d" % (timestamp, i), ShouldSave)
+        postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
+    postprocessor.join()

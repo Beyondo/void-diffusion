@@ -1,4 +1,5 @@
-import torch, os, time, datetime, colab, postprocessor, progress, importlib
+import torch, os, time, datetime, importlib
+from legacy import colab, postprocessor, progress
 from IPython.display import Image
 from IPython.display import display
 
@@ -12,8 +13,11 @@ def process(ShouldSave, ShouldPreview = True):
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if colab.save_settings: postprocessor.save_settings(timestamp, mode="img2img")
     # Load image
-    response = requests.get(colab.settings['InitialImageURL'])
-    init_image = Image.open(BytesIO(response.content)).convert('RGB')
+    init_image = None
+    if colab.settings['UseLastOutputAsInitialImage'] and colab.last_generated_image is not None:
+        init_image = colab.last_generated_image
+    else:
+        init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
     init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     display(init_image)
     # Process image
@@ -34,6 +38,8 @@ def process(ShouldSave, ShouldPreview = True):
             generator=generator,
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
+        colab.last_generated_image = image
         progress.show(image)
-        postprocessor.post_process(image, "%d_%d" % (timestamp, i), ShouldSave)
+        postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
+    postprocessor.join()
