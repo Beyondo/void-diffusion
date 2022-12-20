@@ -9,6 +9,7 @@ from io import BytesIO
 importlib.reload(progress)
 importlib.reload(postprocessor)
 def process(ShouldSave, ShouldPreview = True, ReplaceResult = True):
+    progress.replace_result = ReplaceResult
     colab.prepare("inpaint")
     timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
     if colab.save_settings: postprocessor.save_settings(timestamp, mode="inpaint")
