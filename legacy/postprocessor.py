@@ -84,15 +84,21 @@ def post_process_thread(img, imageName, gdrive, replacePreview):
         # Save the 2x image in media-dir
         scaled_image.save("media-dir/%s-%dx.png" %(imageName, scale))
         # dispaly the 2x image as a link
-        html_link = HTML("<a href='%s/%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, imageName, scale, scale))
-        display("Scaled: ", html_link, display_id=colab.get_current_image_uid() + "-link")
+        html_link = HTML("<a href='%s%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, imageName, scale, scale))
+        display("Scaled: ", html_link, display_id=colab.get_current_image_uid() + "_scaled")
+post_process_jobs = []
+import threading
+def job_queue():
+    while True:
+        if len(post_process_jobs) > 0:
+            start_post_processing(*post_process_jobs[0])
+            post_process_jobs.pop(0)
+        else:
+            time.sleep(0.1)
 def post_process(img, imageName, gdrive = True, replacePreview = True):
-    import queue
-    import threading
-    q = queue.Queue()
-    t = threading.Thread(target=post_process_thread, args=(img, imageName, gdrive, replacePreview))
-    t.start()
-    q.put(t)
-    if q.qsize() > 3:
-        q.get().join()
-    q.join()
+    post_process_jobs.append((img, imageName, gdrive, replacePreview))
+    if len(post_process_jobs) == 1:
+        start_post_processing(*post_process_jobs[0])
+
+
+threading.Thread(target=job_queue).start()
