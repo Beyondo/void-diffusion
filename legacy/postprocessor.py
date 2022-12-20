@@ -62,7 +62,9 @@ def save_settings(filename, mode):
 
 
 import threading
+running = 0
 def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult):
+    global running
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
@@ -84,14 +86,33 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
             display(scaled_image, display_id=image_uid)
         else:
             display(scaled_image, display_id=image_uid + "_image_scaled")
-current_threads = []
+    running -= 1
+
+queueThread = None
+postQueueThreads = []
+def queue_thread():
+    global postQueueThreads, running
+    while len(postQueueThreads) > 0:
+        if running < 3:
+            t = postQueueThreads.pop(0)
+            t.start()
+            running += 1
+        else:
+            time.sleep(1)
+def run_queue_thread():
+    queueThread = threading.Thread(target=queue_thread)
+    queueThread.start()
+
 def post_thread(args):
-    global current_threads
+    global postQueueThreads
     t = threading.Thread(target=post_processing_thread_func, args=args)
-    if len(current_threads) < 3:
-        t.start()
-    current_threads.append(t)
-def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceResult = True):
+    postQueueThreads.append(t)
+
+def join_queue_thread():
+    global queueThread
+    queueThread.join()
+
+def post_process(img, imageName, image_uid, gdrive = True, replaceResult = True):
     if not os.path.exists("media-dir"):
         os.makedirs("media-dir")
     if gdrive:
@@ -101,10 +122,3 @@ def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceRe
     html_link = "<a href='%s%s.png' target='_blank'>Original Image</a>" % (colab.server_url, image_uid)
     display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
     post_thread((img, imageName, image_uid, gdrive, replaceResult))
-
-def join():
-    global current_threads
-    for t in current_threads:
-        if not t.is_alive():
-            t.start()
-        t.join()

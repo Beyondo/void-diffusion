@@ -10,6 +10,7 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
     if ShouldSave and colab.save_settings: postprocessor.save_settings(timestamp, mode="text2img")
     num_iterations = colab.settings['Iterations']
     display("Iterations: 0/%d" % num_iterations, display_id="iterations")
+    postprocessor.run_queue_thread()
     for i in range(num_iterations):
         colab.image_id = i # needed for progress.py
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
@@ -30,5 +31,5 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
         progress.show(image)
         postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), maxNumJobs, ShouldSave, ReplaceResult)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
-    postprocessor.join()
+    postprocessor.join_queue_thread()
     torch.cuda.empty_cache()
