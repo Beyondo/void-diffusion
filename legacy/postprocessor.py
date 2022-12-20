@@ -98,6 +98,7 @@ def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True
     if gdrive:
         path = save_gdrive(img, imageName)
         display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_saved")
+    print("media-dir/%s.png" % image_uid)
     img.save("media-dir/%s.png" % image_uid)
     html_link = "<a href='%s%s.png' target='_blank'>Original Image</a>" % (colab.server_url, image_uid)
     display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
