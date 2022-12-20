@@ -58,9 +58,6 @@ def save_settings(filename, mode):
 
 
 def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
-    if gdrive:
-        path = save_gdrive(img, imageName)
-        display("Saved: %s" % path, display_id=image_uid + "_saved")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
         import upscaler
@@ -87,6 +84,7 @@ def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
         display("Scaled: ", html_link, display_id=image_uid + "_scaled")
 post_process_jobs = []
 import threading
+
 def job_queue():
     while True:
         if len(post_process_jobs) > 0:
@@ -95,6 +93,9 @@ def job_queue():
         else:
             time.sleep(0.1)
 def post_process(img, imageName, image_uid, gdrive = True, replacePreview = True):
+    if gdrive:
+        path = save_gdrive(img, imageName)
+        display("Saved: %s" % path, display_id=image_uid + "_saved")
     post_process_jobs.append((img, imageName, image_uid, gdrive, replacePreview))
 
 
