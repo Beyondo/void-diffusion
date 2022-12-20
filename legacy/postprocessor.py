@@ -60,7 +60,7 @@ def save_settings(filename, mode):
 def start_post_processing(img, imageName, image_uid, gdrive, replacePreview):
     if gdrive:
         path = save_gdrive(img, imageName)
-            display("Saved: %s" % path, display_id=image_uid + "_saved")
+        display("Saved: %s" % path, display_id=image_uid + "_saved")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
         import upscaler
