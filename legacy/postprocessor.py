@@ -117,7 +117,7 @@ def join():
             if os.path.exists("media-dir/%s-%d.png" % (job[2], int(colab.settings['Scale'][:-1]))):
                 # Set the image to the scaled image and remove the job from the queue
                 scaled_image = PIL.Image.open("media-dir/%s-%d.png" % (job[2], int(colab.settings['Scale'][:-1])))
-                if replaceResult:
+                if job[4]:
                     scaled_image.thumbnail(job[0], PIL.Image.ANTIALIAS)
                     display(scaled_image, display_id=image_uid)
                 else:
