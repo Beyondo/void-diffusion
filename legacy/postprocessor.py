@@ -60,6 +60,7 @@ def save_settings(filename, mode):
 
 
 post_process_jobs = []
+
 def start_post_processing(img, imageName, image_uid, gdrive, replaceResult):
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
@@ -114,6 +115,13 @@ def join():
     while len(post_process_jobs) > 0:
         for job in post_process_jobs:
             if os.path.exists("media-dir/%s-%d.png" % (job[2], int(colab.settings['Scale'][:-1]))):
+                # Set the image to the scaled image and remove the job from the queue
+                scaled_image = PIL.Image.open("media-dir/%s-%d.png" % (job[2], int(colab.settings['Scale'][:-1])))
+                if replaceResult:
+                    scaled_image.thumbnail(job[0], PIL.Image.ANTIALIAS)
+                    display(scaled_image, display_id=image_uid)
+                else:
+                    display(scaled_image, display_id=image_uid + "_image_scaled")
                 post_process_jobs.remove(job)
         if not th.is_alive():
             th.start()
