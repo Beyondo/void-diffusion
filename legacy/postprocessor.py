@@ -109,7 +109,8 @@ def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceRe
     display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
     post_process_jobs.append((img, imageName, image_uid, gdrive, replaceResult))
     is_job_queue_running = True
-    run()
+    try: run()
+    except: pass
     while len(post_process_jobs) > maxNumJobs:
         time.sleep(0.1)
 
