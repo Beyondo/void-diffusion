@@ -16,6 +16,7 @@ def process(ShouldSave, ShouldPreview = True, ReplaceResult = True):
         generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
         progress.reset()
         progress.show()
+        torch.cuda.empty_cache()
         image = colab.pipeline(
             prompt=colab.settings['Prompt'],
             width=colab.settings['Width'],
