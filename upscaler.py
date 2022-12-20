@@ -1,9 +1,9 @@
 import os, PIL.Image, IPython.display, IPython, hashlib
 def gfpgan(image, scale, bg_sampler = None):
     hash = hashlib.sha256(image.tobytes()).hexdigest()
-    temp_dir = "temp/%s" % hash
+    temp_dir = "media-dir/%s" % hash
     input_dir = os.path.join(temp_dir, "input")
-    output_dir = os.path.join(temp_dir, "output")
+    output_dir = os.path.join(temp_dir, "scaled")
     os.makedirs(input_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
     image.save(os.path.join(input_dir, "image.png"))
