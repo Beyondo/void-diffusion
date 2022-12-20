@@ -22,7 +22,7 @@ def process(ShouldSave, ShouldPreview = True):
     grey_mask = mask_image.convert("L")
     image_rgba_mask_removed = init_image.convert("RGBA")
     image_rgba_mask_removed.putalpha(grey_mask)
-    display(colab.image_grid([init_image, mask_image, mask_applied_image, image_rgba_mask_removed], 1, 4))
+    display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
     # Process image
     num_iterations = colab.settings['Iterations']
     display("Iterations: 0/%d" % num_iterations, display_id="iterations")
