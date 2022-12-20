@@ -19,8 +19,8 @@ def callback(iter, t, latents):
         last_image_time = time.time()
         with torch.no_grad():
             latents = 1 / 0.18215 * latents
-            images = colab.text2img.vae.decode(latents).sample
+            images = colab.pipeline.vae.decode(latents).sample
             images = (images / 2 + 0.5).clamp(0, 1)
             images = images.cpu().permute(0, 2, 3, 1).float().numpy()
-            images = colab.text2img.numpy_to_pil(images)
+            images = colab.pipeline.numpy_to_pil(images)
             show(images[0])
