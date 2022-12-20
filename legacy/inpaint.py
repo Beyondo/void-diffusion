@@ -14,7 +14,10 @@ def process(ShouldSave, ShouldPreview = True):
     if colab.save_settings: postprocessor.save_settings(timestamp, mode="inpaint")
     # Load image
     init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
+    init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("RGB")
+    init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
+    size = init_image.size
     # inpaint only accepts a tensor size of 64x64 thus we need to resize the image to 512x512
     init_image = init_image.resize((512, 512))
     mask_image = mask_image.resize((512, 512))
@@ -47,6 +50,8 @@ def process(ShouldSave, ShouldPreview = True):
             generator=generator,
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
+        # convert the image back to the original size
+        image = image.resize(size)
         progress.show(image)
         postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
