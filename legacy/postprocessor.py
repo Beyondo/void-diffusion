@@ -88,7 +88,8 @@ current_threads = []
 def post_thread(args):
     global current_threads
     t = threading.Thread(target=post_processing_thread_func, args=args)
-    t.start()
+    if len(current_threads) < 3:
+        t.start()
     current_threads.append(t)
 def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceResult = True):
     if not os.path.exists("media-dir"):
@@ -104,4 +105,6 @@ def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceRe
 def join():
     global current_threads
     for t in current_threads:
+        if not t.is_alive():
+            t.start()
         t.join()
