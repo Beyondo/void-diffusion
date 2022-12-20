@@ -112,8 +112,8 @@ def post_process(img, imageName, image_uid, maxNumJobs, gdrive = True, replaceRe
     try: run()
     except: pass
     while len(post_process_jobs) > maxNumJobs:
+        run()
         time.sleep(0.1)
-
 th = threading.Thread(target=job_queue)
 def run():
     global th
