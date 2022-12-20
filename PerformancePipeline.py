@@ -14,7 +14,7 @@ def from_pretrained(model_name):
         pipe = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16)
     except:
         try:
-            pipe = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16)
+            pipe = StableDiffusionPipeline.from_pretrained(model_name)
         except Exception as e:
             print("Failed to load model %s: %s" % (model_name, e))
     #pipe = clip_limit.modify(512)
