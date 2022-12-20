@@ -13,7 +13,7 @@ def show(img = None):
     global rendering_start_time
     image_id = colab.get_current_image_uid()
     display(HTML("<label>Seed: <code>%d</code></label>" % colab.get_current_image_seed()), display_id=image_id + "_seed")
-    display(HTML("<label>Execution time: %.2fs</label>" % (time.time() - rendering_start_time)), display_id=image_id + "_time")
+    display(HTML("<label>Generation time: %.2fs</label>" % (time.time() - rendering_start_time)), display_id=image_id + "_time")
     display(HTML("<label>Original: Emerging...</label>"), display_id=image_id + "_original")
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_saved")
     display(HTML("<label>Scaled: Waiting...</label>"), display_id=image_id + "_scaled")
