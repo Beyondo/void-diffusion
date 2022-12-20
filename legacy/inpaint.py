@@ -14,10 +14,7 @@ def process(ShouldSave, ShouldPreview = True):
     if colab.save_settings: postprocessor.save_settings(timestamp, mode="inpaint")
     # Load image
     init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
-    init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
     mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("RGB")
-    mask_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
-    # make divisible by 16
     mask_image = mask_image.resize((colab.settings['Width'], colab.settings['Height']))
     init_image = init_image.resize((colab.settings['Width'], colab.settings['Height']))
     mask_applied_image = init_image.copy()
