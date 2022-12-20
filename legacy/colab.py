@@ -30,10 +30,10 @@ def media_server():
     server_url = eval_js("google.colab.kernel.proxyPort(8000)")
     # print current dir
     print("Current directory: " + os.getcwd())
-    IPython.get_ipython().system_raw("python -m http.server 8000 --directory void-diffusion/media-dir")
+    IPython.get_ipython().system_raw("python -m http.server 8000 --directory media-dir")
     print("Server stopped.")
 def init(ModelName, debug=False):
-    global model_name, ready, pipeline, tokenizer, img2img, inpaint
+    global model_name, ready, pipeline, tokenizer, img2img, inpaint, settings, server_url
     ready = False
     model_name = ModelName
     settings['ModelName'] = ModelName
@@ -43,7 +43,7 @@ def init(ModelName, debug=False):
         print("Starting local media server -> ", end="")
         from threading import Thread
         Thread(target=media_server).start()
-        print("Done.\nRunning on -> ", end="")
+        print("%s.\nRunning on -> ", server_url, end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
             env.install_vendor()
