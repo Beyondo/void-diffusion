@@ -45,7 +45,6 @@ def process(ShouldSave, ShouldPreview = True):
             guidance_scale=colab.settings['GuidanceScale'],
             num_inference_steps=colab.settings['Steps'],
             generator=generator,
-            latents=latents,
             callback=progress.callback if ShouldPreview else None,
             callback_steps=20).images[0]
         progress.show(image)
