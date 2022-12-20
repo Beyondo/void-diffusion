@@ -42,7 +42,7 @@ def init(ModelName, debug=False):
         print("Starting local media server -> ", end="")
         from threading import Thread
         Thread(target=media_server).start()
-        print("%s.\nRunning on -> ", server_url, end="")
+        print("%s.\nRunning on -> " % server_url, end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
             env.install_vendor()
