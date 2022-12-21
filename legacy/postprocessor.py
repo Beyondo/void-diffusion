@@ -106,9 +106,7 @@ def queue_thread():
                     if thread.is_alive():
                         thread.join()
                 break
-
-        else:
-            time.sleep(1)
+        time.sleep(1)
     print("Queue thread finished.")
 def run_queue_thread():
     global queueThread, finished
