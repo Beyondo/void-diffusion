@@ -68,10 +68,11 @@ def init(ModelName, InpaintingModel, debug=False):
             if "502" in str(e):
                 print("Received 502 Server Error: Huggingface is currently down." % model_name)
             print(e)
-
-def prepare(mode):
+def start_media_server():
     from threading import Thread
     Thread(target=media_server).start()
+def prepare(mode):
+    start_media_server()
     global current_mode, settings
     torch.set_default_dtype(torch.float16)
     if 'Seed' not in settings:
