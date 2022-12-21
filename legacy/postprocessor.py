@@ -88,13 +88,14 @@ queueThread = None
 available_jobs = []
 threads = []
 finished = False
+max_num_parallel_jobs = 3
 def queue_thread():
     global available_jobs, finished, threads
     while True:
         # Run a maximum of 3 threads at a time
         # Wait for threads to finish before starting new ones
         num_is_alive = sum([thread.is_alive() for thread in threads])
-        if num_is_alive < 3:
+        if num_is_alive < max_num_parallel_jobs:
             if len(available_jobs) > 0:
                 threads.append(threading.Thread(target=post_processing_thread_func, args=available_jobs.pop(0)))
                 threads[-1].start()
