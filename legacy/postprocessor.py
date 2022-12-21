@@ -90,7 +90,7 @@ available_jobs = []
 threads = []
 finished = False
 def queue_thread():
-    global postQueueJobs, finished, threads
+    global available_jobs, finished, threads
     while True:
         # Run a maximum of 3 threads at a time
         # Wait for threads to finish before starting new ones
