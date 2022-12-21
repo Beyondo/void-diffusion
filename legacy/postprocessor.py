@@ -83,7 +83,6 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
             display(scaled_image, display_id=image_uid)
         else:
             display(scaled_image, display_id=image_uid + "_image_scaled")
-    print("Thread finished.")
 import threading
 queueThread = None
 available_jobs = []
@@ -99,32 +98,26 @@ def queue_thread():
             if len(available_jobs) > 0:
                 threads.append(threading.Thread(target=post_processing_thread_func, args=available_jobs.pop(0)))
                 threads[-1].start()
-                print("Started thread. Running threads: %d" % (num_is_alive + 1))
             elif finished:
-                print("Finished. Waiting for threads to finish...")
                 for thread in threads:
                     if thread.is_alive():
                         thread.join()
                 break
         time.sleep(1)
-    print("Queue thread finished.")
 def run_queue_thread():
     global queueThread, finished
     queueThread = threading.Thread(target=queue_thread)
     finished = False
     queueThread.start()
-    print("Post-processing started.")
 
 def post_thread(args):
     global available_jobs
     available_jobs.append(args)
-    print("Added thread to queue.")
 
 def join_queue_thread():
     global queueThread, finished
     finished = True
     queueThread.join() 
-    print("Post-processing ended.")
 
 def post_process(img, imageName, image_uid, gdrive = True, replaceResult = True):
     if not os.path.exists("media-dir"):
