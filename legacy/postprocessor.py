@@ -61,10 +61,7 @@ def save_settings(filename, mode):
     return settingsFile.replace("/content/gdrive/MyDrive/", "")
 
 
-import threading
-runningThreadsNum = 0
 def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult):
-    global runningThreadsNum
     display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
@@ -87,26 +84,26 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
         else:
             display(scaled_image, display_id=image_uid + "_image_scaled")
     print("Thread finished.")
-    runningThreadsNum -= 1
-
+import threading
 queueThread = None
-postQueueThreads = []
-runningThreads = []
+available_jobs = []
+threads = []
 finished = False
 def queue_thread():
-    global postQueueThreads, waitForNewThreads, runningThreadsNum
+    global postQueueJobs, finished, threads
     while True:
         # Run a maximum of 3 threads at a time
         # Wait for threads to finish before starting new ones
-        if runningThreadsNum < 3:
-            if len(postQueueThreads) > 0:
-                runningThreads.append(postQueueThreads.pop(0))
-                runningThreadsNum += 1
-                runningThreads[-1].start()
-                print("Started thread. Running threads: %d" % runningThreadsNum)
+        num_is_alive = sum([thread.is_alive() for thread in threads])
+        if num_is_alive < 3:
+            if len(available_jobs) > 0:
+                threads.append(threading.Thread(target=post_processing_thread_func, args=available_jobs.pop(0)))
+                threads[-1].start()
+                print("Started thread. Running threads: %d" % (num_is_alive + 1))
             elif finished:
-                for thread in runningThreads:
-                    thread.join()
+                for thread in threads:
+                    if thread.is_alive():
+                        thread.join()
                 break
 
         else:
@@ -120,8 +117,8 @@ def run_queue_thread():
     print("Post-processing started.")
 
 def post_thread(args):
-    global postQueueThreads
-    postQueueThreads.append(threading.Thread(target=post_processing_thread_func, args=args))
+    global available_jobs
+    available_jobs.append(args)
     print("Added thread to queue.")
 
 def join_queue_thread():
