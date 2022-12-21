@@ -101,6 +101,7 @@ def queue_thread():
                 threads[-1].start()
                 print("Started thread. Running threads: %d" % (num_is_alive + 1))
             elif finished:
+                print("Finished. Waiting for threads to finish...")
                 for thread in threads:
                     if thread.is_alive():
                         thread.join()
