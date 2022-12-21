@@ -61,5 +61,5 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
         progress.show(image)
         postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave, ReplaceResult)
         display("Iterations: %d/%d" % (i + 1,  num_iterations), display_id="iterations")
-    postprocessor.join()
+    postprocessor.join_queue_thread()
     torch.cuda.empty_cache()
