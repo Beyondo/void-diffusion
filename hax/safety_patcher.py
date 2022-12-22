@@ -19,14 +19,14 @@ def get_python_modules_dir():
         return os.path.join(sys.prefix, 'lib', python_version, 'site-packages')
 def empty_safety_checker(images, **kwargs):
     return images, False
-def try_patch(pipe):
-    try:
-        target_script = os.path.join(get_python_modules_dir(), 'diffusers', 'pipelines', 'stable_diffusion', 'safety_checker.py')
-        if(os.path.exists(patched_script)):
-            shutil.copyfile(patched_script, target_script)
-            importlib.invalidate_caches()
-        pipe.safety_checker = empty_safety_checker
-        return True
-    except Exception as e:
-        print("Couldn't patch NSFW: ", e)
-        return False
+def try_patch(pipe): pass
+    #try:
+    #    target_script = os.path.join(get_python_modules_dir(), 'diffusers', 'pipelines', 'stable_diffusion', 'safety_checker.py')
+    #    if(os.path.exists(patched_script)):
+    #        shutil.copyfile(patched_script, target_script)
+    #        importlib.invalidate_caches()
+    #    pipe.safety_checker = empty_safety_checker
+    #    return True
+    #except Exception as e:
+    #    print("Couldn't patch NSFW: ", e)
+    #    return False
