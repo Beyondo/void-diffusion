@@ -4,6 +4,7 @@ from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
 import env, PerformancePipeline, importlib
+from hax import safety_patcher
 importlib.reload(PerformancePipeline)
 model_name = ""
 inpaint_model_name = ""
@@ -52,16 +53,16 @@ def init(ModelName, InpaintingModel, debug=False):
             print("Img2Img model initialized.")
             try:
                 inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
+                safety_patcher.try_patch(inpaint)
             except:
                 try:
                     inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16).to("cuda:0")
+                    safety_patcher.try_patch(inpaint)
                 except:
                     print("Couldn't load %s as an Inpainting model." % inpaint_model_name)
                     return
-            from hax import safety_patcher
             safety_patcher.try_patch(pipeline)
             safety_patcher.try_patch(img2img)
-            safety_patcher.try_patch(inpaint)
             print("Done.")
             ready = True
             if not debug:
