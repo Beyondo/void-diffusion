@@ -51,16 +51,17 @@ def init(ModelName, InpaintingModel, debug=False):
             print("Text2Img model initialized.")
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             print("Img2Img model initialized.")
-            try:
-                inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
-                safety_patcher.try_patch(inpaint)
-            except:
+            if InpaintingModel != None:
                 try:
-                    inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16).to("cuda:0")
+                    inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
                     safety_patcher.try_patch(inpaint)
                 except:
-                    print("Couldn't load %s as an Inpainting model." % inpaint_model_name)
-                    return
+                    try:
+                        inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16).to("cuda:0")
+                        safety_patcher.try_patch(inpaint)
+                    except:
+                        print("Couldn't load %s as an Inpainting model." % inpaint_model_name)
+                        return
             safety_patcher.try_patch(pipeline)
             safety_patcher.try_patch(img2img)
             print("Done.")
