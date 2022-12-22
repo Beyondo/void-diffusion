@@ -59,6 +59,8 @@ def init(ModelName, InpaintingModel, debug=False):
                     print("Couldn't load %s as an Inpainting model." % inpaint_model_name)
                     return
             from hax import safety_patcher
+            safety_patcher.try_patch(pipeline)
+            safety_patcher.try_patch(img2img)
             safety_patcher.try_patch(inpaint)
             print("Done.")
             ready = True
