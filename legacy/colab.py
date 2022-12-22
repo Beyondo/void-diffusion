@@ -4,10 +4,6 @@ from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
 import env, PerformancePipeline, importlib
-<<<<<<< HEAD
-from hax import safety_patcher
-=======
->>>>>>> Dev
 importlib.reload(PerformancePipeline)
 model_name = ""
 inpaint_model_name = ""
