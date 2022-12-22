@@ -3,8 +3,8 @@ def install_vendor():
     
     print("Installing vendors -> ", end="")
     import os, IPython
-    if(os.path.exists("vendor")):
-        print("Vendor already installed.")
+    if os.path.exists("vendor/.installed"):
+        print("Done.")
         return
     try:
         f = open(os.devnull, 'w')
@@ -32,6 +32,8 @@ def install_vendor():
         IPython.get_ipython().system("git clone https://github.com/xinntao/Real-ESRGAN.git vendor/Real-ESRGAN > /dev/null")
         IPython.get_ipython().system("pip install -q -r vendor/Real-ESRGAN/requirements.txt > /dev/null")
         IPython.get_ipython().system("python vendor/Real-ESRGAN/setup.py develop > /dev/null")
+        # generate a random file to mark that the vendors are installed
+        open("vendor/.installed", "w").close()
         # StyleGAN2
         sys.stdout = original_stdout
         print("Done.")
