@@ -67,7 +67,10 @@ def init(ModelName, InpaintingModel, debug=False):
             if not debug:
                 from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected for Text2Img and Img2Img." % model_name))
-            display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected for inpainting." % inpaint_model_name))
+            if InpaintingModel == None:
+                display.display(HTML("Inpainting model <strong><span style='color: red'>not selected</span></strong>."))
+            else:
+                display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected for inpainting." % inpaint_model_name))
         except Exception as e:
             if "502" in str(e):
                 print("Received 502 Server Error: Huggingface is currently down." % model_name)
