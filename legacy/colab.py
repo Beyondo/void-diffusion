@@ -47,7 +47,9 @@ def init(ModelName, InpaintingModel, debug=False):
             env.install_vendor()
             print("Initializing model " + model_name + ":")
             pipeline = PerformancePipeline.from_pretrained(model_name)
+            print("Text2Img model initialized.")
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
+            print("Img2Img model initialized.")
             try:
                 inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
             except:
