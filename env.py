@@ -22,7 +22,7 @@ def install_vendor():
         IPython.get_ipython().system("wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.8/GFPGANv1.3.pth -P experiments/pretrained_models > /dev/null")
         # Use vendor/GFPGAN/inference_gfpgan.py to download & cache the model
         if not os.path.exists("vendor/GFPGAN/results/whole_imgs"):
-            IPython.get_ipython().system("python vendor/GFPGAN/inference_gfpgan.py -i vendor/GFPGAN/inputs/whole_imgs -o vendor/GFPGAN/results/whole_imgs -v 1.3 -s 2 --bg_upsampler realesrgan > /dev/null")
+            IPython.get_ipython().system("python vendor/GFPGAN/inference_gfpgan.py -i vendor/GFPGAN/inputs/whole_imgs -o vendor/GFPGAN/results/whole_imgs -v 1.3 -s 2 --bg_upsampler realesrgan > /dev/null 2>&1")
         # Real-ESRGAN
         os.remove("vendor/Real-ESRGAN") if os.path.exists("vendor/Real-ESRGAN") else None
         IPython.get_ipython().system("git clone https://github.com/xinntao/Real-ESRGAN.git vendor/Real-ESRGAN > /dev/null")
