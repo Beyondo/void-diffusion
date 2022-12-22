@@ -4,6 +4,8 @@ from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
 import env, PerformancePipeline, importlib
+from hax import safety_patcher
+importlib.reload(env)
 importlib.reload(PerformancePipeline)
 model_name = ""
 inpaint_model_name = ""
@@ -48,22 +50,28 @@ def init(ModelName, InpaintingModel, debug=False):
             print("Initializing model " + model_name + ":")
             pipeline = PerformancePipeline.from_pretrained(model_name)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
-            try:
-                inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
-            except:
+            if InpaintingModel != None:
                 try:
-                    inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16).to("cuda:0")
+                    inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
+                    safety_patcher.try_patch(inpaint)
                 except:
-                    print("Couldn't load %s as an Inpainting model." % inpaint_model_name)
-                    return
-            from hax import safety_patcher
-            safety_patcher.try_patch(inpaint)
+                    try:
+                        inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16).to("cuda:0")
+                        safety_patcher.try_patch(inpaint)
+                    except:
+                        print("Couldn't load %s as an Inpainting model." % inpaint_model_name)
+                        return
+            safety_patcher.try_patch(pipeline)
+            safety_patcher.try_patch(img2img)
             print("Done.")
             ready = True
             if not debug:
                 from IPython.display import clear_output; clear_output()
             display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected for Text2Img and Img2Img." % model_name))
-            display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected for inpainting." % inpaint_model_name))
+            if InpaintingModel == None:
+                display.display(HTML("Inpainting model <strong><span style='color: red'>not selected</span></strong>."))
+            else:
+                display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected for inpainting." % inpaint_model_name))
         except Exception as e:
             if "502" in str(e):
                 print("Received 502 Server Error: Huggingface is currently down." % model_name)
