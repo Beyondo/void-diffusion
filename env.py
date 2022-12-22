@@ -1,11 +1,17 @@
 import os, sys, IPython
 def install_vendor():
+    
     print("Installing vendors -> ", end="")
     import os, IPython
     if(os.path.exists("vendor")):
         print("Vendor already installed.")
         return
     try:
+        import os
+        import sys
+        f = open(os.devnull, 'w')
+        original_stdout = sys.stdout
+        sys.stdout = f
         os.mkdir("vendor")
         # GFPGAN
         os.remove("vendor/GFPGAN") if os.path.exists("vendor/GFPGAN") else None
@@ -29,6 +35,7 @@ def install_vendor():
         IPython.get_ipython().system("pip install -q -r vendor/Real-ESRGAN/requirements.txt > /dev/null")
         IPython.get_ipython().system("python vendor/Real-ESRGAN/setup.py develop > /dev/null")
         # StyleGAN2
+        sys.stdout = original_stdout
         print("Done.")
     except Exception as e:
         print("Error: %s" % e)
