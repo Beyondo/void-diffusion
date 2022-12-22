@@ -7,8 +7,6 @@ def install_vendor():
         print("Vendor already installed.")
         return
     try:
-        import os
-        import sys
         f = open(os.devnull, 'w')
         original_stdout = sys.stdout
         sys.stdout = f
