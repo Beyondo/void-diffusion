@@ -2,7 +2,7 @@ import requests, json, threading, time, os, colab
 from IPython.display import display
 from IPython.display import HTML
 from IPython.display import clear_output;
-import job_manager
+from compute import job_manager
 import importlib
 # import get_ipython()
 API = "https://voidops.com/diffusion/api.php"
