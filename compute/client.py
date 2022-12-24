@@ -48,11 +48,11 @@ def run(uuid):
                             if response.status_code == 200:
                                 json = json.loads(response.text)
                                 if json["status"] == "ok":
-                                    if(process_job(job)):
+                                    if process_job(job):
                                         job['status'] = "complete"
                                         job['progress'] = 100
                                         requests.post(API, json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
-                                    else
+                                    else:
                                         job['status'] = "error"
                                         job['progress'] = 0
                                         requests.post(API, json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
