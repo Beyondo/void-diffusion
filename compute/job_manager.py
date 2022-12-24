@@ -30,8 +30,8 @@ def run():
 
 def add_to_queue(job):
     global job_queue
-    job['status'] = "In Queue"
-    job['progress'] = 0
+    job.data['status'] = "In Queue"
+    job.data['progress'] = 0
     job.update()
     job_queue.append(job)
 
