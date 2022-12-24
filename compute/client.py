@@ -1,7 +1,8 @@
-import requests, json, threading, time, colab
+import requests, json, threading, time, os, colab
 from IPython.display import display
 from IPython.display import HTML
 from IPython.display import clear_output;
+import importlib
 # import get_ipython()
 API = "https://voidops.com/diffusion/api.php"
 from IPython import get_ipython
@@ -9,7 +10,7 @@ def process_job(job):
     print("Processing job " + job["id"])
     if job['type'] == "run_script":
         try:
-            exec(job['script'])
+            importlib.import_module(os.path.join("scripts", job['script']))
         except Exception as e:
             job['status'] = "error"
             job['progress'] = -1
@@ -32,6 +33,17 @@ def process_job(job):
     return True
 def set_connection_status(uuid, msg, color, end = ""):
     display(HTML("%s <code><font color='%s'>%s</font></code>%s<br><hr><br>" % (msg, color, uuid, end)),  display_id = "void-connection")
+def update_job(job):
+    response = requests.post(API, json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
+    if response.status_code == 200:
+        r = json.loads(response.text)
+        if r["status"] == "ok":
+            return True
+        else:
+            print("Job update refused: " + r["message"])
+    else:
+        print("Couldn't post job update: " + str(response))
+    return False
 def run(uuid):
     clear_output()
     set_connection_status(uuid, "Connecting to", "orange", "...")
@@ -49,22 +61,14 @@ def run(uuid):
                             # Send a post request to the server
                             job['status'] = "processing"
                             job['progress'] = 0
-                            response = requests.post(API, json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
-                            if response.status_code == 200:
-                                r = json.loads(response.text)
-                                if r["status"] == "ok":
-                                    if process_job(job):
-                                        job['status'] = "complete"
-                                        job['progress'] = 100
-                                        requests.post(API, json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
-                                    else:
-                                        job['status'] = "error"
-                                        job['progress'] = -1
-                                        requests.post(API, json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
-                                else:
-                                    print(r["message"])
+                            if update_job(job) and process_job(job):
+                                job['status'] = "complete"
+                                job['progress'] = 100
+                                update_job(job)
                             else:
-                                print("Error: " + str(response))
+                                job['status'] = "error"
+                                job['progress'] = -1
+                                update_job(job)
               else:
                 if r["code"] != 404:
                     display(HTML("<font color='red'>" + r["message"] + "</font>"), display_id = "void-error")

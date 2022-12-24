@@ -1,8 +1,7 @@
 # PerformancePipeline Or PP for convenience (Hahah- ok, I'm sorry)
 from diffusers import StableDiffusionPipeline
 import torch, os, importlib
-from hax import safety_patcher, clip_pipeline, clip_limit
-importlib.reload(safety_patcher)
+from hax import clip_pipeline, clip_limit
 importlib.reload(clip_pipeline)
 def from_pretrained(model_name):
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb=512"
