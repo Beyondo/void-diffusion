@@ -1,4 +1,5 @@
-import json, os, importlib, client, job_manager
+import json, os, importlib
+from compute import client, job_manager
 class job:
     def __init__(self, uuid, jobData):
         self.uuid = uuid
