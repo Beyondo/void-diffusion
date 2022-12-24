@@ -33,21 +33,21 @@ def run(uuid):
         response = requests.post(API, json = {"type": "get_jobs", "uuid": uuid}, headers={"User-Agent": "VOID-Compute-Client"})
         if response.status_code == 200:
             if response.text != "":
-              json = json.loads(response.text)
-              if json["status"] == "ok":
+              r = json.loads(response.text)
+              if r["status"] == "ok":
                   set_connection_status(uuid, "Currently working for ", "green")
-                  num_jobs = len(json["jobs"])
+                  num_jobs = len(r["jobs"])
                   if num_jobs > 0:
                     print("Processing %d jobs..." % num_jobs)
-                    for job in json["jobs"]:
+                    for job in r["jobs"]:
                         if job['status'] == "pending":
                             # Send a post request to the server
                             job['status'] = "processing"
                             job['progress'] = 0
                             response = requests.post(API, json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
                             if response.status_code == 200:
-                                json = json.loads(response.text)
-                                if json["status"] == "ok":
+                                r = json.loads(response.text)
+                                if r["status"] == "ok":
                                     if process_job(job):
                                         job['status'] = "complete"
                                         job['progress'] = 100
@@ -57,12 +57,12 @@ def run(uuid):
                                         job['progress'] = 0
                                         requests.post(API, json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
                                 else:
-                                    print(json["message"])
+                                    print(r["message"])
                             else:
                                 print("Error: " + str(response))
               else:
-                if json["code"] != 404:
-                    display(HTML("<font color='red'>" + json["message"] + "</font>"), display_id = "void-error")
+                if r["code"] != 404:
+                    display(HTML("<font color='red'>" + r["message"] + "</font>"), display_id = "void-error")
         else:
             set_connection_status(uuid, "Waiting for", "orange", "...")
         time.sleep(1)
