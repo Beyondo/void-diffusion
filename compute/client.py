@@ -30,8 +30,8 @@ def run(uuid):
                 server_jobs = response["jobs"]
                 num_jobs = len(server_jobs)
                 if num_jobs > 0:
-                    for jobData in job_manager.currently_running:
-                        if not any(server_job["id"] == jobData.id for server_job in server_jobs): # if job is not in server jobs
+                    for _job in job_manager.currently_running:
+                        if not any(serverJobData["id"] == _job.data.id for serverJobData in server_jobs): # if job is not in server jobs
                             print("Signaling termination...")
                             job_manager.signal_termination(uuid, jobData.id)
                     for jobData in response["jobs"]:
