@@ -30,15 +30,17 @@ def run(uuid):
                 server_jobs = response["jobs"]
                 num_jobs = len(server_jobs)
                 if num_jobs > 0:
-                  for job in job_manager.currently_running:
-                      if not any(server_job["id"] == job.data.id for server_job in server_jobs): # if job is not in server jobs
-                          job_manager.signal_termination(job)
-                  for job in response["jobs"]:
-                      if job['status'] == "pending":
-                          job_manager.add_to_queue(job)
+                    for job in job_manager.currently_running:
+                        if not any(server_job["id"] == job.data.id for server_job in server_jobs): # if job is not in server jobs
+                            print("Signaling termination...")
+                            job_manager.signal_termination(job)
+                    for job in response["jobs"]:
+                        if job['status'] == "pending":
+                            print("Adding to queue...")
+                            job_manager.add_to_queue(job)
             else:
-              if r["code"] != 404:
-                  display(HTML("<font color='red'>" + response["message"] + "</font>"), display_id = "void-error")
+                if r["code"] != 404:
+                    display(HTML("<font color='red'>" + response["message"] + "</font>"), display_id = "void-error")
         else:
             set_connection_status(uuid, "Waiting for", "orange", "...")
         time.sleep(1)
