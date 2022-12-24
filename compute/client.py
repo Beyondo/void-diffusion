@@ -11,6 +11,8 @@ def process_job(job):
         try:
             exec(job['script'])
         except Exception as e:
+            job['status'] = "error"
+            job['progress'] = -1
             print(e)
             return False
     elif job['type'] == "install_vendors":
@@ -18,9 +20,13 @@ def process_job(job):
             import env
             env.install_vendors()
         except Exception as e:
+            job['status'] = "error"
+            job['progress'] = -1
             print(e)
             return False
     else:
+        job['status'] = "error"
+        job['progress'] = -1
         print("Unknown job type")
         return False
     return True
