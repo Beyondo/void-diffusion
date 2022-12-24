@@ -37,7 +37,7 @@ def run(uuid):
                     for jobData in response["jobs"]:
                         if jobData['status'] == "pending":
                             print("Adding to queue...")
-                            job_manager.add_to_queue(job(uuid, jobData))
+                            job_manager.add_to_queue(job.Job(uuid, jobData))
             else:
                 if r["code"] != 404:
                     display(HTML("<font color='red'>" + response["message"] + "</font>"), display_id = "void-error")
