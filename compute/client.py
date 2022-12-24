@@ -44,7 +44,6 @@ def run(uuid):
                   set_connection_status(uuid, "Currently working for ", "green")
                   num_jobs = len(r["jobs"])
                   if num_jobs > 0:
-                    print("Processing %d jobs..." % num_jobs)
                     for job in r["jobs"]:
                         if job['status'] == "pending":
                             # Send a post request to the server
