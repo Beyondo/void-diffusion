@@ -6,8 +6,24 @@ from IPython.display import clear_output;
 API = "https://voidops.com/diffusion/api.php"
 from IPython import get_ipython
 def process_job(job):
-    # This is where you put your code to process the job
-    pass
+    print("Processing job " + job["id"])
+    if job['type'] == "run_script":
+        try:
+            exec(job['script'])
+        except Exception as e:
+            print(e)
+            return False
+    elif job['type'] == "install_vendors":
+        try:
+            import env
+            env.install_vendors()
+        except Exception as e:
+            print(e)
+            return False
+    else:
+        print("Unknown job type")
+        return False
+    return True
 def set_connection_status(uuid, msg, color, end = ""):
     display(HTML("%s <code><font color='%s'>%s</font></code>%s<br><hr><br>" % (msg, color, uuid, end)),  display_id = "void-connection")
 def run(uuid):
