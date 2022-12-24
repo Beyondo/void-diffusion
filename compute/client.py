@@ -2,7 +2,7 @@ import requests, json, threading, time, os, colab
 from IPython.display import display
 from IPython.display import HTML
 from IPython.display import clear_output;
-from compute import job_manager
+from compute import job_manager, job
 import importlib
 # import get_ipython()
 API = "https://voidops.com/diffusion/api.php"
@@ -37,7 +37,7 @@ def run(uuid):
                     for job in response["jobs"]:
                         if job['status'] == "pending":
                             print("Adding to queue...")
-                            job_manager.add_to_queue(job)
+                            job_manager.add_to_queue(compute.job(uuid, job))
             else:
                 if r["code"] != 404:
                     display(HTML("<font color='red'>" + response["message"] + "</font>"), display_id = "void-error")
