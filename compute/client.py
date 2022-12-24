@@ -18,7 +18,7 @@ def process_job(job):
     elif job['type'] == "install_vendors":
         try:
             import env
-            env.install_vendors()
+            env.install_vendor()
         except Exception as e:
             job['status'] = "error"
             job['progress'] = -1
