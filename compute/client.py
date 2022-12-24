@@ -31,7 +31,7 @@ def run(uuid):
                             else:
                                 print(data["message"])
                         else:
-                            print("Error: " + str(response.status_code))
+                            print("Error: " + str(response))
               else:
                 if data["code"] != 404:
                     display(HTML("<font color='red'>" + data["message"] + "</font>"), display_id = "void-error")
