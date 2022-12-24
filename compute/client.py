@@ -23,7 +23,8 @@ def run(uuid):
                     print("Processing %d jobs..." % num_jobs)
                     for job in data["jobs"]:
                         # Send a post request to the server
-                        response = requests.post("https://voidops.com/diffusion/api.php", json = {"uuid": uuid, "job": job["id"], "status": "running"})
+                        job.progress = 0
+                        response = requests.post("https://voidops.com/diffusion/api.php", json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
                         if response.status_code == 200:
                             data = json.loads(response.text)
                             if data["status"] == "ok":
