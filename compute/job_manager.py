@@ -29,6 +29,7 @@ def run():
     jobManagerThread.start()
 
 def add_to_queue(job):
+    print("adding.")
     global job_queue
     job.data['status'] = "In Queue"
     job.data['progress'] = 0
