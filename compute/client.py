@@ -15,7 +15,7 @@ def process_job(job):
             job['progress'] = -1
             print(e)
             return False
-    elif job['type'] == "install_vendors":
+    elif job['type'] == "install_vendor":
         try:
             import env
             env.install_vendor()
@@ -59,7 +59,7 @@ def run(uuid):
                                         requests.post(API, json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
                                     else:
                                         job['status'] = "error"
-                                        job['progress'] = 0
+                                        job['progress'] = -1
                                         requests.post(API, json = {"uuid": uuid, "job": job, "type": "update_job"}, headers={"User-Agent": "VOID-Compute-Client"})
                                 else:
                                     print(r["message"])
