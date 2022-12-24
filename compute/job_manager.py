@@ -33,6 +33,7 @@ def add_to_queue(job):
     job.data['status'] = "In Queue"
     job.data['progress'] = 0
     job.update()
+    print("updated.")
     job_queue.append(job)
 
 def join_queue_thread():
