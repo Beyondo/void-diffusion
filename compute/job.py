@@ -20,7 +20,7 @@ class job:
 
     def process(self):
         if self.update():
-            job_manager.currently_running.append(self)
+            job_manager.running_jobs.append(self)
             print("Processing job " + self.data["id"])
             if self.data['type'] == "run_script":
                 try:

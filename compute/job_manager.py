@@ -5,7 +5,7 @@ job_queue = [] # List of job objects
 threads = []
 finished = False
 max_num_parallel_jobs = 3
-currently_running = []
+running_jobs = []
 def queue_thread():
     global job_queue, finished, threads
     while True:
@@ -55,9 +55,9 @@ def signal_termination(uuid, job_id):
             job.stop()
             job_queue.remove(job)
             return True
-    for job in currently_running:
+    for job in running_jobs:
         if job.data['id'] == job_id:
             job.stop()
-            currently_running.remove(job)
+            running_jobs.remove(job)
             return True
     return False
