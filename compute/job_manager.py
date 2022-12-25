@@ -29,12 +29,10 @@ def run():
     jobManagerThread.start()
 
 def add_to_queue(job):
-    print("adding.")
     global job_queue
     job.data['status'] = "In Queue"
     job.data['progress'] = 0
     job.update()
-    print("updated.")
     job_queue.append(job)
 
 def join_queue_thread():
