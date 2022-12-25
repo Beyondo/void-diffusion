@@ -29,6 +29,7 @@ def run(uuid):
                 set_connection_status(uuid, "Currently working for ", "green")
                 server_jobs = response["jobs"]
                 num_jobs = len(server_jobs)
+                print("num_jobs: " + str(num_jobs))
                 if num_jobs > 0:
                     for _job in job_manager.currently_running:
                         print("currently_running: " + str(_job.data.id))
