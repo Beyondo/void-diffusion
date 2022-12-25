@@ -49,15 +49,15 @@ def contains(uuid, job_id):
             return True
     return False
 
-def signal_termination(uuid, job_id):
+def signal_termination(job_id):
     for job in job_queue:
         if job.data['id'] == job_id:
-            job.stop()
             job_queue.remove(job)
+            job.stop()
             return True
     for job in running_jobs:
         if job.data['id'] == job_id:
-            job.stop()
             running_jobs.remove(job)
+            job.stop()
             return True
     return False

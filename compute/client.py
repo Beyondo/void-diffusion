@@ -33,7 +33,7 @@ def run(uuid):
                     for _job in job_manager.running_jobs:
                         if not any(serverJobData["id"] == _job.data['id'] for serverJobData in server_jobs): # if job is not in server jobs
                             print("Signaling termination of %s" % _job.data['id'])
-                            job_manager.signal_termination(uuid, _job.data['id'])
+                            job_manager.signal_termination(_job.data['id'])
                     for jobData in response["jobs"]:
                         if jobData['status'] == "pending":
                             print("Adding to queue %s (Currently running: %s)" % (jobData['id'], len(job_manager.running_jobs)))
