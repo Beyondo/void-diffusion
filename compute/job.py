@@ -29,6 +29,7 @@ class job:
                     self.data['status'] = "error"
                     self.data['progress'] = -1
                     print(e)
+                    job_manager.running_jobs.remove(self)
                     return False
             elif self.data['type'] == "install_vendor":
                 try:
@@ -38,11 +39,13 @@ class job:
                     self.data['status'] = "error"
                     self.data['progress'] = -1
                     print(e)
+                    job_manager.running_jobs.remove(self)
                     return False
             else:
                 self.data['status'] = "error"
                 self.data['progress'] = -1
                 print("Unknown job type")
+                job_manager.running_jobs.remove(self)
                 return False
             self.data['status'] = "complete"
             self.data['progress'] = 100
@@ -50,6 +53,7 @@ class job:
             self.data['status'] = "error"
             self.data['progress'] = -1
         self.update()
+        job_manager.running_jobs.remove(self)
 
     def stop():
         self.data['status'] = "stopped"
