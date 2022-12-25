@@ -62,7 +62,7 @@ def save_settings(filename, mode):
 
 
 def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult):
-    display(HTML("<label>Scaled: Processing..."), display_id=image_uid + "_scaled")
+    display(HTML("<label>Post-processed: Processing..."), display_id=image_uid + "_scaled")
     imgSavePath = get_save_path(imageName)
     if colab.settings['Scale'] != "1x":
         scale = int(colab.settings['Scale'][:-1])
@@ -77,7 +77,7 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
             
         scaled_image.save("media-dir/%s-%dx.png" % (image_uid, scale))
         html_link = "<a href='%s%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale, scale)
-        display(HTML("<label>Scaled: %s" % html_link), display_id=image_uid + "_scaled")
+        display(HTML("<label>Post-processed: %s" % html_link), display_id=image_uid + "_scaled")
         if replaceResult:
             scaled_image.thumbnail(img.size, PIL.Image.ANTIALIAS)
             display(scaled_image, display_id=image_uid)
