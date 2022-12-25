@@ -53,6 +53,11 @@ def signal_termination(uuid, job_id):
     for job in job_queue:
         if job.uuid == uuid and job.data.id == job_id:
             job.stop()
+            job_queue.remove(job)
+            return True
+    for job in currently_running:
+        if job.uuid == uuid and job.data.id == job_id:
+            job.stop()
             currently_running.remove(job)
             return True
     return False
