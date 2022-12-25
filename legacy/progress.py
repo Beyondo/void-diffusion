@@ -16,11 +16,11 @@ def show(img = None):
     display(HTML("<label>Generation time: %.2fs</label>" % (time.time() - rendering_start_time)), display_id=image_id + "_time")
     display(HTML("<label>Original: Emerging...</label>"), display_id=image_id + "_original")
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_saved")
-    display(HTML("<label>Scaled: Waiting...</label>"), display_id=image_id + "_scaled")
+    display(HTML("<label>Post-processed: Waiting...</label>"), display_id=image_id + "_scaled")
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_scaled_saved")
     if not img == None:
         display(img, display_id=image_id)
-        if not replace_result: display("[Scaled Image...]", display_id=image_id + "_image_scaled")
+        if not replace_result: display("[Post-processed Image...]", display_id=image_id + "_image_scaled")
     else:
         display("...", display_id=image_id)
 def callback(iter, t, latents):
