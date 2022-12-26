@@ -50,10 +50,10 @@ def init(ModelName, InpaintingModel, debug=False):
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             if InpaintingModel != None:
                 try:
-                    inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16).to("cuda:0")
+                    inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16, safety_checker=None).to("cuda:0")
                 except:
                     try:
-                        inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16).to("cuda:0")
+                        inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16, safety_checker=None).to("cuda:0")
                     except:
                         print("Couldn't load %s as an Inpainting model." % inpaint_model_name)
                         return
