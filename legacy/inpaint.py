@@ -65,4 +65,4 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
         postprocessor.join_queue_thread()
         torch.cuda.empty_cache()
     except Exception as e:
-        print("Error trying to generate image: " + e)
+        print("Error trying to generate image: %s" % e)
