@@ -12,6 +12,7 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
     try:
         progress.replace_result = ReplaceResult
         colab.prepare("inpaint")
+        
         timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
         if colab.save_settings: postprocessor.save_settings(timestamp, mode="inpaint")
         # Load image
@@ -22,15 +23,19 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
             init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
         colab.image_size = init_image.size
         mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("RGB")
-        if colab.settings['Width'] / colab.settings['Height'] != init_image.size[0] / init_image.size[1]:
-            display("Warning: Colab aspect ratio is different from image aspect ratio. This may cause unexpected results.")
-        grey_mask = mask_image.convert("L")
+        if mask_image.size[0] / mask_image.size[1] != init_image.size[0] / init_image.size[1]:
+            display("Warning: Mask aspect ratio is different from image aspect ratio. This will cause unexpected results.")
+        if mask_image.size[0] < init_image.size[0] or mask_image.size[1] < init_image.size[1]:
+            mask_image = mask_image.resize(init_image.size)
+        elif mask_image.size[0] > init_image.size[0] or mask_image.size[1] > init_image.size[1]:
+            mask_image = mask_image.resize(init_image.size, resample=Image.LANCZOS)
         # Display
         init_image.thumbnail((512, 512))
-        grey_mask.thumbnail((512, 512))
+        mask_image.thumbnail((512, 512))
         mask_applied_image = Image.blend(init_image, mask_image, 0.5)
         display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
         # Process image
+        grey_mask = mask_image.convert("L")
         init_image = init_image.resize((512, 512))
         grey_mask = grey_mask.resize((512, 512))
         num_iterations = colab.settings['Iterations']
@@ -58,9 +63,9 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
                 num_inference_steps=colab.settings['Steps'],
                 generator=generator,
                 callback=progress.callback if ShouldPreview else None,
-                callback_steps=20).images[0]
-            # convert the image back to the original size
-            image = image.resize(colab.image_size)
+                callback_steps=10).images[0]
+            # resize image back to original size
+            image = image.resize((512, int(512 * colab.image_size[1] / colab.image_size[0])))
             colab.last_generated_image = image
             progress.show(image)
             postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave, ReplaceResult)

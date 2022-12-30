@@ -2,6 +2,8 @@ import torch, time
 from legacy import colab
 from IPython.display import display
 from IPython.display import HTML
+import PIL.Image as Image
+import threading
 rendering_start_time = 0
 last_image_time = 0
 replace_result = True
@@ -9,7 +11,7 @@ def reset():
     global rendering_start_time
     rendering_start_time = time.time()
 
-def show(img = None):
+def show(img = None, iter = 0):
     global rendering_start_time
     image_id = colab.get_current_image_uid()
     display(HTML("<label>Seed: <code>%d</code></label>" % colab.get_current_image_seed()), display_id=image_id + "_seed")
@@ -19,7 +21,7 @@ def show(img = None):
     display(HTML("<label>Post-processed: Waiting...</label>"), display_id=image_id + "_scaled")
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_scaled_saved")
     if not img == None:
-        display(img, display_id=image_id)
+        display(img.resize((256, int(256 * colab.image_size[1] / colab.image_size[0]))), display_id=image_id)
         if not replace_result: display("[Post-processed Image...]", display_id=image_id + "_image_scaled")
     else:
         display("...", display_id=image_id)
@@ -33,5 +35,4 @@ def callback(iter, t, latents):
             images = (images / 2 + 0.5).clamp(0, 1)
             images = images.cpu().permute(0, 2, 3, 1).float().numpy()
             images = colab.pipeline.numpy_to_pil(images)
-            images[0].thumbnail(colab.image_size)
-            show(images[0])
+            threading.Thread(target=show, args=(images[0], iter)).start()
