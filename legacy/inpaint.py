@@ -20,18 +20,19 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
             init_image = colab.last_generated_image
         else:
             init_image = Image.open(BytesIO(requests.get(colab.settings['InitialImageURL']).content)).convert('RGB')
-        init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
+        colab.image_size = init_image.size
         mask_image = Image.open(BytesIO(requests.get(colab.settings['MaskImageURL']).content)).convert("RGB")
-        init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
-        init_image = init_image.resize((colab.settings['Width'], colab.settings['Height']))
-        mask_image = mask_image.resize((colab.settings['Width'], colab.settings['Height']))
         if colab.settings['Width'] / colab.settings['Height'] != init_image.size[0] / init_image.size[1]:
             display("Warning: Colab aspect ratio is different from image aspect ratio. This may cause unexpected results.")
+        grey_mask = mask_image.convert("L")
+        # Display
+        init_image.thumbnail((512, 512))
+        grey_mask.thumbnail((512, 512))
         mask_applied_image = Image.blend(init_image, mask_image, 0.5)
         display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
-        colab.image_size = init_image.size
-        grey_mask = mask_image.convert("L")
         # Process image
+        init_image = init_image.resize((512, 512))
+        grey_mask = grey_mask.resize((512, 512))
         num_iterations = colab.settings['Iterations']
         display("Iterations: 0/%d" % num_iterations, display_id="iterations")
         postprocessor.max_num_parallel_jobs = maxNumJobs
