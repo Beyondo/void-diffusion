@@ -6,16 +6,16 @@ class job:
         self.data = jobData
 
     def submit(self):
-        self.data.progress = 100
-        self.data.status = "complete"
+        self.data['progres'] = 100
+        self.data['status'] = "complete"
         return client.send({"uuid": self.uuid, "job": self.data, "type": "submit_job"})
 
     def update(self):
         return client.send({"uuid": self.uuid, "job": self.data, "type": "update_job"})
 
     def callback(self, progress, status):
-        self.data.progress = progress
-        self.data.status = status
+        self.data['progress'] = progress
+        self.data['status'] = status
         self.update()
 
     def process(self):
@@ -44,6 +44,7 @@ class job:
             else:
                 self.data['status'] = "error"
                 self.data['progress'] = -1
+                self.update()
                 print("Unknown job type")
                 job_manager.running_jobs.remove(self)
                 return False
