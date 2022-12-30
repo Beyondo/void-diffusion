@@ -25,6 +25,8 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
         init_image.thumbnail((colab.settings['Width'], colab.settings['Height']))
         init_image = init_image.resize((colab.settings['Width'], colab.settings['Height']))
         mask_image = mask_image.resize((colab.settings['Width'], colab.settings['Height']))
+        if colab.settings['Width'] / colab.settings['Height'] != init_image.size[0] / init_image.size[1]:
+            display("Warning: Colab aspect ratio is different from image aspect ratio. This may cause unexpected results.")
         mask_applied_image = Image.blend(init_image, mask_image, 0.5)
         display(colab.image_grid([init_image, mask_image, mask_applied_image], 1, 3))
         colab.image_size = init_image.size
