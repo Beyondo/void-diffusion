@@ -47,7 +47,9 @@ def esrgan(image, scale):
     return PIL.Image.fromarray(output)
 
 def img2img(image, scale):
-    from legacy import colab
+    from legacy import colab, progress
+    import torch
+    generator = torch.Generator("cuda").manual_seed(colab.current_seed)
     return colab.img2img(
                 prompt=colab.settings['Prompt'],
                 image=image,

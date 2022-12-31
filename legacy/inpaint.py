@@ -44,7 +44,8 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
         postprocessor.run_queue_thread()
         for i in range(num_iterations):
             colab.image_id = i # needed for progress.py
-            generator = torch.Generator("cuda").manual_seed(colab.settings['InitialSeed'] + i)
+            colab.current_seed = colab.settings['InitialSeed'] + i
+            generator = torch.Generator("cuda").manual_seed(colab.current_seed)
             progress.reset()
             progress.show()
             latents = None

@@ -20,6 +20,7 @@ current_mode = ""
 server_url = ""
 last_generated_image = None
 image_size = (512, 512)
+current_seed = 0
 def get_current_image_seed():
     global settings, image_id
     return settings['InitialSeed'] + image_id
