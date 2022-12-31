@@ -15,11 +15,11 @@ def install_vendor():
         os.remove("vendor/GFPGAN") if os.path.exists("vendor/GFPGAN") else None
         # git clone using IPython magic
         IPython.get_ipython().system("git clone https://github.com/TencentARC/GFPGAN.git vendor/GFPGAN > /dev/null")
-        os.chdir("vendor/Real-GFPGAN")
+        os.chdir("vendor/GFPGAN")
         IPython.get_ipython().system("pip install basicsr > /dev/null")
         IPython.get_ipython().system("pip install facexlib > /dev/null")
-        IPython.get_ipython().system("pip install -q -r vendor/GFPGAN/requirements.txt > /dev/null")
-        IPython.get_ipython().system("python vendor/GFPGAN/setup.py develop > /dev/null")
+        IPython.get_ipython().system("pip install -q -r requirements.txt > /dev/null")
+        IPython.get_ipython().system("python setup.py develop > /dev/null")
         # used for enhancing the background (non-face) regions
         IPython.get_ipython().system("pip install realesrgan > /dev/null")
         # used for enhancing the background (non-face) regions
@@ -35,8 +35,8 @@ def install_vendor():
         IPython.get_ipython().system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P weights > /dev/null")
         IPython.get_ipython().system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth -p weights > /dev/null")
         IPython.get_ipython().system("pip install basicsr facexlib gfpgan ffmpeg-python > /dev/null")
-        IPython.get_ipython().system("pip install -q -r vendor/Real-ESRGAN/requirements.txt > /dev/null")
-        IPython.get_ipython().system("python vendor/Real-ESRGAN/setup.py develop > /dev/null")
+        IPython.get_ipython().system("pip install -q -r requirements.txt > /dev/null")
+        IPython.get_ipython().system("python setup.py develop > /dev/null")
         os.chdir("../..")
         # generate a random file to mark that the vendors are installed
         open("vendor/.installed", "w").close()
