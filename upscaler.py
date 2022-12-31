@@ -28,7 +28,7 @@ def realesrgan(image, scale):
     image.save(os.path.join(input_dir, "image.png"))
     IPython.get_ipython().system("python vendor/Real-ESRGAN/inference_realesrgan.py -i %s -o %s -s %s &> /dev/null" % (input_dir, output_dir, scale))
     try:
-        image = PIL.Image.open(os.path.join(output_dir, "restored_imgs", "image.png"))
+        image = PIL.Image.open(os.path.join(output_dir, "image_out.png"))
     except Exception as e: print("Scaling failed: %s" % e)
     return image
 def esrgan(image, scale):
