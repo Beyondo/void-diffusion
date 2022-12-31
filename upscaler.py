@@ -58,7 +58,7 @@ def img2img(image, scale):
                 strength=colab.settings['Strength'],
                 num_inference_steps=colab.settings['Steps'],
                 generator=generator,
-                callback=progress.callback if ShouldPreview else None,
+                callback=None,
                 callback_steps=20).images[0]
 upscalers = { }
 upscalers['bicubic'] = lambda image, scale: bicubic(image, scale)
