@@ -29,10 +29,12 @@ def install_vendor():
             IPython.get_ipython().system("python vendor/GFPGAN/inference_gfpgan.py -i vendor/GFPGAN/inputs/whole_imgs -o vendor/GFPGAN/results/whole_imgs -v 1.3 -s 2 --bg_upsampler realesrgan > /dev/null 2>&1")
         # Real-ESRGAN
         os.remove("vendor/Real-ESRGAN") if os.path.exists("vendor/Real-ESRGAN") else None
+        os.chdir("vendor/Real-ESRGAN")
         IPython.get_ipython().system("git clone https://github.com/xinntao/Real-ESRGAN.git vendor/Real-ESRGAN > /dev/null")
         IPython.get_ipython().system("pip install basicsr facexlib gfpgan ffmpeg-python > /dev/null")
         IPython.get_ipython().system("pip install -q -r vendor/Real-ESRGAN/requirements.txt > /dev/null")
         IPython.get_ipython().system("python vendor/Real-ESRGAN/setup.py develop > /dev/null")
+        os.chdir("../..")
         # generate a random file to mark that the vendors are installed
         open("vendor/.installed", "w").close()
         # StyleGAN2
