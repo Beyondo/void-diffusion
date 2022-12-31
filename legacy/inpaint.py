@@ -64,8 +64,7 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
                 generator=generator,
                 callback=progress.callback if ShouldPreview else None,
                 callback_steps=10).images[0]
-            # resize image back to original size
-            image = image.resize((512, int(512 * colab.image_size[1] / colab.image_size[0])))
+            image.thumbnail((512, 512), PIL.Image.ANTIALIAS)
             colab.last_generated_image = image
             progress.show(image)
             postprocessor.post_process(image, "%d_%d" % (timestamp, i), colab.get_current_image_uid(), ShouldSave, ReplaceResult)

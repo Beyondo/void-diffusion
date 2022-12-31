@@ -21,7 +21,7 @@ def show(img = None, iter = 0):
     display(HTML("<label>Post-processed: Waiting...</label>"), display_id=image_id + "_scaled")
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_scaled_saved")
     if not img == None:
-        display(img.resize((256, int(256 * colab.image_size[1] / colab.image_size[0]))), display_id=image_id)
+        display(img, display_id=image_id)
         if not replace_result: display("[Post-processed Image...]", display_id=image_id + "_image_scaled")
     else:
         display("...", display_id=image_id)
