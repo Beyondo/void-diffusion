@@ -76,7 +76,7 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
             scaled_image.save(imgSavePath + "-%dx.png" % scale)
             
         scaled_image.save("media-dir/%s-%dx.png" % (image_uid, scale))
-        html_link = "<a href='%s%s-%dx.png' target='_blank'>Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale, scale)
+        html_link = "<a href='%s%s-%dx.png' target='_blank' Download >Full %dx-scaled Image</a>" % (colab.server_url, image_uid, scale, scale)
         display(HTML("<label>Post-processed: %s" % html_link), display_id=image_uid + "_scaled")
         if replaceResult:
             scaled_image.thumbnail(img.size, PIL.Image.ANTIALIAS)
@@ -127,6 +127,6 @@ def post_process(img, imageName, image_uid, gdrive = True, replaceResult = True)
         path = save_gdrive(img, imageName)
         display(HTML("<label>Saved: %s" % path), display_id=image_uid + "_saved")
     img.save("media-dir/%s.png" % image_uid) 
-    html_link = "<a href='%s%s.png' target='_blank'>Original Image</a>" % (colab.server_url, image_uid)
+    html_link = "<a href='%s%s.png' target='_blank' Download >Original Image</a>" % (colab.server_url, image_uid)
     display(HTML("<label>Original: %s" % html_link), display_id=image_uid + "_original")
     post_thread((img, imageName, image_uid, gdrive, replaceResult))
