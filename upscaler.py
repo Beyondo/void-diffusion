@@ -19,10 +19,18 @@ def gfpgan(image, scale, bg_sampler = None):
     except Exception as e: print("Scaling failed: %s" % e)
     return image
 def realesrgan(image, scale):
-    model = arch.RRDBNet(3, 3, 64, 23, gc=32)
-    model.load_state_dict(torch.load("vendor/Real-ESRGAN/experiments/pretrained_models/RealESRGAN_x2plus.pth"), strict=True)
-    model.eval()
-    model = model.to("cuda:0")
+    hash = hashlib.sha256(image.tobytes()).hexdigest()
+    temp_dir = "temp/%s" % hash
+    input_dir = os.path.join(temp_dir, "input")
+    output_dir = os.path.join(temp_dir, "output")
+    os.makedirs(input_dir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
+    image.save(os.path.join(input_dir, "image.png"))
+    IPython.get_ipython().system("python vendor/Real-ESRGAN/inference_realesrgan.py -i %s -o %s -s %s &> /dev/null" % (input_dir, output_dir, scale))
+    try:
+        image = PIL.Image.open(os.path.join(output_dir, "restored_imgs", "image.png"))
+    except Exception as e: print("Scaling failed: %s" % e)
+    return image
 def esrgan(image, scale):
     import cv2, torch
     import vendor.ESRGAN.RRDBNet_arch as arch
@@ -42,6 +50,7 @@ upscalers['bicubic'] = lambda image, scale: bicubic(image, scale)
 upscalers['nearest'] = lambda image, scale: nearest(image, scale)
 upscalers['gfpgan'] = lambda image, scale: gfpgan(image, scale)
 upscalers['esrgan'] = lambda image, scale: esrgan(image, scale)
+upscalers['real-esrgan'] = lambda image, scale: realesrgan(image, scale)
 upscalers['gfpgan+real-esrgan'] = lambda image, scale: gfpgan(image, scale, bg_sampler = "realesrgan")
 def upscale(upscaler, scale, image):
     image = upscalers[upscaler.lower()](image, scale)
