@@ -45,6 +45,19 @@ def esrgan(image, scale):
     output = (output * 255.0).round()
     output = output.astype(np.uint8)
     return PIL.Image.fromarray(output)
+
+def img2img(image, scale):
+    from legacy import colab
+    return colab.img2img(
+                prompt=colab.settings['Prompt'],
+                image=image,
+                negative_prompt=colab.settings['NegativePrompt'],
+                guidance_scale=colab.settings['GuidanceScale'],
+                strength=colab.settings['Strength'],
+                num_inference_steps=colab.settings['Steps'],
+                generator=generator,
+                callback=progress.callback if ShouldPreview else None,
+                callback_steps=20).images[0]
 upscalers = { }
 upscalers['bicubic'] = lambda image, scale: bicubic(image, scale)
 upscalers['nearest'] = lambda image, scale: nearest(image, scale)
@@ -52,6 +65,7 @@ upscalers['gfpgan'] = lambda image, scale: gfpgan(image, scale)
 upscalers['esrgan'] = lambda image, scale: esrgan(image, scale)
 upscalers['real-esrgan'] = lambda image, scale: realesrgan(image, scale)
 upscalers['gfpgan+real-esrgan'] = lambda image, scale: gfpgan(image, scale, bg_sampler = "realesrgan")
+upscalers['img2img'] = lambda image, scale: img2img(image, scale)
 def upscale(upscaler, scale, image):
     image = upscalers[upscaler.lower()](image, scale)
     return image
