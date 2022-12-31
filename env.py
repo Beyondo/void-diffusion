@@ -22,7 +22,6 @@ def install_vendor():
         # used for enhancing the background (non-face) regions
         IPython.get_ipython().system("pip install realesrgan > /dev/null")
         # used for enhancing the background (non-face) regions
-        IPython.get_ipython().system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth -p experiments/pretrained_models > /dev/null")
         IPython.get_ipython().system("wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.8/GFPGANv1.3.pth -P experiments/pretrained_models > /dev/null")
         # Use vendor/GFPGAN/inference_gfpgan.py to download & cache the model
         if not os.path.exists("vendor/GFPGAN/results/whole_imgs"):
@@ -30,6 +29,8 @@ def install_vendor():
         # Real-ESRGAN
         os.remove("vendor/Real-ESRGAN") if os.path.exists("vendor/Real-ESRGAN") else None
         os.chdir("vendor/Real-ESRGAN")
+        IPython.get_ipython().system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P weights > /dev/null")
+        IPython.get_ipython().system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth -p weights > /dev/null")
         IPython.get_ipython().system("git clone https://github.com/xinntao/Real-ESRGAN.git vendor/Real-ESRGAN > /dev/null")
         IPython.get_ipython().system("pip install basicsr facexlib gfpgan ffmpeg-python > /dev/null")
         IPython.get_ipython().system("pip install -q -r vendor/Real-ESRGAN/requirements.txt > /dev/null")
