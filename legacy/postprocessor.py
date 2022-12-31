@@ -82,6 +82,7 @@ def post_processing_thread_func(img, imageName, image_uid, gdrive, replaceResult
             scaled_image.thumbnail(img.size, PIL.Image.ANTIALIAS)
             display(scaled_image, display_id=image_uid)
         else:
+            scaled_image.thumbnail((1024, 1024), PIL.Image.ANTIALIAS)
             display(scaled_image, display_id=image_uid + "_image_scaled")
 import threading
 queueThread = None
