@@ -1,4 +1,4 @@
-import torch, random, time, os
+import torch, random, time, os, gc
 import IPython
 from IPython import display
 from IPython.display import HTML
@@ -87,8 +87,8 @@ def prepare(mode):
     else:
         settings['InitialSeed'] = settings['Seed']
     current_mode = mode
+    gc.collect()
     torch.cuda.empty_cache()
-    # set max_split_size_mb in environment
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = 'max_split_size_mb:64'
 
 def image_grid(imgs, rows, cols):
