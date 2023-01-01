@@ -33,8 +33,13 @@ def media_server():
     server_url = eval_js("google.colab.kernel.proxyPort(8000)")
     IPython.get_ipython().system_raw("fuser -k 8000/tcp")
     IPython.get_ipython().system_raw("python -m http.server 8000 --directory media-dir")
+def prepare_memory():
+    gc.collect()
+    torch.cuda.empty_cache()
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = 'max_split_size_mb:64'
 def init(ModelName, InpaintingModel, debug=False):
     global model_name, ready, pipeline, tokenizer, img2img, inpaint, settings, server_url
+    prepare_memory()
     ready = False
     model_name = ModelName
     inpaint_model_name = InpaintingModel
@@ -75,6 +80,7 @@ def start_media_server():
     from threading import Thread
     Thread(target=media_server).start()
 def prepare(mode):
+    prepare_memory()
     start_media_server()
     global current_mode, settings
     torch.set_default_dtype(torch.float16)
@@ -87,9 +93,6 @@ def prepare(mode):
     else:
         settings['InitialSeed'] = settings['Seed']
     current_mode = mode
-    gc.collect()
-    torch.cuda.empty_cache()
-    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = 'max_split_size_mb:64'
 
 def image_grid(imgs, rows, cols):
     assert len(imgs) == rows*cols
