@@ -89,7 +89,6 @@ def prepare(mode):
     current_mode = mode
     torch.cuda.empty_cache()
     # set max_split_size_mb in environment
-    import os
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = 'max_split_size_mb:64'
 
 def image_grid(imgs, rows, cols):
