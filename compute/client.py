@@ -5,7 +5,7 @@ from IPython.display import clear_output;
 from compute import job_manager, job
 import importlib
 # import get_ipython()
-API = "https://voidops.com/diffusion/api.php"
+API = "https://voidops.com/compute/api"
 from IPython import get_ipython
 def set_connection_status(uuid, msg, color, end = ""):
     display(HTML("%s <code><font color='%s'>%s</font></code>%s<br><hr><br>" % (msg, color, uuid, end)),  display_id = "void-connection")
