@@ -10,7 +10,7 @@ from IPython import get_ipython
 def set_connection_status(uuid, msg, color, end = ""):
     display(HTML("%s <code><font color='%s'>%s</font></code>%s<br><hr><br>" % (msg, color, uuid, end)),  display_id = "void-connection")
 def send(request_function, data):
-    response = requests.post(API + "/" + request_function, json = data, headers={"User-Agent": "VOID-Compute-Client"})
+    response = requests.post(f"{API}/{request_function}", json = data, headers={"User-Agent": "VOID-Compute-Client"})
     if response.status_code == 200:
         return json.loads(response.text)
     else:
