@@ -39,7 +39,7 @@ def run(uuid):
                             print("Adding to queue %s (Currently running: %s)" % (jobData['id'], len(job_manager.running_jobs)))
                             job_manager.add_to_queue(job.job(uuid, jobData)) 
             else:
-                if r["code"] != 404:
+                if response["code"] != 404:
                     display(HTML("<font color='red'>" + response["message"] + "</font>"), display_id = "void-error")
         else:
             set_connection_status(uuid, "Waiting for", "orange", "...")
