@@ -9,8 +9,8 @@ API = "https://voidops.com/compute/api"
 from IPython import get_ipython
 def set_connection_status(uuid, msg, color, end = ""):
     display(HTML("%s <code><font color='%s'>%s</font></code>%s<br><hr><br>" % (msg, color, uuid, end)),  display_id = "void-connection")
-def send(data):
-    response = requests.post(API, json = data, headers={"User-Agent": "VOID-Compute-Client"})
+def send(request_function, data):
+    response = requests.post(API + "/" + request_function, json = data, headers={"User-Agent": "VOID-Compute-Client"})
     if response.status_code == 200:
         return json.loads(response.text)
     else:
@@ -23,7 +23,7 @@ def run(uuid):
     set_connection_status(uuid, "Connecting to", "orange", "...")
     job_manager.run()
     while True:
-        response = send({"uuid": uuid, "type": "get_jobs"})
+        response = send("get_jobs", {"uuid": uuid})
         if response != None:
             if response["status"] == "ok":
                 set_connection_status(uuid, "Currently working for ", "green")
