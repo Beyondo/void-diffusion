@@ -1,6 +1,6 @@
 # VOID Diffusion
 An easy-to-use Stable Diffusion toolkit with NSFW filter disabled.
-
+<img src="https://user-images.githubusercontent.com/58893646/210701459-57d923b3-1e60-40bc-bb67-0975107ce97f.png" width="512" height="512"/>
 Features:
 - **Parallelism:** Fully parallelized post-processing
 - **Upscaling:** Scale your images up to 8x their original sizes
