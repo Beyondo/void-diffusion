@@ -8,10 +8,10 @@ class job:
     def submit(self):
         self.data['progres'] = 100
         self.data['status'] = "complete"
-        return client.send({"uuid": self.uuid, "job": self.data, "type": "submit_job"})
+        return client.send("submit_job", {"uuid": self.uuid, "job": self.data })
 
     def update(self):
-        return client.send({"uuid": self.uuid, "job": self.data, "type": "update_job"})
+        return client.send("update_job", {"uuid": self.uuid, "job": self.data })
 
     def callback(self, progress, status):
         self.data['progress'] = progress
