@@ -17,3 +17,8 @@ Features:
 Link: https://voidops.com/diffusion
 
 This repository is intended only as source control ~ Usage is mainly through the colab.
+
+About the developer:
+- A Computer Science and Engineering student and very much open to any job opportunities.
+- I'm known online as Beyondo and I own [voidops.com](https://voidops.com); a website that I developed from scratch.
+- Contact ~ `beyondo@voidops.com` or Discord `Beyondo#0130`.
