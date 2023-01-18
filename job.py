@@ -25,6 +25,7 @@ class job:
             print(f"Processing in {scriptFile} ({self.data['id']})")
             try:
                 importlib.import_module(scriptFile, package="")
+                print("Imported")
             except Exception as e:
                 self.data['status'] = "error"
                 self.data['progress'] = -1
