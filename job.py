@@ -22,8 +22,8 @@ class job:
         return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
     def update(self):
         resp = client.send("update_job", data={"uuid": self.uuid, "job": self.data })
-        print (resp)
-        return resp
+        if resp['status'] == "error":
+            raise Exception("Error updating job: " + resp['message'])
 
     def callback(self, progress, status):
         self.data['progress'] = progress
