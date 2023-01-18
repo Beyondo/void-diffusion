@@ -19,7 +19,7 @@ def send(request_function, data):
             try:
                 decoded = json.loads(response.text)
             except:
-                print("Couldn't parse response: " + response.text)
+                raise Exception("Couldn't parse response" + response.text)
         return decoded
     else:
         print("Couldn't post job submission: " + str(response))
