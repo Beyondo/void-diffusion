@@ -21,10 +21,10 @@ class job:
     def process(self):
         if self.update():
             job_manager.running_jobs.append(self)
-            print("Processing job " + self.data["id"])
             scriptFile = os.path.join("scripts", self.data['script'])
+            print("Processing in %s (%s)" % (scriptFile, self.data['id']))
             try:
-                importlib.import_module(os.path.join("scripts", self.data['script']))
+                importlib.import_module(scriptFile)
             except Exception as e:
                 self.data['status'] = "error"
                 self.data['progress'] = -1
