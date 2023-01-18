@@ -22,32 +22,41 @@ class job:
         if self.update():
             job_manager.running_jobs.append(self)
             print("Processing job " + self.data["id"])
-            if self.data['type'] == "run_script":
-                try:
-                    importlib.import_module(os.path.join("scripts", self.data['script']))
-                except Exception as e:
-                    self.data['status'] = "error"
-                    self.data['progress'] = -1
-                    print(e)
-                    job_manager.running_jobs.remove(self)
-                    return False
-            elif self.data['type'] == "install_vendor":
-                try:
-                    import env
-                    env.install_vendor()
-                except Exception as e:
-                    self.data['status'] = "error"
-                    self.data['progress'] = -1
-                    print(e)
-                    job_manager.running_jobs.remove(self)
-                    return False
-            else:
+            scriptFile = os.path.join("scripts", self.data['script'])
+            try:
+                importlib.import_module(os.path.join("scripts", self.data['script']))
+            except Exception as e:
                 self.data['status'] = "error"
                 self.data['progress'] = -1
-                self.update()
-                print("Unknown job type")
+                print(e)
                 job_manager.running_jobs.remove(self)
                 return False
+            #if self.data['script'] == "run_script":
+            #    try:
+            #        importlib.import_module(os.path.join("scripts", self.data['script']))
+            #    except Exception as e:
+            #        self.data['status'] = "error"
+            #        self.data['progress'] = -1
+            #        print(e)
+            #        job_manager.running_jobs.remove(self)
+            #        return False
+            #elif self.data['type'] == "install_vendor":
+            #    try:
+            #        import env
+            #        env.install_vendor()
+            #    except Exception as e:
+            #        self.data['status'] = "error"
+            #        self.data['progress'] = -1
+            #        print(e)
+            #        job_manager.running_jobs.remove(self)
+            #        return False
+            #else:
+            #    self.data['status'] = "error"
+            #    self.data['progress'] = -1
+            #    self.update()
+            #    print("Unknown job type")
+            #    job_manager.running_jobs.remove(self)
+            #    return False
             self.data['status'] = "complete"
             self.data['progress'] = 100
         else:
