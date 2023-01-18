@@ -21,7 +21,7 @@ class job:
     def process(self):
         if self.update():
             job_manager.running_jobs.append(self)
-            scriptFile = os.path.join("~", os.getcwd(), "scripts", self.data['script']) + ".py"
+            scriptFile = os.path.join(".", os.getcwd(), "scripts", self.data['script']) + ".py"
             print(f"Processing in {scriptFile} ({self.data['id']})")
             try:
                 importlib.import_module(scriptFile, package="")
