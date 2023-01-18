@@ -22,10 +22,9 @@ class job:
         if self.update():
             job_manager.running_jobs.append(self)
             try:
-                #scriptFile = os.path.join("." + os.getcwd(), "scripts", self.data['script']) + ".py"
-                #print(f"Processing in {scriptFile} ({self.data['id']})")
+                print(f"Processing in {self.data['script']} ({self.data['id']})")
                 sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
-                mod = importlib.import_module("env")
+                mod = importlib.import_module(self.data['script'])
                 print("Imported")
             except Exception as e:
                 print("Exception: ", end="")
