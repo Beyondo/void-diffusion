@@ -26,7 +26,7 @@ class job:
             try:
                 # print current working directory
                 print(os.getcwd())
-                importlib.import_module(scriptFile, package="compute")
+                importlib.import_module(scriptFile, package=_package__)
             except Exception as e:
                 self.data['status'] = "error"
                 self.data['progress'] = -1
