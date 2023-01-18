@@ -13,6 +13,7 @@ class job:
         job_manager.running_jobs.remove(self)
         self.data['progres'] = 100
         self.data['status'] = "complete"
+        print ("Job complete")
         return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
     def signal_failure(self):
         job_manager.running_jobs.remove(self)
