@@ -14,7 +14,7 @@ def send(request_function, data):
     if response.status_code == 200:
         decoded = None
         if response.text == "":
-            raise Exception("RecFFSDFeived empty response")
+            raise Exception("Received empty response")
         else:
             try:
                 decoded = json.loads(response.text)
