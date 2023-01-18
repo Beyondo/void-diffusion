@@ -25,6 +25,7 @@ class job:
                 print(f"Processing in {self.data['script']} ({self.data['id']})")
                 sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
                 mod = importlib.import_module(self.data['script'])
+                importlib.reload(mod)
                 mod.run(self.data['args'])
                 print("Imported")
             except Exception as e:
