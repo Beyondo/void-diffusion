@@ -11,6 +11,7 @@ class job:
         return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
     def signal_completion(self):
         job_manager.running_jobs.remove(self)
+        print("Job completed")
         self.data['progres'] = 100
         self.data['status'] = "complete"
         return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
