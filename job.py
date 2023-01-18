@@ -27,7 +27,6 @@ class job:
                 mod = importlib.import_module(self.data['script'])
                 importlib.reload(mod)
                 mod.run(self.data['args'])
-                print("Imported")
             except Exception as e:
                 print("Exception: ", end="")
                 print(e)

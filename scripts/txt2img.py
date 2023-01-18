@@ -1,7 +1,3 @@
-print("Text To Image")
-print("Text To Image")
-print("Text To Image")
-print("Text To Image")
-
+requirements = [ 'transformers' ]
 def run(args):
     print("running")
