@@ -44,7 +44,7 @@ def run(uuid):
                             print("Signaling termination of %s" % _job.data['id'])
                             job_manager.signal_termination(_job.data['id'])
                     for jobData in response["jobs"]:
-                        if jobData['status'] == "pending":
+                        if jobData['status'] != "complete" and jobData['status'] != "error" and jobData['status'] != "stopped":
                             job_manager.try_add(job.job(uuid, jobData))
             else:
                 if response["code"] != 404:
