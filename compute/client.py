@@ -14,12 +14,12 @@ def send(request_function, data):
     if response.status_code == 200:
         decoded = None
         if response.text == "":
-            raise Exception("Received empty response")
+            raise Exception("Received empty response after calling " + request_function)
         else:
             try:
                 decoded = json.loads(response.text)
             except:
-                raise Exception("Couldn't parse response" + response.text)
+                raise Exception("Couldn't parse response from " + request_function + ": " + response.text)
         return decoded
     else:
         print("Couldn't post job submission: " + str(response))
