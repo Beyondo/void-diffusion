@@ -2,7 +2,6 @@ requirements = [ 'transformers' ]
 import time
 def run(args, callback):
     while True:
-        print (args['seeds'][0])
         time.sleep(1)
         callback(0, "Waiting...")
         time.sleep(1)
