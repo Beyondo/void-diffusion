@@ -4,12 +4,21 @@ class job:
     def __init__(self, uuid, jobData):
         self.uuid = uuid
         self.data = jobData
-
-    def submit(self):
+    def signal_start(self):
+        job_manager.running_jobs.append(self)
+        self.data['status'] = "running"
+        self.data['progress'] = 0
+        return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
+    def signal_completion(self):
+        job_manager.running_jobs.remove(self)
         self.data['progres'] = 100
         self.data['status'] = "complete"
-        return client.send("submit_job", data={"uuid": self.uuid, "job": self.data })
-
+        return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
+    def signal_failure(self):
+        job_manager.running_jobs.remove(self)
+        self.data['progres'] = -1
+        self.data['status'] = "error"
+        return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
     def update(self):
         print("Updating job %s" % self.data['id'])
         return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
@@ -20,30 +29,19 @@ class job:
         self.update()
 
     def process(self):
-        if self.update():
-            job_manager.running_jobs.append(self)
-            try:
-                print(f"Processing in {self.data['script']} ({self.data['id']})")
-                mod = importlib.import_module(self.data['script'])
-                #importlib.reload(mod)
-                if mod.run(args=self.data['args'], callback=self.callback):
-                    self.data['status'] = "complete"
-                    self.data['progress'] = 100
-                else:
-                    self.data['status'] = "error"
-                    self.data['progress'] = -1
-            except Exception as e:
-                print("Exception: ", end="")
-                print(e)
-                self.data['status'] = "error"
-                self.data['progress'] = -1
-                job_manager.running_jobs.remove(self)
-                return False
-        else:
-            self.data['status'] = "error"
-            self.data['progress'] = -1
-        self.update()
-        job_manager.running_jobs.remove(self)
+        try:
+            self.signal_start()
+            print(f"Processing in {self.data['script']} ({self.data['id']})")
+            mod = importlib.import_module(self.data['script'])
+            #importlib.reload(mod)
+            if mod.run(args=self.data['args'], callback=self.callback):
+                self.signal_completion()
+            else:
+                self.signal_failure()
+        except Exception as e:
+            print("Exception: ", end="")
+            print(e)
+            self.signal_failure()
 
     def stop():
         self.data['status'] = "stopped"
