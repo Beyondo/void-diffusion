@@ -5,6 +5,7 @@ from IPython.display import clear_output;
 from compute import job_manager, job
 import importlib
 importlib.reload(job_manager)
+importlib.reload(job)
 # import get_ipython()
 API = "https://voidops.com/compute/api"
 from IPython import get_ipython
