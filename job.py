@@ -1,5 +1,5 @@
 import json, os, importlib
-from compute import client, job_manager
+import client, job_manager
 class job:
     def __init__(self, uuid, jobData):
         self.uuid = uuid
@@ -21,12 +21,12 @@ class job:
     def process(self):
         if self.update():
             job_manager.running_jobs.append(self)
-            scriptFile = self.data['script'] + ".py"
+            scriptFile = os.path.join("scripts", self.data['script'])
             print(f"Processing in {scriptFile} ({self.data['id']})")
             try:
                 # print current working directory
                 print(os.getcwd())
-                importlib.import_module(scriptFile, package=".scripts")
+                importlib.import_module(scriptFile, package="")
             except Exception as e:
                 self.data['status'] = "error"
                 self.data['progress'] = -1

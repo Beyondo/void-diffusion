@@ -2,7 +2,7 @@ import requests, json, threading, time, os, colab
 from IPython.display import display
 from IPython.display import HTML
 from IPython.display import clear_output;
-from compute import job_manager, job
+import job_manager, job
 import importlib
 importlib.reload(job_manager)
 importlib.reload(job)

@@ -1,5 +1,5 @@
 import threading, os, importlib, time
-from compute import job
+import job
 importlib.reload(job)
 jobManagerThread = None
 job_queue = [] # List of job objects
