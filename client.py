@@ -51,4 +51,5 @@ def run(uuid):
                     display(HTML("<font color='red'>" + response["message"] + "</font>"), display_id = "void-error")
         else:
             set_connection_status(uuid, "Waiting for", "orange", "...")
+        send("ping", {"uuid": uuid})
         time.sleep(1)
