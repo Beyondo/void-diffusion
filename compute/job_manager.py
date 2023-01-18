@@ -31,8 +31,8 @@ def run():
 
 def add_to_queue(job):
     global job_queue, running_jobs
-    for job in job_queue:
-        if job.data['id'] == job_id:
+    for existingJob in job_queue:
+        if existingJob.data['id'] == job.data['id']:
             break
     print("Adding to queue %s (Currently running: %s)" % (job.data['id'], len(running_jobs)))
     job.data['status'] = "In Queue"
