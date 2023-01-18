@@ -43,7 +43,6 @@ def run(uuid):
                             job_manager.signal_termination(_job.data['id'])
                     for jobData in response["jobs"]:
                         if jobData['status'] == "pending":
-                            print("Adding to queue %s (Currently running: %s)" % (jobData['id'], len(job_manager.running_jobs)))
                             job_manager.add_to_queue(job.job(uuid, jobData)) 
             else:
                 if response["code"] != 404:

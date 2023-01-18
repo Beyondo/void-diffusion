@@ -30,6 +30,10 @@ def run():
 
 def add_to_queue(job):
     global job_queue
+    for job in job_queue:
+        if job.data['id'] == job_id:
+            break
+    print("Adding to queue %s (Currently running: %s)" % (jobData['id'], len(job_manager.running_jobs)))
     job.data['status'] = "In Queue"
     job.data['progress'] = 0
     job.update()
