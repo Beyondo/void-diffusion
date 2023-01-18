@@ -29,10 +29,14 @@ def run():
     finished = False
     jobManagerThread.start()
 
-def add_to_queue(job):
+def try_add(job):
     global job_queue, running_jobs
-    if job.data['status'] == "In Queue" or job.data['status'] == "running":
-        return
+    for existingJob in job_queue:
+        if existingJob.data['id'] == job.data['id']:
+            return
+    for existingJob in running_jobs:
+        if existingJob.data['id'] == job.data['id']:
+            return
     print("Adding to queue %s (Currently running: %s)" % (job.data['id'], len(running_jobs)))
     job.data['status'] = "In Queue"
     job.data['progress'] = 0

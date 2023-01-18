@@ -46,7 +46,7 @@ def run(uuid):
                             job_manager.signal_termination(_job.data['id'])
                     for jobData in response["jobs"]:
                         if jobData['status'] == "pending":
-                            job_manager.add_to_queue(job.job(uuid, jobData))
+                            job_manager.try_add(job.job(uuid, jobData))
             else:
                 if response["code"] != 404:
                     display(HTML("<font color='red'>" + response["message"] + "</font>"), display_id = "void-error")
