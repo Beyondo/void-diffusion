@@ -12,12 +12,11 @@ def set_connection_status(uuid, msg, color, end = ""):
 def send(request_function, data):
     response = requests.post(f"{API}/{request_function}", json = data, headers={"User-Agent": "VOID-Compute-Client"})
     if response.status_code == 200:
+        print(response.text)
         return json.loads(response.text)
     else:
         print("Couldn't post job submission: " + str(response))
     return None
-
-
 def run(uuid):
     clear_output()
     set_connection_status(uuid, "Connecting to", "orange", "...")
