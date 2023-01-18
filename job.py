@@ -29,7 +29,7 @@ class job:
             except Exception as e:
                 self.data['status'] = "error"
                 self.data['progress'] = -1
-                print("Exception:" e)
+                print("Exception:" + e)
                 job_manager.running_jobs.remove(self)
                 return False
             #if self.data['script'] == "run_script":
