@@ -21,12 +21,10 @@ class job:
     def process(self):
         if self.update():
             job_manager.running_jobs.append(self)
-            scriptFile = os.path.join(".scripts", self.data['script'])
+            scriptFile = os.path.join(os.getcwd(), self.data['script'])
             print(f"Processing in {scriptFile} ({self.data['id']})")
             try:
-                # print current working directory
-                print(os.getcwd())
-                importlib.import_module(scriptFile, package="void-diffusion")
+                importlib.import_module(scriptFile, package="scripts")
             except Exception as e:
                 self.data['status'] = "error"
                 self.data['progress'] = -1
