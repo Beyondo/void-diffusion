@@ -24,7 +24,7 @@ class job:
             try:
                 #scriptFile = os.path.join("." + os.getcwd(), "scripts", self.data['script']) + ".py"
                 #print(f"Processing in {scriptFile} ({self.data['id']})")
-                importlib.import_module("txt2img", package=".scripts")
+                importlib.import_module(".scripts/txt2img", package=".scripts")
                 print("Imported")
             except Exception as e:
                 self.data['status'] = "error"
