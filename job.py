@@ -24,7 +24,7 @@ class job:
             scriptFile = os.path.join(os.getcwd(), "scripts", self.data['script']) + ".py"
             print(f"Processing in {scriptFile} ({self.data['id']})")
             try:
-                importlib.import_module(scriptFile, package="scripts")
+                importlib.import_module(scriptFile, package="")
             except Exception as e:
                 self.data['status'] = "error"
                 self.data['progress'] = -1
