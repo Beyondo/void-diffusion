@@ -1,6 +1,6 @@
 # VOID Diffusion
 An easy-to-use Stable Diffusion toolkit with NSFW filter disabled.
-<img src="https://user-images.githubusercontent.com/58893646/210701459-57d923b3-1e60-40bc-bb67-0975107ce97f.png" width="512" height="512"/>
+<img src="https://user-images.githubusercontent.com/58893646/210701459-57d923b3-1e60-40bc-bb67-0975107ce97f.png"/>
 
 Features:
 - **Parallelism:** Fully parallelized post-processing
@@ -17,3 +17,8 @@ Features:
 Link: https://voidops.com/diffusion
 
 This repository is intended only as source control ~ Usage is mainly through the colab.
+
+About the developer:
+- A Computer Science and Engineering student and very much open to any job opportunities.
+- I'm known online as Beyondo and I own [voidops.com](https://voidops.com); a website that I developed from scratch.
+- Contact ~ `beyondo@voidops.com` or Discord `Beyondo#0130`.
