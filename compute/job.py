@@ -22,7 +22,7 @@ class job:
         if self.update():
             job_manager.running_jobs.append(self)
             scriptFile = os.path.join("scripts", self.data['script'])
-            print("Processing in %s (%s)" % (scriptFile, self.data['id']))
+            print(f"Processing in {scriptFile} ({self.data['id']})")
             try:
                 importlib.import_module(scriptFile)
             except Exception as e:
