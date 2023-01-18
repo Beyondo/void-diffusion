@@ -1,3 +1,4 @@
 requirements = [ 'transformers' ]
-def run(args):
+def run(args, callback):
     print("running")
+    return True

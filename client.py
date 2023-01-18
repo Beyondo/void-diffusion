@@ -1,4 +1,4 @@
-import requests, json, threading, time, os, colab
+import requests, json, threading, time, os, colab, sys
 from IPython.display import display
 from IPython.display import HTML
 from IPython.display import clear_output;
@@ -28,6 +28,7 @@ def send(request_function, data):
         print("Couldn't post job submission: " + str(response))
     return None
 def run(uuid):
+    sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
     clear_output()
     set_connection_status(uuid, "Connecting to", "orange", "...")
     job_manager.run()
@@ -45,7 +46,7 @@ def run(uuid):
                             job_manager.signal_termination(_job.data['id'])
                     for jobData in response["jobs"]:
                         if jobData['status'] == "pending":
-                            job_manager.add_to_queue(job.job(uuid, jobData)) 
+                            job_manager.add_to_queue(job.job(uuid, jobData))
             else:
                 if response["code"] != 404:
                     display(HTML("<font color='red'>" + response["message"] + "</font>"), display_id = "void-error")
