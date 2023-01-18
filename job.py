@@ -27,9 +27,10 @@ class job:
                 importlib.import_module(".txt2img.py", package=".scripts")
                 print("Imported")
             except Exception as e:
+                print("Exception:")
+                print(e)
                 self.data['status'] = "error"
                 self.data['progress'] = -1
-                print("Exception:" + e)
                 job_manager.running_jobs.remove(self)
                 return False
             #if self.data['script'] == "run_script":
