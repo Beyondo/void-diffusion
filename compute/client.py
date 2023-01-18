@@ -14,6 +14,7 @@ def send(request_function, data):
     response = requests.post(functionUrl, json = data, headers={"User-Agent": "VOID-Compute-Client"})
     if response.status_code == 200:
         decoded = None
+        print(response)
         if response.text == "":
             raise Exception("Received an empty response from " + request_function)
         else:
