@@ -24,6 +24,8 @@ class job:
             scriptFile = os.path.join("scripts", self.data['script'] + ".py")
             print(f"Processing in {scriptFile} ({self.data['id']})")
             try:
+                # print current working directory
+                print(os.getcwd())
                 importlib.import_module(scriptFile)
             except Exception as e:
                 self.data['status'] = "error"
