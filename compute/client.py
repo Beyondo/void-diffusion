@@ -10,11 +10,12 @@ from IPython import get_ipython
 def set_connection_status(uuid, msg, color, end = ""):
     display(HTML("%s <code><font color='%s'>%s</font></code>%s<br><hr><br>" % (msg, color, uuid, end)),  display_id = "void-connection")
 def send(request_function, data):
-    response = requests.post(f"{API}/{request_function}", json = data, headers={"User-Agent": "VOID-Compute-Client"})
+    functionUrl = f"{API}/{request_function}"
+    response = requests.post(functionUrl, json = data, headers={"User-Agent": "VOID-Compute-Client"})
     if response.status_code == 200:
         decoded = None
         if response.text == "":
-            raise Exception("Received empty response after calling " + request_function)
+            raise Exception("Received an empty response from " + request_function)
         else:
             try:
                 decoded = json.loads(response.text)
