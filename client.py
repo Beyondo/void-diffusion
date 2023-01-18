@@ -14,8 +14,8 @@ def set_connection_status(uuid, msg, color, end = ""):
 def send(request_function, data):
     functionUrl = f"{API}/{request_function}"
     response = requests.post(functionUrl, json = data, headers={"User-Agent": "VOID-Compute-Client"})
+    decoded = None
     if response.status_code == 200:
-        decoded = None
         if response.text == "":
             raise Exception("Received an empty response from " + request_function)
         else:
@@ -23,10 +23,9 @@ def send(request_function, data):
                 decoded = json.loads(response.text)
             except:
                 raise Exception("Couldn't parse response from " + request_function + ": " + response.text)
-        return decoded
     else:
-        print("Couldn't post job submission: " + str(response))
-    return None
+        print("Couldn't send request: " + str(response))
+    return decoded
 def run(uuid):
     sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
     clear_output()
