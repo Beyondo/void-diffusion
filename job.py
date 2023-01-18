@@ -21,7 +21,9 @@ class job:
         self.data['status'] = "error"
         return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
     def update(self):
-        return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
+        resp = client.send("update_job", data={"uuid": self.uuid, "job": self.data })
+        print (resp)
+        return resp
 
     def callback(self, progress, status):
         self.data['progress'] = progress
