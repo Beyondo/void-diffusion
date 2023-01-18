@@ -7,4 +7,5 @@ def run(args, callback):
     callback(50, "Running...")
     time.sleep(1)
     callback(100, "Complete!")
+    print("Done!")
     return True
