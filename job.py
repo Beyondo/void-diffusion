@@ -27,7 +27,7 @@ class job:
                 importlib.import_module(".txt2img.py", package=".scripts")
                 print("Imported")
             except Exception as e:
-                print("Exception:")
+                print("Exception: ", end="")
                 print(e)
                 self.data['status'] = "error"
                 self.data['progress'] = -1
