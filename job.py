@@ -1,4 +1,4 @@
-import json, os, importlib
+import json, os, importlib, sys
 import client, job_manager
 class job:
     def __init__(self, uuid, jobData):
@@ -24,7 +24,6 @@ class job:
             try:
                 #scriptFile = os.path.join("." + os.getcwd(), "scripts", self.data['script']) + ".py"
                 #print(f"Processing in {scriptFile} ({self.data['id']})")
-                import sys
                 sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
                 mod = importlib.import_module("env")
                 print("Imported")
