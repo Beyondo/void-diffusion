@@ -34,7 +34,14 @@ class job:
         try:
             self.signal_start()
             print(f"Processing in {self.data['script']} ({self.data['id']})")
-            mod = importlib.import_module(".txt2img", package="stable_diffusion")
+            # if self.data['script'] contains a dot, then it's a module in a package
+            mod = None
+            #if "." in self.data['script']:
+            #    package, script = self.data['script'].split(".")
+            #    mod = importlib.import_module(f".{script}", package=package)
+            #else:
+            #    mod = importlib.import_module(f".{self.data['script']}")
+            mod = importlib.import_module("txt2img")
             importlib.reload(mod)
             if mod.run(args=self.data['args'], callback=self.callback):
                 self.signal_completion()
