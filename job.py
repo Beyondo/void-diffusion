@@ -41,7 +41,7 @@ class job:
             #    mod = importlib.import_module(f".{script}", package=package)
             #else:
             #    mod = importlib.import_module(f".{self.data['script']}")
-            mod = importlib.import_module("txt2img")
+            mod = importlib.import_module(".txt2img")
             importlib.reload(mod)
             if mod.run(args=self.data['args'], callback=self.callback):
                 self.signal_completion()
