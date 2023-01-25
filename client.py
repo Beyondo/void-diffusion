@@ -23,7 +23,11 @@ def send(request_function, data):
                 decoded = json.loads(response.text)
             except:
                 raise Exception("Couldn't parse response from " + request_function + ": " + response.text)
-    else:
+    elif response.status_code == 502:
+        print("Packet loss. Retrying~")
+        time.sleep(1)
+        return send(request_function, data)
+    else
         raise Exception("Couldn't send request: " + str(response))
     return decoded
 def run(uuid):
