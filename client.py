@@ -27,7 +27,7 @@ def send(request_function, data):
         print("Packet loss. Retrying~")
         time.sleep(1)
         return send(request_function, data)
-    else
+    else:
         raise Exception("Couldn't send request: " + str(response))
     return decoded
 def run(uuid):
