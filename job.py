@@ -22,7 +22,6 @@ class job:
         return client.send("update_job", data={"uuid": self.uuid, "job": self.data })
     def update(self):
         resp = client.send("update_job", data={"uuid": self.uuid, "job": self.data })
-        print(resp)
         if resp['status'] == "error":
             raise Exception(f"Error updating job ({self.data['id']}): {resp['message']}")
 

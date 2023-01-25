@@ -24,7 +24,7 @@ def send(request_function, data):
             except:
                 raise Exception("Couldn't parse response from " + request_function + ": " + response.text)
     else:
-        print("Couldn't send request: " + str(response))
+        raise Exception("Couldn't send request: " + str(response))
     return decoded
 def run(uuid):
     sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
