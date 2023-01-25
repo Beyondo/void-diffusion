@@ -34,7 +34,7 @@ class job:
         try:
             self.signal_start()
             print(f"Processing in {self.data['script']} ({self.data['id']})")
-            mod = importlib.import_module(self.data['script'])
+            mod = importlib.import_module(".txt2img", package="stable_diffusion")
             importlib.reload(mod)
             if mod.run(args=self.data['args'], callback=self.callback):
                 self.signal_completion()
