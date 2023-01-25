@@ -13,8 +13,7 @@ def set_connection_status(uuid, msg, color, end = ""):
     display(HTML("%s <code><font color='%s'>%s</font></code>%s<br><hr><br>" % (msg, color, uuid, end)),  display_id = "void-connection")
 def send(request_function, data):
     functionUrl = f"{API}/{request_function}"
-    if "jobs" in data:
-        data['jobs'] = json.dumps(data['jobs'])
+    print(data)
     response = requests.post(functionUrl, json = data, headers={"User-Agent": "VOID-Compute-Client"})
     print(response.text)
     decoded = None
