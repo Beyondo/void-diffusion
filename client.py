@@ -65,5 +65,5 @@ def run(uuid):
             set_connection_status(uuid, "Connection was interrupted from", "red")
             break
         except:
-            set_connection_status(uuid, "Connection lost to", "red")
+            set_connection_status(uuid, "Connecting to", "orange", "...")
             time.sleep(2)
