@@ -11,7 +11,7 @@ API = "https://voidops.com/compute/api"
 from IPython import get_ipython
 def set_connection_status(uuid, msg, color, end = ""):
     display(HTML("%s <code><font color='%s'>%s</font></code>%s<br><hr><br>" % (msg, color, uuid, end)),  display_id = "void-connection")
-def send(request_function, data):
+def send(request_function, data, retries = 0):
     functionUrl = f"{API}/{request_function}"
     response = requests.post(functionUrl, json = data, headers={"User-Agent": "VOID-Compute-Client"})
     decoded = None
@@ -24,9 +24,12 @@ def send(request_function, data):
             except:
                 raise Exception("Couldn't parse response from " + request_function + ": " + response.text)
     elif response.status_code == 502:
-        print("Packet loss. Retrying~")
-        time.sleep(1)
-        return send(request_function, data)
+        if retries > 5:
+            raise Exception("Backend is down.")
+        else:
+            print("Packet loss. Retrying~")
+            time.sleep(1)
+            return send(request_function, data, retries + 1)
     else:
         raise Exception("Couldn't send request: " + str(response))
     return decoded
