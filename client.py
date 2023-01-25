@@ -62,6 +62,7 @@ def run(uuid):
             send("ping", {"uuid": uuid})
             time.sleep(2)
         except KeyboardInterrupt:
+            set_connection_status(uuid, "Connection was interrupted from", "red")
             break
         except:
             set_connection_status(uuid, "Connection lost to", "red")
