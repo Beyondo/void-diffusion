@@ -61,7 +61,8 @@ def run(uuid):
                 set_connection_status(uuid, "Waiting for", "orange", "...")
             send("ping", {"uuid": uuid})
             time.sleep(2)
-        except Exception as e:
+        except KeyboardInterrupt:
+            break
+        except:
             set_connection_status(uuid, "Connection lost to", "red")
-            if str(e) == "KeyboardInterrupt": break
             time.sleep(2)
