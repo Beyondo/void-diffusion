@@ -36,12 +36,11 @@ class job:
             print(f"Processing in {self.data['script']} ({self.data['id']})")
             # if self.data['script'] contains a dot, then it's a module in a package
             mod = None
-            #if "." in self.data['script']:
-            #    package, script = self.data['script'].split(".")
-            #    mod = importlib.import_module(f".{script}", package=package)
-            #else:
-            #    mod = importlib.import_module(f".{self.data['script']}")
-            mod = importlib.import_module(".txt2img")
+            if "." in self.data['script']:
+                package, script = self.data['script'].split(".")
+                mod = importlib.import_module(f".{script}", package=package)
+            else:
+                mod = importlib.import_module(self.data['script'])
             importlib.reload(mod)
             if mod.run(args=self.data['args'], callback=self.callback):
                 self.signal_completion()
