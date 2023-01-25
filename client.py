@@ -39,24 +39,28 @@ def run(uuid):
     set_connection_status(uuid, "Connecting to", "orange", "...")
     job_manager.run()
     while True:
-        response = send("get_jobs", {"uuid": uuid})
-        if response != None:
-            if response["status"] == "ok":
-                set_connection_status(uuid, "Currently working for ", "green")
-                server_jobs = response["jobs"]
-                num_jobs = len(server_jobs)
-                if num_jobs > 0:
-                    for _job in job_manager.running_jobs:
-                        if not any(serverJobData["id"] == _job.data['id'] for serverJobData in server_jobs): # if job is not in server jobs
-                            print("Signaling termination of %s" % _job.data['id'])
-                            job_manager.signal_termination(_job.data['id'])
-                    for jobData in response["jobs"]:
-                        if jobData['status'] == "pending":
-                            job_manager.try_add(job.job(uuid, jobData))
+        try:
+            response = send("get_jobs", {"uuid": uuid})
+            if response != None:
+                if response["status"] == "ok":
+                    set_connection_status(uuid, "Currently working for ", "green")
+                    server_jobs = response["jobs"]
+                    num_jobs = len(server_jobs)
+                    if num_jobs > 0:
+                        for _job in job_manager.running_jobs:
+                            if not any(serverJobData["id"] == _job.data['id'] for serverJobData in server_jobs): # if job is not in server jobs
+                                print("Signaling termination of %s" % _job.data['id'])
+                                job_manager.signal_termination(_job.data['id'])
+                        for jobData in response["jobs"]:
+                            if jobData['status'] == "pending":
+                                job_manager.try_add(job.job(uuid, jobData))
+                else:
+                    if response["code"] != 404:
+                        display(HTML("<font color='red'>" + response["message"] + "</font>"), display_id = "void-error")
             else:
-                if response["code"] != 404:
-                    display(HTML("<font color='red'>" + response["message"] + "</font>"), display_id = "void-error")
-        else:
-            set_connection_status(uuid, "Waiting for", "orange", "...")
-        send("ping", {"uuid": uuid})
-        time.sleep(1)
+                set_connection_status(uuid, "Waiting for", "orange", "...")
+            send("ping", {"uuid": uuid})
+            time.sleep(2)
+        except:
+            set_connection_status(uuid, "Connection lost to", "red")
+            time.sleep(2)
