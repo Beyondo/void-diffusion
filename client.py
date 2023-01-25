@@ -14,6 +14,7 @@ def set_connection_status(uuid, msg, color, end = ""):
 def send(request_function, data):
     functionUrl = f"{API}/{request_function}"
     response = requests.post(functionUrl, json = data, headers={"User-Agent": "VOID-Compute-Client"})
+    print(response)
     decoded = None
     if response.status_code == 200:
         if response.text == "":
