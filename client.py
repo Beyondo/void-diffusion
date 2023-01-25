@@ -63,5 +63,5 @@ def run(uuid):
             time.sleep(2)
         except Exception as e:
             set_connection_status(uuid, "Connection lost to", "red")
-            if str(e) == "KeyboardInterrupt": raise e
+            if str(e) == "KeyboardInterrupt": break
             time.sleep(2)
