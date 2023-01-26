@@ -98,7 +98,7 @@ def prepare(mode):
         settings['InitialSeed'] = settings['Seed']
     current_mode = mode
     
-    if mode == "txt2img" or mode == "img2img":
+    if mode == "text2img" or mode == "img2img":
         if settings['Scheduler'] != "Default":
             scheduler = getattr(diffusers, settings['Scheduler'])
             pipeline.scheduler = scheduler.from_config(pipeline.scheduler.config)
