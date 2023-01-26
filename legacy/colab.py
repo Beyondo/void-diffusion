@@ -1,4 +1,4 @@
-import torch, random, time, os, gc
+import torch, random, time, os, gc, diffusers
 import IPython
 from IPython import display
 from IPython.display import HTML
@@ -21,6 +21,8 @@ server_url = ""
 last_generated_image = None
 image_size = (512, 512)
 current_seed = 0
+default_pipe_scheduler = None
+default_inpaint_scheduler = None
 def get_current_image_seed():
     global settings, image_id
     return settings['InitialSeed'] + image_id
@@ -38,7 +40,7 @@ def prepare_memory():
     torch.cuda.empty_cache()
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = 'max_split_size_mb:64'
 def init(ModelName, InpaintingModel, debug=False):
-    global model_name, ready, pipeline, tokenizer, img2img, inpaint, settings, server_url
+    global model_name, ready, pipeline, tokenizer, img2img, inpaint, settings, server_url, default_pipe_scheduler, default_inpaint_scheduler
     prepare_memory()
     ready = False
     model_name = ModelName
@@ -54,6 +56,7 @@ def init(ModelName, InpaintingModel, debug=False):
             print("Initializing model " + model_name + ":")
             pipeline = PerformancePipeline.from_pretrained(model_name)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
+            default_pipe_scheduler = pipeline.scheduler
             if InpaintingModel != None:
                 try:
                     inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16, safety_checker=None).to("cuda:0")
@@ -72,6 +75,7 @@ def init(ModelName, InpaintingModel, debug=False):
                 display.display(HTML("Inpainting model <strong><span style='color: red'>not selected</span></strong>."))
             else:
                 display.display(HTML("Model <strong><span style='color: green'>%s</span></strong> has been selected for inpainting." % inpaint_model_name))
+                default_inpaint_scheduler = inpaint.scheduler
         except Exception as e:
             if "502" in str(e):
                 print("Received 502 Server Error: Huggingface is currently down." % model_name)
@@ -93,8 +97,21 @@ def prepare(mode):
     else:
         settings['InitialSeed'] = settings['Seed']
     current_mode = mode
-
-def image_grid(imgs, rows, cols):
+    
+    if mode == "txt2img" or mode == "img2img":
+        if settings['Scheduler'] != "Default":
+            scheduler = getattr(diffusers, "DPMSolverMultistepScheduler")
+            pipeline.scheduler = scheduler.from_config(colab.pipeline.scheduler.config)
+        else:
+            pipeline.scheduler = default_pipe_scheduler
+    elif mode == "inpaint":
+        if settings['Scheduler'] != "Default":
+            scheduler = getattr(diffusers, "DPMSolverMultistepScheduler")
+            inpaint.scheduler = scheduler.from_config(colab.inpaint.scheduler.config)
+        else:
+            inpaint.scheduler = default_inpaint_scheduler
+#
+def image_grid(imgs, rows, cols):#
     assert len(imgs) == rows*cols
     import PIL.Image
     w, h = imgs[0].size
