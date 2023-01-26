@@ -21,6 +21,7 @@ def write_general_settings(f):
     f.write("Guidance Scale: %s\n" % colab.settings['GuidanceScale'])
     f.write("Steps: %s\n" % colab.settings['Steps'])
     f.write("Iterations: %s\n" % colab.settings['Iterations'])
+    f.write("Scheduler: %s\n" % colab.settings['Scheduler'])
     f.write("Generated seeds: %d (0)" % colab.settings['InitialSeed'])
     for i in range(1, colab.settings['Iterations']):
         f.write(", %d (%d)" % (colab.settings['InitialSeed'] + i, i))
