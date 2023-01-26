@@ -36,7 +36,7 @@ def media_server():
     IPython.get_ipython().system_raw("fuser -k 8000/tcp")
     IPython.get_ipython().system_raw("python -m http.server 8000 --directory media-dir")
 def prepare_memory():
-    #gc.collect()
+    gc.collect()
     torch.cuda.empty_cache()
     #os.environ["PYTORCH_CUDA_ALLOC_CONF"] = 'max_split_size_mb:64'
 def init(ModelName, InpaintingModel, debug=False):
