@@ -100,13 +100,13 @@ def prepare(mode):
     
     if mode == "txt2img" or mode == "img2img":
         if settings['Scheduler'] != "Default":
-            scheduler = getattr(diffusers, "DPMSolverMultistepScheduler")
+            scheduler = getattr(diffusers, settings['Scheduler'])
             pipeline.scheduler = scheduler.from_config(colab.pipeline.scheduler.config)
         else:
             pipeline.scheduler = default_pipe_scheduler
     elif mode == "inpaint":
         if settings['Scheduler'] != "Default":
-            scheduler = getattr(diffusers, "DPMSolverMultistepScheduler")
+            scheduler = getattr(diffusers, settings['Scheduler'])
             inpaint.scheduler = scheduler.from_config(colab.inpaint.scheduler.config)
         else:
             inpaint.scheduler = default_inpaint_scheduler
