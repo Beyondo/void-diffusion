@@ -6,7 +6,7 @@ importlib.reload(postprocessor)
 def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
     
     if colab.settings['Scheduler'] != "Default":
-        scheduler = importlib.import_module("diffusers." + colab.settings['Scheduler'])
+        scheduler = importlib.import_module(colab.settings['Scheduler'], package="diffusers")
         colab.pipeline.scheduler = scheduler.from_config(colab.pipeline.scheduler.config)
     try:
         progress.replace_result = ReplaceResult
