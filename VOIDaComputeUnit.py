@@ -29,7 +29,7 @@ def StartLocalUnit(clientsInfo):
     sys.path.insert(0, os.path.join(os.getcwd(), "scripts"))
     print("Starting VOID Compute Unit...")
     for clientInfo in clientsInfo:
-        clients.append(VoidComputeClient.VoidComputeClient(clientInfo[0]))
+        clients.append(VOIDComputeClient.VOIDComputeClient(clientInfo[0]))
         clients[-1].addShells(clientInfo[1])
         clients[-1].start_pinging_async()
     while True:
@@ -38,8 +38,8 @@ def StartLocalUnit(clientsInfo):
             if len(threading.enumerate()) == 1:
                 break
         except KeyboardInterrupt:
-            VoidLogger.Log("Compute Unit", "Keyboard interrupt")
+            VOIDLogger.Log("Compute Unit", "Keyboard interrupt")
             break
         except Exception as e:
-            VoidLogger.Log("Compute Unit", e)
+            VOIDLogger.Log("Compute Unit", e)
             break
