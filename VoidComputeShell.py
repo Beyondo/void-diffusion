@@ -1,7 +1,7 @@
 # A shell represents a compute thread that can be started, stopped, and sent data to.
 # It interacts with the API directly in an infinite loop.
 import importlib
-class VoidComputeShell():
+class VOIDComputeShell():
     def __init__(self, client):
         super().__init__()
         self.client = client
