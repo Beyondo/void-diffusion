@@ -35,6 +35,7 @@ def save_settings(filename, mode):
             if mode == "text2img":
                 f.write("Model: %s\n" % colab.model_name)
                 f.write("Mode: Text to Image\n")
+                f.write("%sX%s\n" % (colab.settings['Width'], colab.settings['Height']))
                 f.write("Initial Seed: %s\n" % colab.settings['InitialSeed'])
                 f.write("Prompt: %s\n" % colab.settings['Prompt'])
                 f.write("Negative Prompt: %s\n" % colab.settings['NegativePrompt'])
@@ -42,6 +43,7 @@ def save_settings(filename, mode):
             elif mode == "img2img":
                 f.write("Model: %s\n" % colab.model_name)
                 f.write("Mode: Image to Image\n")
+                f.write("%sX%s\n" % (colab.settings['Width'], colab.settings['Height']))
                 f.write("Initial Seed: %s\n" % colab.settings['InitialSeed'])
                 f.write("Prompt: %s\n" % colab.settings['Prompt'])
                 f.write("Negative Prompt: %s\n" % colab.settings['NegativePrompt'])
@@ -51,6 +53,7 @@ def save_settings(filename, mode):
             elif mode == "inpaint":
                 f.write("Model: %s\n" % colab.inpaint_model_name)
                 f.write("Mode: Inpainting\n")
+                f.write("%sX%s\n" % (colab.settings['Width'], colab.settings['Height']))
                 f.write("Initial Seed: %s\n" % colab.settings['InitialSeed'])
                 f.write("Prompt: %s\n" % colab.settings['Prompt'])
                 f.write("Negative Prompt: %s\n" % colab.settings['NegativePrompt'])
