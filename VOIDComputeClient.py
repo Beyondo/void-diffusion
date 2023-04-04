@@ -1,6 +1,7 @@
 import requests, json, time, threading
 import VOIDComputeShell, VOIDLogger
 class VOIDComputeClient:
+    # Hello
     API = "https://voidops.com/compute/api"
     def __init__(self, uuid):
         self.uuid = uuid
@@ -10,7 +11,7 @@ class VOIDComputeClient:
             self.shells.append(VOIDComputeShell.VOIDComputeShell(self))
     def send(self, request_function, data, retries = 0):
         functionUrl = f"{self.API}/{request_function}"
-        response = requests.post(functionUrl, json = data, headers={"User-Agent": "VOID-Compute-Client"})
+        response = requests.post(functionUrl, json, headers={"User-Agent": "VOID-Compute-Client"})
         decoded = None
         if response.status_code == 200:
             if response.text == "":

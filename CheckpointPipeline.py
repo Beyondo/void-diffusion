@@ -4,7 +4,6 @@ import torch, os, importlib
 from hax import clip_pipeline, clip_limit
 importlib.reload(clip_pipeline)
 def from_pretrained(checkpoint_path):
-    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb=512"
     torch.set_default_dtype(torch.float16)
     #VOIDPipeline.Hook()
     pipe = None

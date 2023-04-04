@@ -38,7 +38,6 @@ def media_server():
 def prepare_memory():
     gc.collect()
     torch.cuda.empty_cache()
-    #os.environ["PYTORCH_CUDA_ALLOC_CONF"] = 'max_split_size_mb:64'
 def init(ModelName, InpaintingModel, debug=False):
     global model_name, ready, pipeline, tokenizer, img2img, inpaint, settings, server_url, default_pipe_scheduler, default_inpaint_scheduler
     prepare_memory()
