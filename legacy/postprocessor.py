@@ -26,6 +26,9 @@ def write_general_settings(f):
     for i in range(1, colab.settings['Iterations']):
         f.write(", %d (%d)" % (colab.settings['InitialSeed'] + i, i))
     f.write("\n")
+    f.write("Scale: %s\n" % colab.settings['Scale'])
+    f.write("Post Processor: %s\n" % colab.settings['Upscaler'])
+
     
 def save_settings(filename, mode):
     imgSavePath = get_save_path(filename)
