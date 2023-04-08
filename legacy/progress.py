@@ -25,7 +25,7 @@ def show(img = None, iter = 0):
             document.body.removeChild(dummy);
         }}
     '''
-    display(HTML(f'<label>Seed: <code>{seed}</code><button style="width: 16px; padding: 0; margin: 0;" class="copy-button" onclick="copyToClipboard(\'{seed}\')">{copy_button}</button></label>'), display_id=image_id + "_seed")
+    display(HTML(f'<label>Seed: <code>{seed}</code><button alt="Copy seed" style="width: 16px; padding: 0; margin: 0;" class="copy-button" onclick="copyToClipboard(\'{seed}\')">{copy_button}</button></label>'), display_id=image_id + "_seed")
     display(HTML("<label>Generation time: %.2fs</label>" % (time.time() - rendering_start_time)), display_id=image_id + "_time")
     display(HTML("<label>Original: Emerging...</label>"), display_id=image_id + "_original")
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_saved")
