@@ -1,6 +1,6 @@
 import torch, os, time, datetime, importlib
 from legacy import colab, postprocessor, progress
-from IPython.display import display
+from IPython.display import display, HTML
 importlib.reload(progress)
 importlib.reload(postprocessor)
 def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):

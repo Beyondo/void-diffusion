@@ -39,7 +39,7 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
         init_image = init_image.resize((512, 512))
         grey_mask = grey_mask.resize((512, 512))
         num_iterations = colab.settings['Iterations']
-        display("Iterations: 0/%d" % num_iterations, display_id="iterations")
+        display(HTML("<label>Iterations: 0/%d</label>" % num_iterations), display_id="iterations")
         postprocessor.max_num_parallel_jobs = maxNumJobs
         postprocessor.run_queue_thread()
         for i in range(num_iterations):

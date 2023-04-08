@@ -1,7 +1,6 @@
 import torch, time
 from legacy import colab
-from IPython.display import display
-from IPython.display import HTML
+from IPython.display import display, HTML
 import PIL.Image as Image
 import threading
 rendering_start_time = 0

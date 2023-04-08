@@ -1,7 +1,6 @@
 import torch, os, time, datetime, importlib
 from legacy import colab, postprocessor, progress
-from IPython.display import Image
-from IPython.display import display
+from IPython.display import display, HTML, Image
 
 import requests
 from PIL import Image
@@ -24,7 +23,7 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
         display(init_image)
         # Process image
         num_iterations = colab.settings['Iterations']
-        display("Iterations: 0/%d" % num_iterations, display_id="iterations")
+        display(HTML("<label>Iterations: 0/%d</label>" % num_iterations), display_id="iterations")
         postprocessor.max_num_parallel_jobs = maxNumJobs
         postprocessor.run_queue_thread()
         for i in range(num_iterations):
