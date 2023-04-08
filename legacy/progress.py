@@ -1,6 +1,6 @@
 import torch, time
 from legacy import colab
-from IPython.display import display, HTML
+from IPython.display import display, HTML, Javascript
 import PIL.Image as Image
 import threading
 rendering_start_time = 0
@@ -15,19 +15,18 @@ def show(img = None, iter = 0):
     image_id = colab.get_current_image_uid()
     seed = colab.get_current_image_seed()
     seed_label = f'<label>Seed: <code id="seed">{seed}</code></label>'
-    copy_button = '<button onclick="copySeed()">Copy</button>'
+    copy_button = f'<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M10 8V7C10 6.05719 10 5.58579 10.2929 5.29289C10.5858 5 11.0572 5 12 5H17C17.9428 5 18.4142 5 18.7071 5.29289C19 5.58579 19 6.05719 19 7V12C19 12.9428 19 13.4142 18.7071 13.7071C18.4142 14 17.9428 14 17 14H16M7 19H12C12.9428 19 13.4142 19 13.7071 18.7071C14 18.4142 14 17.9428 14 17V12C14 11.0572 14 10.5858 13.7071 10.2929C13.4142 10 12.9428 10 12 10H7C6.05719 10 5.58579 10 5.29289 10.2929C5 10.5858 5 11.0572 5 12V17C5 17.9428 5 18.4142 5.29289 18.7071C5.58579 19 6.05719 19 7 19Z" stroke="#464455" stroke-linecap="round" stroke-linejoin="round"></path></g></svg>'
     javascript = f'''
-        function copySeed() {{
-            var seed = document.getElementById("seed");
-            var range = document.createRange();
-            range.selectNode(seed);
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
-            document.execCommand("copy");
-            window.getSelection().removeAllRanges();
+        function copyToClipboard(text) {{
+            var dummy = document.createElement("input");
+            document.body.appendChild(dummy);
+            dummy.setAttribute('value', text);
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
         }}
     '''
-    display(HTML(seed_label + copy_button), display_id=image_id + "_seed")
+    display(HTML(f'<label>Seed: <code>{seed}</code><button class="copy-button" onclick="copyToClipboard(\'{seed}\')">{copy_button}</button></label>'), display_id=image_id + "_seed")
     display(HTML("<label>Generation time: %.2fs</label>" % (time.time() - rendering_start_time)), display_id=image_id + "_time")
     display(HTML("<label>Original: Emerging...</label>"), display_id=image_id + "_original")
     display(HTML("<label>Saved: No</label>"), display_id=image_id + "_saved")
