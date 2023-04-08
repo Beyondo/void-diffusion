@@ -10,7 +10,8 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
         timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
         if ShouldSave and colab.save_settings: postprocessor.save_settings(timestamp, mode="text2img")
         num_iterations = colab.settings['Iterations']
-        display("Iterations: 0/%d" % num_iterations, display_id="iterations")
+        
+        display(HTML("<label>Iterations: 0/%d</label>" % num_iterations), display_id="iterations")
         postprocessor.max_num_parallel_jobs = maxNumJobs
         postprocessor.run_queue_thread()
         for i in range(num_iterations):
