@@ -305,13 +305,11 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
     return pipe
 
 import torch
-def from_pretrained(checkpoint_path, is_img2img=False):
-    torch.set_default_dtype(torch.float32)
+def from_pretrained(checkpoint_path):
     pipe = None
     try:
         pipe = load_pipeline_from_original_stable_diffusion_ckpt(
             checkpoint_path,
-            controlnet=None,
             precision=torch.float16,
             scan_needed=False
         )
