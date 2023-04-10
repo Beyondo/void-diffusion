@@ -16,9 +16,9 @@ def install_vendors():
         # git clone using IPython magic
         IPython.get_ipython().system("git clone https://github.com/TencentARC/GFPGAN.git vendor/GFPGAN > /dev/null")
         os.chdir("vendor/GFPGAN")
+        IPython.get_ipython().system("pip install -q -r requirements.txt > /dev/null")
         IPython.get_ipython().system("pip install basicsr > /dev/null")
         IPython.get_ipython().system("pip install facexlib > /dev/null")
-        IPython.get_ipython().system("pip install -q -r requirements.txt > /dev/null")
         IPython.get_ipython().system("python setup.py develop > /dev/null")
         # used for enhancing the background (non-face) regions
         IPython.get_ipython().system("pip install realesrgan > /dev/null")
