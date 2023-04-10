@@ -1,5 +1,5 @@
 import os, sys, IPython
-def install_vendor():
+def install_vendors():
     
     print("Installing vendors -> ", end="")
     import os, IPython
