@@ -13,3 +13,4 @@ Pillow
 torch
 torchvision
 tqdm
+omegaconf
