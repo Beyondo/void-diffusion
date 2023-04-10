@@ -234,7 +234,7 @@ setup(
     license="Apache",
     author="The HuggingFace team",
     author_email="patrick@huggingface.co",
-    url="https://github.com/Beyondo/diffusers",
+    url="https://github.com/Beyondo/void-diffusion",
     package_dir={"": "src"},
     packages=find_packages("src"),
     include_package_data=True,
