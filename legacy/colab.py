@@ -53,15 +53,24 @@ def init(ModelName, InpaintingModel, debug=False):
         try:
             env.install_vendor()
             print("Initializing model " + model_name + ":")
-            pipeline = PerformancePipeline.from_pretrained(model_name)
+            if ModelName.endswith('.ckpt'):
+                pipeline = checkpoint.convert_checkpoint(ModelName).to("cuda:0")
+            else:
+                pipeline = PerformancePipeline.from_pretrained(model_name)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             default_pipe_scheduler = pipeline.scheduler
             if InpaintingModel != None:
                 try:
-                    inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16, safety_checker=None).to("cuda:0")
+                    if InpaintingModel.endswith('.ckpt'):
+                        inpaint = checkpoint.convert_checkpoint(InpaintingModel).to("cuda:0")
+                    else:
+                        inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16, safety_checker=None).to("cuda:0")
                 except:
                     try:
-                        inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16, safety_checker=None).to("cuda:0")
+                        if InpaintingModel.endswith('.ckpt'):
+                            inpaint = checkpoint.convert_checkpoint(InpaintingModel).to("cuda:0")
+                        else:
+                            inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16, safety_checker=None).to("cuda:0")
                     except:
                         print("Couldn't load %s as an Inpainting model." % inpaint_model_name)
                         return
