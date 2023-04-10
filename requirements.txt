@@ -1,3 +1,4 @@
+omegaconf
 einops
 torch
 transformers
@@ -13,4 +14,3 @@ Pillow
 torch
 torchvision
 tqdm
-omegaconf
