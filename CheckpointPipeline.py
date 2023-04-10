@@ -82,8 +82,8 @@ def from_pretrained(checkpoint_path, is_img2img=False):
     torch.set_default_dtype(torch.float16)
     pipe = None
     try:
-        pipe = convert_checkpoint(ModelName, is_img2img)
+        pipe = convert_checkpoint(checkpoint_path, is_img2img)
     except Exception as e:
-        print("Failed to load model %s: %s" % (checkpoint_path, e))
+        print("Failed to load checkpoint %s: %s" % (checkpoint_path, e))
     pipe.to("cuda:0")
     return pipe
