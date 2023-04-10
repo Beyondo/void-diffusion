@@ -1,4 +1,4 @@
-requirements = [ 'transformers' ]
+requirements = [ 'diffusers' ]
 import time
 def run(args, callback):
     time.sleep(1)

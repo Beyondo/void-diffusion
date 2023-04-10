@@ -1,8 +1,7 @@
 omegaconf
 einops
-torch
-transformers
 diffusers
+torch
 accelerate
 basicsr
 facexlib
