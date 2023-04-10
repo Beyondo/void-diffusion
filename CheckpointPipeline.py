@@ -1,6 +1,5 @@
 from diffusers import StableDiffusionPipeline
-import torch, os, importlib
-import torch
+import torch, argparse
 from diffusers.pipelines.stable_diffusion.convert_from_ckpt import load_pipeline_from_original_stable_diffusion_ckpt
 
 def convert_checkpoint(checkpoint_path, original_config_file=None, num_in_channels=None, 
