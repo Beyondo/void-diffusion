@@ -1,7 +1,7 @@
 from diffusers import StableDiffusionPipeline
 import torch, argparse
 from diffusers.pipelines.stable_diffusion.convert_from_ckpt import load_pipeline_from_original_stable_diffusion_ckpt
-
+import io
 def convert_checkpoint(checkpoint_path, original_config_file=None, num_in_channels=None, 
                        scheduler_type='pndm', pipeline_type=None, image_size=None, prediction_type=None, 
                        extract_ema=False, upcast_attention=False, from_safetensors=False, to_safetensors=False, 
@@ -25,11 +25,14 @@ def convert_checkpoint(checkpoint_path, original_config_file=None, num_in_channe
                               stable_unclip_prior=stable_unclip_prior,
                               clip_stats_path=clip_stats_path,
                               controlnet=controlnet)
-    
+    # Load checkpoint file into a buffer
+    with open(checkpoint_path, 'rb') as f:
+        buffer = io.BytesIO(f.read())
+    # Load checkpoint from buffer
     if args.from_safetensors:
-        checkpoint = torch.load(args.checkpoint_path, map_location=torch.device(args.device), pickle_module=dill)
+        checkpoint = torch.load(buffer, map_location=torch.device(args.device), pickle_module=dill)
     else:
-        checkpoint = torch.load(args.checkpoint_path, map_location=torch.device(args.device))
+        checkpoint = torch.load(buffer, map_location=torch.device(args.device))
 
     if args.original_config_file is None:
         # infer original config file from checkpoint
