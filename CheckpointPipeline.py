@@ -45,7 +45,6 @@ from diffusers.pipelines.stable_diffusion import StableDiffusionSafetyChecker
 
 from diffusers.utils import logging
 
-logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 def shave_segments(path, n_shave_prefix_segments=1):
     """
     Removes segments. Positive values shave the first segments, negative shave the last segments.
