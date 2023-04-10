@@ -52,7 +52,6 @@ def init(ModelName, InpaintingModel, debug=False):
         torch.set_default_dtype(torch.float16)
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
-            env.install_vendors()
             if ModelName.endswith('.ckpt'):
                 print("Initializing checkpoint " + model_name + ":")
                 pipeline = CheckpointPipeline.from_pretrained(model_name)
