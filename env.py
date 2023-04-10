@@ -10,11 +10,13 @@ def install_vendors():
         f = open(os.devnull, 'w')
         original_stdout = sys.stdout
         sys.stdout = f
+        # requires
+        os.chdir("backend/diffusers")
+        IPython.get_ipython().system("python setup.py sdist > /dev/null")
+        os.chdir("../..")
         os.mkdir("vendor")
         # GFPGAN
         os.remove("vendor/GFPGAN") if os.path.exists("vendor/GFPGAN") else None
-        # git clone using IPython magic
-        IPython.get_ipython().system("python backend/diffusers/setup.py sdist > /dev/null")
         IPython.get_ipython().system("pip install -q -r requirements.txt > /dev/null")
         IPython.get_ipython().system("git clone https://github.com/TencentARC/GFPGAN.git vendor/GFPGAN > /dev/null")
         os.chdir("vendor/GFPGAN")
