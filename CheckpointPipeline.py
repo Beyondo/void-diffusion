@@ -7,6 +7,7 @@ def from_pretrained(checkpoint_path, is_img2img=False):
         pipe = load_pipeline_from_original_stable_diffusion_ckpt(
             checkpoint_path,
             controlnet=None,
+            precision=torch.float16,
             scan_needed=False
         )
         pipe.to('cuda')
