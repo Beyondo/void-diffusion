@@ -1033,7 +1033,7 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
     vae_path: str = None,
     precision: torch.dtype = torch.float32,
     return_generator_pipeline: bool = False,
-    safety_checker = False
+    safety_checker = None
 ) -> StableDiffusionPipeline:
     """
     Load a Stable Diffusion pipeline object from a CompVis-style `.ckpt`/`.safetensors` file and (ideally) a `.yaml`
@@ -1216,7 +1216,7 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
             tokenizer=tokenizer,
             unet=unet.to(precision),
             scheduler=scheduler,
-            safety_checker=None,
+            safety_checker=safety_checker,
             feature_extractor=None,
             requires_safety_checker=False,
         )
@@ -1225,28 +1225,18 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
         tokenizer = CLIPTokenizer.from_pretrained(
             "openai/clip-vit-large-patch14", cache_dir=cache_dir
         )
-        feature_extractor = AutoFeatureExtractor.from_pretrained(
-            "CompVis/stable-diffusion-safety-checker", cache_dir=cache_dir
-        )
         pipe = PaintByExamplePipeline(
             vae=vae,
             image_encoder=vision_model,
             unet=unet,
             scheduler=scheduler,
-            safety_checker=None,
-            feature_extractor=feature_extractor if safety_checker else None,
+            safety_checker=safety_checker,
+            feature_extractor=None
         )
     elif model_type in ["FrozenCLIPEmbedder", "WeightedFrozenCLIPEmbedder"]:
         text_model = convert_ldm_clip_checkpoint(checkpoint)
         tokenizer = CLIPTokenizer.from_pretrained(
             "openai/clip-vit-large-patch14", cache_dir=cache_dir
-        )
-        safety_checker = StableDiffusionSafetyChecker.from_pretrained(
-            "CompVis/stable-diffusion-safety-checker",
-            cache_dir="/content/cache_dir",
-        )
-        feature_extractor = AutoFeatureExtractor.from_pretrained(
-            "CompVis/stable-diffusion-safety-checker", cache_dir=cache_dir
         )
         pipe = pipeline_class(
             vae=vae.to(precision),
@@ -1254,8 +1244,8 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
             tokenizer=tokenizer,
             unet=unet.to(precision),
             scheduler=scheduler,
-            safety_checker=(None if return_generator_pipeline else safety_checker.to(precision)) if safety_checker else None,
-            feature_extractor=feature_extractor if safety_checker else None,
+            safety_checker=safety_checker,
+            feature_extractor=None
         )
     else:
         text_config = create_ldm_bert_config(original_config)
@@ -1273,13 +1263,13 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
     return pipe
 
 import torch
-def from_pretrained(checkpoint_path):
+def from_pretrained(checkpoint_path, safety_checker=None):
     pipe = None
     try:
         pipe = load_pipeline_from_original_stable_diffusion_ckpt(
             checkpoint_path,
             precision=torch.float16,
-            safety_checker=False
+            safety_checker=safety_checker
         )
         pipe.to('cuda')
     except Exception as e:
