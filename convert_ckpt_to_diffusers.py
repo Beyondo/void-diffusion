@@ -25,8 +25,6 @@ from typing import Union
 import torch
 from safetensors.torch import load_file
 
-from invokeai.backend.globals import global_cache_dir, global_config_dir
-
 from .model_manager import ModelManager, SDLegacyType
 
 try:
@@ -841,7 +839,7 @@ def convert_ldm_bert_checkpoint(checkpoint, config):
 
 def convert_ldm_clip_checkpoint(checkpoint):
     text_model = CLIPTextModel.from_pretrained(
-        "openai/clip-vit-large-patch14", cache_dir=global_cache_dir("hub")
+        "openai/clip-vit-large-patch14", cache_dir="/content/cache_dir"
     )
 
     keys = list(checkpoint.keys())
@@ -896,7 +894,7 @@ textenc_pattern = re.compile("|".join(protected.keys()))
 
 
 def convert_paint_by_example_checkpoint(checkpoint):
-    cache_dir = global_cache_dir("hub")
+    cache_dir = "/content/cache_dir"
     config = CLIPVisionConfig.from_pretrained(
         "openai/clip-vit-large-patch14", cache_dir=cache_dir
     )
@@ -968,7 +966,7 @@ def convert_paint_by_example_checkpoint(checkpoint):
 
 
 def convert_open_clip_checkpoint(checkpoint):
-    cache_dir = global_cache_dir("hub")
+    cache_dir = "/content/cache_dir"
     text_model = CLIPTextModel.from_pretrained(
         "stabilityai/stable-diffusion-2", subfolder="text_encoder", cache_dir=cache_dir
     )
@@ -1104,7 +1102,7 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
         else:
             checkpoint = load_file(checkpoint_path)
 
-        cache_dir = global_cache_dir("hub")
+        cache_dir = "/content/cache_dir"
         pipeline_class = (
             StableDiffusionGeneratorPipeline
             if return_generator_pipeline
@@ -1296,7 +1294,7 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
             )
             safety_checker = StableDiffusionSafetyChecker.from_pretrained(
                 "CompVis/stable-diffusion-safety-checker",
-                cache_dir=global_cache_dir("hub"),
+                cache_dir="/content/cache_dir",
             )
             feature_extractor = AutoFeatureExtractor.from_pretrained(
                 "CompVis/stable-diffusion-safety-checker", cache_dir=cache_dir
