@@ -39,7 +39,7 @@ def convert_checkpoint(checkpoint_path, original_config_file=None, num_in_channe
         else:
             raise ValueError(f'Cannot automatically infer original config file from checkpoint: {args.checkpoint_path}')
 
-    config = load_pipeline_from_original_stable_diffusion_ckpt(args.original_config_file, load_safety_checker=False, is_img2img=is_img2img)
+    config = load_pipeline_from_original_stable_diffusion_ckpt(args.original_config_file, is_img2img=is_img2img)
 
     if args.pipeline_type is None:
         args.pipeline_type = config.pipeline_type
