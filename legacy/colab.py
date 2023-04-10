@@ -3,8 +3,9 @@ import IPython
 from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
-import env, PerformancePipeline, importlib
+import env, PerformancePipeline, CheckpointPipeline, importlib
 importlib.reload(PerformancePipeline)
+importlib.reload(CheckpointPipeline)
 model_name = ""
 inpaint_model_name = ""
 ready = False
@@ -52,23 +53,24 @@ def init(ModelName, InpaintingModel, debug=False):
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
             env.install_vendor()
-            print("Initializing model " + model_name + ":")
             if ModelName.endswith('.ckpt'):
-                pipeline = checkpoint.convert_checkpoint(ModelName).to("cuda:0")
+                print("Initializing checkpoint " + model_name + ":")
+                pipeline = CheckpointPipeline.from_pretrained(model_name)
             else:
+                print("Initializing model " + model_name + ":")
                 pipeline = PerformancePipeline.from_pretrained(model_name)
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             default_pipe_scheduler = pipeline.scheduler
             if InpaintingModel != None:
                 try:
                     if InpaintingModel.endswith('.ckpt'):
-                        inpaint = checkpoint.convert_checkpoint(InpaintingModel).to("cuda:0")
+                        inpaint = CheckpointPipeline.from_pretrained(model_name, is_img2img=True)
                     else:
                         inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, revision="fp16", torch_dtype=torch.float16, safety_checker=None).to("cuda:0")
                 except:
                     try:
                         if InpaintingModel.endswith('.ckpt'):
-                            inpaint = checkpoint.convert_checkpoint(InpaintingModel).to("cuda:0")
+                            inpaint = CheckpointPipeline.from_pretrained(model_name, is_img2img=True)
                         else:
                             inpaint = StableDiffusionInpaintPipeline.from_pretrained(inpaint_model_name, torch_dtype=torch.float16, safety_checker=None).to("cuda:0")
                     except:
