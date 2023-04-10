@@ -2,7 +2,6 @@ omegaconf
 einops
 diffusers
 transformers
-safetensors
 torch
 accelerate
 basicsr
