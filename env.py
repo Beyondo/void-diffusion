@@ -10,10 +10,6 @@ def install_vendors():
         f = open(os.devnull, 'w')
         original_stdout = sys.stdout
         sys.stdout = f
-        # requires
-        os.chdir("backend/diffusers")
-        IPython.get_ipython().system("python setup.py sdist > /dev/null")
-        os.chdir("../..")
         os.mkdir("vendor")
         # GFPGAN
         os.remove("vendor/GFPGAN") if os.path.exists("vendor/GFPGAN") else None
