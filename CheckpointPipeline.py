@@ -6,7 +6,8 @@ def from_pretrained(checkpoint_path, is_img2img=False):
     try:
         pipe = load_pipeline_from_original_stable_diffusion_ckpt(
             checkpoint_path,
-            controlnet=None
+            controlnet=None,
+            scan_needed=False
         )
         pipe.to('cuda')
     except Exception as e:
