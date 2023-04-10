@@ -1032,7 +1032,8 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
     vae: AutoencoderKL = None,
     vae_path: str = None,
     precision: torch.dtype = torch.float32,
-    return_generator_pipeline: bool = False
+    return_generator_pipeline: bool = False,
+    safety_checker = False
 ) -> StableDiffusionPipeline:
     """
     Load a Stable Diffusion pipeline object from a CompVis-style `.ckpt`/`.safetensors` file and (ideally) a `.yaml`
@@ -1074,7 +1075,7 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
     if "global_step" in checkpoint:
         global_step = checkpoint["global_step"]
     else:
-        #print("VOID Checkpoint Loader: global_step key not found in model")
+        print("VOID Checkpoint Loader: global_step key not found in model")
         global_step = None
 
     # sometimes there is a state_dict key and sometimes not
@@ -1233,7 +1234,7 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
             unet=unet,
             scheduler=scheduler,
             safety_checker=None,
-            feature_extractor=feature_extractor,
+            feature_extractor=feature_extractor if safety_checker else None,
         )
     elif model_type in ["FrozenCLIPEmbedder", "WeightedFrozenCLIPEmbedder"]:
         text_model = convert_ldm_clip_checkpoint(checkpoint)
@@ -1253,7 +1254,7 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
             tokenizer=tokenizer,
             unet=unet.to(precision),
             scheduler=scheduler,
-            safety_checker=None if return_generator_pipeline else safety_checker.to(precision),
+            safety_checker=(None if return_generator_pipeline else safety_checker.to(precision)) if safety_checker else None,
             feature_extractor=feature_extractor,
         )
     else:
@@ -1277,7 +1278,8 @@ def from_pretrained(checkpoint_path):
     try:
         pipe = load_pipeline_from_original_stable_diffusion_ckpt(
             checkpoint_path,
-            precision=torch.float16
+            precision=torch.float16,
+            safety_checker=False
         )
         pipe.to('cuda')
     except Exception as e:
