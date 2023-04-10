@@ -1255,7 +1255,7 @@ def load_pipeline_from_original_stable_diffusion_ckpt(
             unet=unet.to(precision),
             scheduler=scheduler,
             safety_checker=(None if return_generator_pipeline else safety_checker.to(precision)) if safety_checker else None,
-            feature_extractor=feature_extractor,
+            feature_extractor=feature_extractor if safety_checker else None,
         )
     else:
         text_config = create_ldm_bert_config(original_config)
