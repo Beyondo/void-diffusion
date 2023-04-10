@@ -3,7 +3,7 @@ import IPython
 from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
-import env, PerformancePipeline, CheckpointPipeline, importlib
+import PerformancePipeline, CheckpointPipeline, importlib
 importlib.reload(PerformancePipeline)
 importlib.reload(CheckpointPipeline)
 model_name = ""
