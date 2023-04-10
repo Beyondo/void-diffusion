@@ -310,8 +310,7 @@ def from_pretrained(checkpoint_path):
     try:
         pipe = load_pipeline_from_original_stable_diffusion_ckpt(
             checkpoint_path,
-            precision=torch.float16,
-            scan_needed=False
+            precision=torch.float16
         )
         pipe.to('cuda')
     except Exception as e:
