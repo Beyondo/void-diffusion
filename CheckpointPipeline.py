@@ -7,8 +7,7 @@ def from_pretrained(checkpoint_path, is_img2img=False):
         pipe = load_pipeline_from_original_stable_diffusion_ckpt(
         checkpoint_path,
         device='cuda',
-        controlnet=None,
-        precision=torch.float32
+        controlnet=None
     )
     except Exception as e:
         print("Failed to load checkpoint %s: %s" % (checkpoint_path, e))
