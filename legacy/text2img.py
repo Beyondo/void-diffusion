@@ -1,6 +1,9 @@
 import torch, os, time, datetime, importlib
 from legacy import colab, postprocessor, progress
 from IPython.display import display, HTML
+
+import traceback
+
 importlib.reload(progress)
 importlib.reload(postprocessor)
 def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
@@ -37,5 +40,5 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
             display(HTML("<label>Iterations: %d/%d</label>" % (i + 1,  num_iterations)), display_id="iterations")
         postprocessor.join_queue_thread()
         torch.cuda.empty_cache()
-    except Exception as e:
-        print("Error trying to generate image: " + str(e))
+    except Exception:
+        print("Error trying to generate image", traceback.format_exc())
