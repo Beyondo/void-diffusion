@@ -114,6 +114,9 @@ def prepare(mode):
             else:
                 pipeline.scheduler = default_pipe_scheduler
         elif mode == "inpaint":
+            if inpaint == None:
+                print("You haven't selected any inpainting model from the Setup section.")
+                return
             if settings['Scheduler'] != "Default":
                 scheduler = getattr(diffusers, settings['Scheduler'])
                 inpaint.scheduler = scheduler.from_config(inpaint.scheduler.config)
