@@ -4,6 +4,7 @@ from IPython import display
 from IPython.display import HTML
 from diffusers import StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipeline
 import PerformancePipeline, CheckpointPipeline, importlib
+import traceback
 importlib.reload(PerformancePipeline)
 importlib.reload(CheckpointPipeline)
 model_name = ""
@@ -99,25 +100,28 @@ def prepare(mode):
     if 'Seed' not in settings:
         print("Please set your settings first.")
         return
-    if settings['Seed'] == 0:
-        random.seed(int(time.time_ns()))
-        settings['InitialSeed'] = random.getrandbits(64)
-    else:
-        settings['InitialSeed'] = settings['Seed']
-    current_mode = mode
-    if mode == "text2img" or mode == "img2img":
-        if settings['Scheduler'] != "Default":
-            scheduler = getattr(diffusers, settings['Scheduler'])
-            pipeline.scheduler = scheduler.from_config(pipeline.scheduler.config)
+    try:
+        if settings['Seed'] == 0:
+            random.seed(int(time.time_ns()))
+            settings['InitialSeed'] = random.getrandbits(64)
         else:
-            pipeline.scheduler = default_pipe_scheduler
-    elif mode == "inpaint":
-        if settings['Scheduler'] != "Default":
-            scheduler = getattr(diffusers, settings['Scheduler'])
-            inpaint.scheduler = scheduler.from_config(inpaint.scheduler.config)
-        else:
-            inpaint.scheduler = default_inpaint_scheduler
-    prepare_memory()
+            settings['InitialSeed'] = settings['Seed']
+        current_mode = mode
+        if mode == "text2img" or mode == "img2img":
+            if settings['Scheduler'] != "Default":
+                scheduler = getattr(diffusers, settings['Scheduler'])
+                pipeline.scheduler = scheduler.from_config(pipeline.scheduler.config)
+            else:
+                pipeline.scheduler = default_pipe_scheduler
+        elif mode == "inpaint":
+            if settings['Scheduler'] != "Default":
+                scheduler = getattr(diffusers, settings['Scheduler'])
+                inpaint.scheduler = scheduler.from_config(inpaint.scheduler.config)
+            else:
+                inpaint.scheduler = default_inpaint_scheduler
+        prepare_memory()
+    except Exception:
+        print(traceback.format_exc())
 #
 def image_grid(imgs, rows, cols):#
     assert len(imgs) == rows*cols
