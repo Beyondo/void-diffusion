@@ -121,7 +121,7 @@ def prepare(mode):
                 inpaint.scheduler = default_inpaint_scheduler
         prepare_memory()
     except Exception:
-        print(traceback.format_exc())
+        print("Error preparing: ", traceback.format_exc())
 #
 def image_grid(imgs, rows, cols):#
     assert len(imgs) == rows*cols
