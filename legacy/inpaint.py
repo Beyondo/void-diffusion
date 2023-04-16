@@ -11,7 +11,10 @@ def process(ShouldSave, maxNumJobs, ShouldPreview = True, ReplaceResult = True):
     try:
         progress.replace_result = ReplaceResult
         colab.prepare("inpaint")
-        
+        # Since Inpainting is always a Width and Height of 512 - Needed for config saving. 
+        colab.settings['Width'] = 512
+        colab.settings['Height'] = 512
+        #
         timestamp = int(time.mktime(datetime.datetime.now().timetuple()))
         if colab.save_settings: postprocessor.save_settings(timestamp, mode="inpaint")
         # Load image
