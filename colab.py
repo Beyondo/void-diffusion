@@ -100,16 +100,15 @@ def init(ModelName, debug=False):
             print("Initializing model " + model_name + ":")
             os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb=256"
             torch.set_default_dtype(torch.float16)
-            rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else  "" if model_name == "prompthero/openjourney" or model_name == "SG161222/Realistic_Vision_V2.0" else "fp16"
+            #rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else  "" if model_name == "prompthero/openjourney" or model_name == "SG161222/Realistic_Vision_V2.0" else "fp16"
             # Hook VOIDPipeline to StableDiffusionPipeline
             #import VOIDPipeline, importlib
             #importlib.reload(VOIDPipeline)
             #VOIDPipeline.Hook()
-            print(rev)
-            if rev != "":
-                pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
-            else:
-                pipeline = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
+            #if rev != "":
+            #    pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
+            #else:
+            pipeline = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
             #print ("Before: ", pipeline.tokenizer.model_max_length)
             #pipeline = modify_clip_limit(512)
             #print ("After: ", pipeline.tokenizer.model_max_length)
