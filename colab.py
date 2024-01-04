@@ -96,10 +96,13 @@ def init(ModelName, debug=False):
         print("Running on -> ", end="")
         print(torch.cuda.get_device_name("cuda:0") + ".")
         try:
+            print('00')
             install_vendor()
-            print("Initializing model " + model_name + ":")
+            print("Initializing model (2)" + model_name + ":")
             os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb=256"
+            print('05')
             torch.set_default_dtype(torch.float16)
+            print('11')
             #rev = "diffusers-115k" if model_name == "naclbit/trinart_stable_diffusion_v2" else  "" if model_name == "prompthero/openjourney" or model_name == "SG161222/Realistic_Vision_V2.0" else "fp16"
             # Hook VOIDPipeline to StableDiffusionPipeline
             #import VOIDPipeline, importlib
@@ -109,11 +112,14 @@ def init(ModelName, debug=False):
             #    pipeline = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16).to("cuda:0")
             #else:
             pipeline = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16).to("cuda:0")
+            print('22')
             #print ("Before: ", pipeline.tokenizer.model_max_length)
             #pipeline = modify_clip_limit(512)
             #print ("After: ", pipeline.tokenizer.model_max_length)
             patcher.patch(pipeline)
+            print('33')
             text2img = pipeline
+            print('44')
             img2img = StableDiffusionImg2ImgPipeline(**pipeline.components)
             inpaint = StableDiffusionInpaintPipeline(**pipeline.components)
             print("Done.")
