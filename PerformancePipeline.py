@@ -7,7 +7,10 @@ def from_pretrained(model_name, safety_checker=None):
     rev = "diffusers-115k" if  model_name == "naclbit/trinart_stable_diffusion_v2" else "" if model_name == "SG161222/Realistic_Vision_V2.0" else "fp16"
     pipe = None
     try:
-        pipe = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16, safety_checker=safety_checker)
+        if rev != "":
+            pipe = StableDiffusionPipeline.from_pretrained(model_name, revision=rev, torch_dtype=torch.float16, safety_checker=safety_checker)
+        else:
+            pipe = StableDiffusionPipeline.from_pretrained(model_name, torch_dtype=torch.float16, safety_checker=safety_checker)
         pipe.to("cuda")
     except:
         try:
