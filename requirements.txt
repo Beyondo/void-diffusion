@@ -1,4 +1,4 @@
-huggingface_hub
+huggingface_hub=0.20.2
 omegaconf
 einops
 diffusers
