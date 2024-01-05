@@ -14,4 +14,4 @@ Pillow
 torch
 torchvision
 tqdm
-huggingface_hub=0.20.2
+huggingface_hub==0.20.2
