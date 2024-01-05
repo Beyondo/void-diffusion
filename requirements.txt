@@ -1,4 +1,3 @@
-huggingface_hub=0.20.2
 omegaconf
 einops
 diffusers
@@ -15,3 +14,4 @@ Pillow
 torch
 torchvision
 tqdm
+huggingface_hub=0.20.2
