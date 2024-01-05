@@ -1,3 +1,4 @@
+huggingface_hub
 omegaconf
 einops
 diffusers
